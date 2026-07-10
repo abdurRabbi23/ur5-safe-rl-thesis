@@ -1,0 +1,20 @@
+# Upstream Isaac Lab clone — huge, tracked by upstream, do not commit
+IsaacLab/
+
+# Training outputs
+logs/
+outputs/
+*.pt
+*.pth
+*.ckpt
+
+# Python / caches
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
