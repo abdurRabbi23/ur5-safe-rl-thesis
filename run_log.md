@@ -21,3 +21,13 @@
 - Debug lesson: "connection refused" = process down; hang = network/firewall.
 - Git initialised, .gitignore added (excludes IsaacLab clone + logs/checkpoints), first real commit.
 Day 4: Isaac-Reach-Franka-v0 headless trained, reward climbs sharply then plateaus ~400 iters, ep length stable, TB verified from laptop
+
+## Day 5 — num_envs scale test (Reach-Franka, 100 iters each)
+
+| num_envs         | wall time | it/s | throughput (env·it/s) | peak VRAM |
+|------------------|-----------|------|-----------------------|-----------|
+| 4096 (default)   | 40.9s     | 2.44 | ~10.0k                | 4600 MiB  |
+| 8192             | 50.5s     | 1.98 | ~16.2k                | 5059 MiB  |
+| 16384            | 74.1s     | 1.35 | ~22.1k                | 7554 MiB  |
+
+Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 grasping env is heavier per-env — re-time before setting real training budgets.
