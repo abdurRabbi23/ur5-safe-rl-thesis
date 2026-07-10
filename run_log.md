@@ -20,3 +20,4 @@
 - TensorBoard served with --bind_all, reached laptop over Tailscale (100.109.10.66:6006). Curves render.
 - Debug lesson: "connection refused" = process down; hang = network/firewall.
 - Git initialised, .gitignore added (excludes IsaacLab clone + logs/checkpoints), first real commit.
+Day 4: Isaac-Reach-Franka-v0 headless trained, reward climbs sharply then plateaus ~400 iters, ep length stable, TB verified from laptop
