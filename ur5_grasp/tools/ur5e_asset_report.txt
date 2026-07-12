@@ -1,0 +1,51 @@
+======================================================================
+UR5e ASSET INSPECTION REPORT
+======================================================================
+ISAAC_NUCLEUS_DIR    = https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac
+ISAACLAB_NUCLEUS_DIR = https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/IsaacLab
+
+--- 1. Resolving candidate USD paths ---
+  [FOUND] https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/ur5e/ur5e.usd
+  [  -  ] https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/UR5e/ur5e.usd
+  [  -  ] https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/ur5e/ur5e_instanceable.usd
+  [  -  ] https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/IsaacLab/Robots/UniversalRobots/UR5e/ur5e_instanceable.usd
+  [  -  ] https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/IsaacLab/Robots/UniversalRobots/UR5/ur5_instanceable.usd
+  [FOUND] https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/ur5/ur5.usd
+
+--- 2. Variant sets on https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/ur5e/ur5e.usd ---
+    variant set 'Physics': options = ['None', 'PhysX']
+    variant set 'Sensor': options = ['None', 'Sensors']
+    variant set 'Gripper': options = ['None', 'Robotiq_2f_85']
+
+--- 3. USD structure WITH gripper (Gripper=Robotiq_2f_85) ---
+    (pure USD traversal — no physics sim, so the 'single articulation'
+     constraint doesn't apply; this just enumerates the composed tree)
+    applied variants: {'Physics': 'PhysX', 'Gripper': 'Robotiq_2f_85'}
+    articulation roots (2):
+        /ur5e/Gripper/Robotiq_2F_85
+        /ur5e/root_joint
+    rigid-body links (16): ['base_link', 'left_outer_knuckle', 'left_outer_finger', 'left_inner_finger', 'left_inner_knuckle', 'right_outer_knuckle', 'right_outer_finger', 'right_inner_finger', 'right_inner_knuckle', 'base_link', 'shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link']
+    joints (16):
+        FixedJoint  (PhysicsFixedJoint -> left_outer_finger)
+        FixedJoint  (PhysicsFixedJoint -> right_outer_finger)
+        finger_joint  (PhysicsRevoluteJoint -> left_outer_knuckle)
+        right_outer_knuckle_joint  (PhysicsRevoluteJoint -> right_outer_knuckle)
+        right_inner_finger_joint  (PhysicsRevoluteJoint -> right_inner_finger)
+        right_inner_finger_knuckle_joint  (PhysicsRevoluteJoint -> right_inner_knuckle)
+        left_inner_finger_knuckle_joint  (PhysicsRevoluteJoint -> left_inner_knuckle)
+        left_inner_finger_joint  (PhysicsRevoluteJoint -> left_inner_finger)
+        robot_gripper_joint  (PhysicsFixedJoint -> base_link)
+        shoulder_pan_joint  (PhysicsRevoluteJoint -> shoulder_link)
+        shoulder_lift_joint  (PhysicsRevoluteJoint -> upper_arm_link)
+        elbow_joint  (PhysicsRevoluteJoint -> forearm_link)
+        wrist_1_joint  (PhysicsRevoluteJoint -> wrist_1_link)
+        wrist_2_joint  (PhysicsRevoluteJoint -> wrist_2_link)
+        wrist_3_joint  (PhysicsRevoluteJoint -> wrist_3_link)
+        root_joint  (PhysicsFixedJoint -> base_link)
+
+--- What I need from this report ---
+  * gripper joint name(s) (revolute) + their limits -> open/close positions
+  * which prim/link the gripper mounts on (arm flange: tool0 / wrist_3_link / ee_link)
+  * where each articulation root sits (to plan merging arm+gripper into one)
+
+[report saved to /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/tools/ur5e_asset_report.txt]
