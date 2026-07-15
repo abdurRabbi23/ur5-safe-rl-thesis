@@ -22,15 +22,18 @@ Safe Adaptive IBVS with constrained RL (cPPO) for precision grasping on a UR5e, 
 real. Three layers: L1 safe-RL grasping in sim (must-pass), L2 IBVS visual loop
 (stretch), L3 sim-to-real on the physical UR5e (optional). See project instructions.
 
-## Current status (updated 2026-07-12, Day 7)
-Roadmap week ~1–5 zone. **Layer 1 PPO baseline is trained and working** (UR5e grasps +
-lifts a cube in sim). Next real deliverable: the cPPO-vs-PPO safety benchmark.
+## Current status (updated 2026-07-15, Day 8)
+Roadmap week ~1–5 zone. Day-7 PPO baseline was **reward-hacked** (robot threw the cube — the
+2f-85 closed loop can't grip in sim). Fixed with a **proximity-weld grasp** (escape hatch;
+hold-verified). IsaacLab pinned to the **v2.3.0 tag**. **IMMEDIATE NEXT: retrain PPO on the
+weld env → visual play.py check → then start Module 03** (cPPO-vs-PPO safety benchmark).
+See `logbook/02_grasp_env.md` Day-8 correction + `run_log.md` Day 8 for the full story.
 
 ## Modules
 | File | Work-stream | Status |
 |---|---|---|
 | `01_env_setup.md` | Stack install, Isaac validation, reaching tasks | ✅ done |
-| `02_grasp_env.md` | UR5e + Robotiq 2f-85 lift env, PPO baseline | ✅ baseline done |
+| `02_grasp_env.md` | UR5e lift env, weld grasp, PPO baseline | ▶ weld done; PPO retrain pending |
 | `03_cppo_benchmark.md` | Safety constraints + cPPO vs PPO (**Layer 1 deliverable**) | ▶ next |
 | `04_layer2_ibvs.md` | IBVS visual loop, RL-tuned image Jacobian (Layer 2) | ⏳ later |
 | `05_layer3_sim2real.md` | ROS 2 transfer to physical UR5e + RH-P12-RN (Layer 3) | ⏳ later |

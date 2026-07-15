@@ -1,8 +1,23 @@
 # Module 02 — UR5e Grasp Env + PPO Baseline
 
-Status: ✅ baseline done (grasps + lifts); minor tuning optional
+Status: ▶ grasp reliable via proximity weld (hold-verified); PPO baseline RETRAIN pending
 Chat type: sim env / RL engineering
-Last updated: 2026-07-12 (Day 7)
+Last updated: 2026-07-15 (Day 8)
+
+## ⚠️ Day-8 correction (read first)
+- The Day-7 checkpoint (`...18-54-03/model_1499.pt`) is **DEAD** — visual verify showed the
+  robot **throwing** the cube. It reward-hacked the height-only lift term because the
+  Robotiq 2f-85 closed loop transmits **no grip force** in sim (confirmed by
+  `scripts/grasp_hold_test.py`; even 20x clamp force didn't hold).
+- FIX (pre-agreed escape hatch): **proximity weld** grasp — `tasks/lift/ur5e_lift_env.py:
+  UR5eCubeLiftEnv`. On CLOSE + cube within `GRASP_TOL=0.06 m` of the reach frame, the cube
+  latches to the gripper (pose tracks frame, velocity zeroed); releases on open. Registered
+  for `-v0` and `-Play-v0`. Weld makes throwing impossible → height reward no longer hackable.
+- Hold test with weld → **GRIP HOLDS ✅**. Geometry is fine (do NOT zero the EE offset — the
+  "offset=0" probe hint was an artifact of finger body origins sitting at the flange).
+- IsaacLab pinned to the **v2.3.0 TAG** (`frozen/2.3.0`), not the branch (branch drifted to
+  v2.3.1 and broke the URDF-importer version pin).
+- IMMEDIATE NEXT: retrain PPO on the weld env → visual `play.py` check → then Module 03.
 
 ## Goal
 A UR5e + Robotiq 2f-85 cube-lift env (privileged object pose) that trains a PPO grasping
@@ -30,6 +45,9 @@ policy — the foundation for the Layer 1 safety benchmark.
 - `ur5_grasp/robots/ur5e_robotiq.py` — robot cfg
 - `ur5_grasp/tasks/lift/` — env cfg + gym registration + rsl_rl agent cfg
 - `ur5_grasp/scripts/train.py`, `play.py` — launchers
+- `ur5_grasp/tasks/lift/ur5e_lift_env.py` — **weld env class** (grasp escape hatch)
+- `ur5_grasp/scripts/zero_agent.py` — geometry probe (prints reach-frame vs fingertips)
+- `ur5_grasp/scripts/grasp_hold_test.py` — physics-only 30s hold test (HOLDS/TOO-WEAK verdict)
 - `ur5_grasp/tools/` — asset inspector + USD builder (+ their reports)
 
 ## Commands
