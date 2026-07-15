@@ -81,7 +81,7 @@ class UR5eCubeLiftEnvCfg(LiftEnvCfg):
         marker_cfg.prim_path = "/Visuals/FrameTransformer"
         self.scene.ee_frame = FrameTransformerCfg(
             prim_path="{ENV_REGEX_NS}/Robot/base_link",
-            debug_vis=False,
+            debug_vis=True,  # TOUHID: show the reach-target frame for grasp-geometry check
             visualizer_cfg=marker_cfg,
             target_frames=[
                 FrameTransformerCfg.FrameCfg(

@@ -87,10 +87,13 @@ UR5E_ROBOTIQ_CFG = ArticulationCfg(
         # NaN (mirrors Isaac Lab's UR10e Robotiq drive/passive split).
         "gripper_drive": ImplicitActuatorCfg(
             joint_names_expr=["finger_joint"],
-            effort_limit_sim=50.0,
+            # TOUHID: clamp force was ~100x softer than Isaac Lab's Franka gripper
+            # (stiffness 2000 / effort 200), which is why the cube fell straight
+            # through. Drive finger_joint much harder so the linkage presses the pads.
+            effort_limit_sim=200.0,
             velocity_limit_sim=2.0,
-            stiffness=20.0,
-            damping=1.0,
+            stiffness=400.0,
+            damping=20.0,
             armature=0.01,
             friction=0.1,
         ),

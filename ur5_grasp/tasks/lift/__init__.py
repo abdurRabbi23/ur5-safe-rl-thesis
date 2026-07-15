@@ -8,7 +8,7 @@ from . import agents
 
 gym.register(
     id="Isaac-Lift-Cube-UR5e-v0",
-    entry_point="isaaclab.envs:ManagerBasedRLEnv",
+    entry_point=f"{__name__}.ur5e_lift_env:UR5eCubeLiftEnv",
     kwargs={
         "env_cfg_entry_point": f"{__name__}.ur5e_lift_env_cfg:UR5eCubeLiftEnvCfg",
         "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:UR5eLiftPPORunnerCfg",
@@ -18,7 +18,7 @@ gym.register(
 
 gym.register(
     id="Isaac-Lift-Cube-UR5e-Play-v0",
-    entry_point="isaaclab.envs:ManagerBasedRLEnv",
+    entry_point=f"{__name__}.ur5e_lift_env:UR5eCubeLiftEnv",
     kwargs={
         "env_cfg_entry_point": f"{__name__}.ur5e_lift_env_cfg:UR5eCubeLiftEnvCfg_PLAY",
         "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:UR5eLiftPPORunnerCfg",
