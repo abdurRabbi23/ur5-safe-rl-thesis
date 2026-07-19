@@ -22,19 +22,21 @@ Safe Adaptive IBVS with constrained RL (cPPO) for precision grasping on a UR5e, 
 real. Three layers: L1 safe-RL grasping in sim (must-pass), L2 IBVS visual loop
 (stretch), L3 sim-to-real on the physical UR5e (optional). See project instructions.
 
-## Current status (updated 2026-07-15, Day 8)
-Roadmap week ~1–5 zone. Day-7 PPO baseline was **reward-hacked** (robot threw the cube — the
-2f-85 closed loop can't grip in sim). Fixed with a **proximity-weld grasp** (escape hatch;
-hold-verified). IsaacLab pinned to the **v2.3.0 tag**. **IMMEDIATE NEXT: retrain PPO on the
-weld env → visual play.py check → then start Module 03** (cPPO-vs-PPO safety benchmark).
-See `logbook/02_grasp_env.md` Day-8 correction + `run_log.md` Day 8 for the full story.
+## Current status (updated 2026-07-16, Day 9)
+Roadmap week ~5–9 zone. Module 02 done (PPO retrained on the weld env, play-verified). Module 03
+(**Layer 1**) is coded, smoke-tested, and calibrated: cPPO = PPO-Lagrangian on rsl_rl 3.0.1 with a
+separate cost critic; the active safety constraint is **manipulability/singularity** (`MANIP_FLOOR=0.045`,
+`cost_limit=25`). The full Lagrangian mechanism is verified working on a 50-iter probe.
+**IMMEDIATE NEXT: run the 2 full trainings (cPPO + matched PPO baseline at floor 0.045) → overlay
+→ results table.** Commands + what-to-watch: `logbook/03b_cppo_runbook.md` (Steps 6–7);
+deep state + locked settings: `logbook/03_cppo_benchmark.md`.
 
 ## Modules
 | File | Work-stream | Status |
 |---|---|---|
 | `01_env_setup.md` | Stack install, Isaac validation, reaching tasks | ✅ done |
 | `02_grasp_env.md` | UR5e lift env, weld grasp, PPO baseline | ▶ weld done; PPO retrain pending |
-| `03_cppo_benchmark.md` | Safety constraints + cPPO vs PPO (**Layer 1 deliverable**) | ▶ next |
+| `03_cppo_benchmark.md` | Safety constraints + cPPO vs PPO (**Layer 1 deliverable**) | ▶ coded+calibrated; run 2 full trainings |
 | `04_layer2_ibvs.md` | IBVS visual loop, RL-tuned image Jacobian (Layer 2) | ⏳ later |
 | `05_layer3_sim2real.md` | ROS 2 transfer to physical UR5e + RH-P12-RN (Layer 3) | ⏳ later |
 | `06_writing.md` | Thesis chapters, figures, defense prep | ◻ ongoing |

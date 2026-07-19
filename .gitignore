@@ -8,6 +8,9 @@ outputs/
 *.pth
 *.ckpt
 
+# Terminal capture logs (transient; decisions are summarized in run_log.md)
+logbook/*.log
+
 # Python / caches
 __pycache__/
 *.pyc

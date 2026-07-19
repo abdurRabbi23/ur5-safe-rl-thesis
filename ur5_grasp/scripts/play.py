@@ -53,6 +53,7 @@ parser.add_argument(
     help="Use the pre-trained checkpoint from Nucleus.",
 )
 parser.add_argument("--real-time", action="store_true", default=False, help="Run in real-time, if possible.")
+parser.add_argument("--slow", type=float, default=1.0, help="Slow-motion factor (e.g. 5 = 5x slower than real-time).")
 # append RSL-RL cli arguments
 cli_args.add_rsl_rl_args(parser)
 # append AppLauncher cli args
@@ -77,6 +78,8 @@ import time
 import torch
 
 from rsl_rl.runners import DistillationRunner, OnPolicyRunner
+
+from ur5_grasp.safe_rl.lagrangian_runner import LagrangianRunner  # TOUHID: cPPO runner
 
 from isaaclab.envs import (
     DirectMARLEnv,
@@ -148,6 +151,8 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     print(f"[INFO]: Loading model checkpoint from: {resume_path}")
     if agent_cfg.class_name == "OnPolicyRunner":
         runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=None, device=agent_cfg.device)
+    elif agent_cfg.class_name == "LagrangianRunner":  # TOUHID: cPPO (PPO-Lagrangian)
+        runner = LagrangianRunner(env, agent_cfg.to_dict(), log_dir=None, device=agent_cfg.device)
     elif agent_cfg.class_name == "DistillationRunner":
         runner = DistillationRunner(env, agent_cfg.to_dict(), log_dir=None, device=agent_cfg.device)
     else:
@@ -188,8 +193,10 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
             timestep += 1
             if timestep == args_cli.video_length:
                 break
-        sleep_time = dt - (time.time() - start_time)
-        if args_cli.real_time and sleep_time > 0:
+        # target frame time: real-time (dt) scaled by the slow-motion factor
+        target_dt = dt * max(args_cli.slow, 1.0)
+        sleep_time = target_dt - (time.time() - start_time)
+        if (args_cli.real_time or args_cli.slow > 1.0) and sleep_time > 0:
             time.sleep(sleep_time)
 
     env.close()
