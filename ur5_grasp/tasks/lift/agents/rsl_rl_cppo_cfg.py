@@ -22,8 +22,8 @@ class RslRlCppoActorCriticCfg(RslRlPpoActorCriticCfg):
 class RslRlCppoAlgorithmCfg(RslRlPpoAlgorithmCfg):
     class_name: str = "PPOLagrangian"
     # --- constrained-RL knobs ---
-    cost_limit: float = 25.0            # PLACEHOLDER budget (mean undiscounted episodic cost).
-                                        # Set from the PPO baseline's mean episode cost (aim well below it).
+    cost_limit: float = 25.0            # CALIBRATED Day 9 (undiscounted episodic-cost budget).
+                                        # 50-iter probe: ~65% cost cut vs natural ~70+, ~17% reward dip, lambda controlled.
     lambda_lr: float = 0.035            # dual-ascent step for the Lagrange multiplier
     lambda_init: float = 0.0
     lambda_max: float = 100.0
