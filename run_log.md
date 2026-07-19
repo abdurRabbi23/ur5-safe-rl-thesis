@@ -119,3 +119,10 @@ Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 graspin
   cost_limit comment un-placeholdered; runbook intro marks Steps 1-5 done, only 6-7 remain.
 - Built results-table scaffold: results/03_cppo_vs_ppo_results.docx (TNR 14, centered caption,
   PPO vs cPPO, empty cells to fill after the two full runs).
+- Started `Thesis_Documentation/` — the beginner-facing replicate-from-scratch guide (Module 07),
+  written parallel to the thesis. 10 pages built from logbook + run_log + ur5_grasp source:
+  01 env-setup and 02 grasp-env fully written (done work); 03 cppo-benchmark documented to the
+  calibrated state with Steps 6-7 marked PENDING; 04/05 planned outlines; 06 results,
+  07 troubleshooting (all bugs+fixes), 08 glossary, 09 changelog. All referenced paths verified.
+  Convention going forward: fold each session's work into the matching Thesis_Documentation page
+  + append to its 09_Changelog.md.

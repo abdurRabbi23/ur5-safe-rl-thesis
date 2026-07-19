@@ -40,8 +40,11 @@ deep state + locked settings: `logbook/03_cppo_benchmark.md`.
 | `04_layer2_ibvs.md` | IBVS visual loop, RL-tuned image Jacobian (Layer 2) | ⏳ later |
 | `05_layer3_sim2real.md` | ROS 2 transfer to physical UR5e + RH-P12-RN (Layer 3) | ⏳ later |
 | `06_writing.md` | Thesis chapters, figures, defense prep | ◻ ongoing |
+| `07_documentation.md` | Beginner replicate-from-scratch guide (`Thesis_Documentation/`) | ▶ ongoing, parallel |
 
 ## Key pointers
+- Beginner docs: `Thesis_Documentation/` (start at `00_START_HERE.md`) — the cleaned-up,
+  replicate-from-scratch version of these notes; kept in sync via `logbook/07_documentation.md`.
 - Code package: `ur5_grasp/` (git-tracked; separate from the `IsaacLab/` clone).
 - Deep technical state (asset paths, joint names, gripper decisions): `ur5_grasp/CONTEXT.md`.
 - Trained PPO checkpoint: `IsaacLab/logs/rsl_rl/ur5e_lift/2026-07-12_18-54-03/model_1499.pt`.
