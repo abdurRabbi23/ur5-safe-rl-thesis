@@ -12,6 +12,8 @@ gym.register(
     kwargs={
         "env_cfg_entry_point": f"{__name__}.ur5e_lift_env_cfg:UR5eCubeLiftEnvCfg",
         "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:UR5eLiftPPORunnerCfg",
+        # cPPO (PPO-Lagrangian) agent — same env, select with `--agent rsl_rl_cppo_cfg_entry_point`
+        "rsl_rl_cppo_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCPPORunnerCfg",
     },
     disable_env_checker=True,
 )
@@ -22,6 +24,7 @@ gym.register(
     kwargs={
         "env_cfg_entry_point": f"{__name__}.ur5e_lift_env_cfg:UR5eCubeLiftEnvCfg_PLAY",
         "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:UR5eLiftPPORunnerCfg",
+        "rsl_rl_cppo_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCPPORunnerCfg",
     },
     disable_env_checker=True,
 )

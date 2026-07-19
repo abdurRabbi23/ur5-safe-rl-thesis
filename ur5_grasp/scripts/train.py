@@ -100,6 +100,8 @@ from datetime import datetime
 import omni
 from rsl_rl.runners import DistillationRunner, OnPolicyRunner
 
+from ur5_grasp.safe_rl.lagrangian_runner import LagrangianRunner  # TOUHID: cPPO runner
+
 from isaaclab.envs import (
     DirectMARLEnv,
     DirectMARLEnvCfg,
@@ -201,6 +203,8 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     # create runner from rsl-rl
     if agent_cfg.class_name == "OnPolicyRunner":
         runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)
+    elif agent_cfg.class_name == "LagrangianRunner":  # TOUHID: cPPO (PPO-Lagrangian)
+        runner = LagrangianRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)
     elif agent_cfg.class_name == "DistillationRunner":
         runner = DistillationRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)
     else:

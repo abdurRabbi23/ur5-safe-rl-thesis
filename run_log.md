@@ -31,7 +31,8 @@
 | 16384            | 74.1s     | 1.35 | ~22.1k                | 7554 MiB  |
 
 Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 grasping env is heavier per-env — re-time before setting real training budgets.
-Day 6: Spinning Up Parts 1-2 + PPO page read. Notes committed. Khan §3-4 deferred to pre-cPPO week.
+
+##Day 6: Spinning Up Parts 1-2 + PPO page read. Notes committed. Khan §3-4 deferred to pre-cPPO week.
 
 ## Day 7 — Cowork on lab PC + start UR5e grasp env (Layer 1)
 - Claude desktop (Cowork) now runs on the lab PC with full read/write access to this repo.
@@ -60,3 +61,52 @@ Day 6: Spinning Up Parts 1-2 + PPO page read. Notes committed. Khan §3-4 deferr
 - DECISION (pre-agreed tripwire): took the **escape hatch**. New env class `tasks/lift/ur5e_lift_env.py:UR5eCubeLiftEnv` — a proximity weld: when gripper commands CLOSE and cube is within GRASP_TOL=0.06 m of the reach frame, the cube latches to the gripper (pose tracks reach frame, velocity zeroed); releases on open. Registered for both `-v0` and `-Play-v0`. Bonus: welding makes throwing impossible, so the height reward is no longer hackable.
 - HOLD TEST re-run with weld → GRIP HOLDS ✅ (cube stays at pad level 210 steps, no NaN). Grasp is now reliable in the RL sense.
 - NEXT: retrain PPO baseline on the weld env (old checkpoint is reward-hacked, dead) → visual `play.py` check (expect real reach→close-near→lift-to-goal) → then Module 03 (safety constraints + cPPO vs PPO).
+
+## Day 9 — cPPO (PPO-Lagrangian) implemented on rsl_rl 3.0.1 (Module 03 start)
+- Decided the constrained-RL library: **rsl_rl-Lagrangian** (not OmniSafe/skrl) — baseline is
+  rsl_rl 3.0.1, so cPPO on the same trainer/hyperparams keeps the comparison clean. Variant:
+  **separate cost critic** (textbook PPO-Lagrangian), not the single-critic penalty shortcut.
+- Pulled rsl_rl 3.0.1 source (ppo/storage/runner/actor_critic/utils) and built against the real
+  API: obs is a TensorDict with obs-groups; cost rides the `extras` channel of process_env_step.
+- New package `ur5_grasp/safe_rl/`: costs.py (collision/joint-limit/manipulability), actor_critic_cost.py
+  (2nd cost critic), rollout_storage_cost.py (cost-GAE), ppo_lagrangian.py (combined advantage
+  (A_r−λA_c)/(1+λ) + dual-ascent λ), lagrangian_runner.py.
+- Env now emits per-step `extras["cost"]` (both agents) + logs safety/* diagnostics. cPPO cfg
+  `UR5eLiftCPPORunnerCfg` (experiment ur5e_lift_cppo); registered `rsl_rl_cppo_cfg_entry_point`;
+  train.py/play.py gained a LagrangianRunner branch. PPO baseline path untouched.
+- All 12 touched files pass py_compile. NOT yet run on hardware (sandbox has no GPU/Isaac).
+- Placeholders to calibrate on the lab PC: MANIP_FLOOR (via new calibrate_manipulability.py),
+  COLLISION_Z_FLOOR (table height), cost_limit (from PPO baseline mean episodic cost).
+- NEXT: finish Module 02 (retrain PPO on weld env + play-verify) → cPPO smoke test (5 iters) →
+  calibrate floors → full cPPO run → overlay cPPO-vs-PPO in TB.
+- Re-ran zero_agent.py (Day 9): probe again reports "offset=0" but "true grasp point" == wrist_3
+  position exactly -> the SAME finger-origin-at-flange artifact from Day 8. ee_frame z=0.180 sits
+  0.16 m below the flange (=fingertip level). CONFIRMED: keep offset=0.16, do NOT zero it. Gripper
+  visual mesh roll is cosmetic -> deferred to Layer 3 (real-hardware mounting). Weld is unaffected.
+- cPPO SMOKE TEST PASSED (Day 9, 64 envs x 5 iters, logbook/smoke_cppo.log): Cost Critic MLP built,
+  ran clean no traceback, cost_value_function loss decreasing (critic learning), cost_lambda/
+  mean_episode_cost/safety/* all logged, reward finite. Logs -> logs/rsl_rl/ur5e_lift_cppo/.
+  KEY: safety/manipulability_mean=0.11 min=0.091 -> Jacobian extraction in costs.py is CORRECT
+  (biggest untested risk cleared). Also confirmed PPO baseline retrain done (model_1499, 11:13 run).
+- OBSERVATION: all cost terms read 0 at the placeholder thresholds -> constraints currently inert.
+  For a meaningful benchmark the thresholds must make UNCONSTRAINED PPO violate. Extended
+  calibrate_manipulability.py to report w + joint-limit clearance + min link-height distributions
+  and baseline violation rates, so thresholds can be set to bite (~few-30% violation).
+- Calibrated safety thresholds from trained baseline (logbook/calib.log, 25.6k samples):
+  * Manipulability w: min .021 / mean .055 / max .114. Set MANIP_FLOOR=0.045 (~p10-p25 => ~20%
+    baseline violation). THIS is the active constraint (near-singular Jacobian; ties to IBVS theme).
+  * Joint-limit clearance: min 1.39 rad -> arm never nears limits in tabletop grasp. INACTIVE by
+    construction. Keep margin 0.10 as monitored-but-satisfied.
+  * Min link height: min 0.125 m above table -> arm links never near table. INACTIVE. Keep floor 0.0
+    as monitored-but-satisfied.
+  THESIS FRAMING: lead with manipulability/singularity as the active constraint; report joint-limit
+  & collision as monitored constraints that stayed satisfied (honest, still a valid cPPO result).
+  * cost_limit still to set from a 50-iter unconstrained episodic-cost probe.
+- cost_limit probe (50 iters, 4096 envs, logbook/cost_probe.log): CLEAN, no NaN, ~200k steps/s
+  (keep num_envs=4096). Lagrangian mechanism fully working: cost_singularity 0.1->0.4 (constraint
+  bites at floor 0.045); mean_episode_cost climbs 6.7->74 as policy learns to grasp near singular
+  poses; cost_lambda self-engages 0->6.85 (controlled, not railed); reward 58->48 = safety-vs-reward
+  tradeoff visible. DECISION: keep cost_limit=25 (~65% cut vs natural ~70+ cost; ~17% reward dip).
+- BENCHMARK NOTE: PPO baseline model_1499 was trained at old MANIP_FLOOR=0.02 (cost curve ~0, not
+  comparable). Re-run unconstrained PPO at floor 0.045 so PPO vs cPPO use the same cost definition.
+- NEXT: full cPPO run (ur5e_lift_cppo) + full PPO baseline at floor 0.045 (ur5e_lift), then overlay.
