@@ -2,18 +2,24 @@
 
 Step-by-step to take the freshly-coded cPPO from "compiles" to "benchmarked".
 Run everything on the **lab PC** (RTX 5090), from `~/Abdur_Rabbi_THESIS/IsaacLab`, inside tmux.
-Nothing here has touched a GPU yet — treat every step as "verify, don't assume".
+Status (Day 9): Steps 1–5 DONE (baseline retrained + play-verified, cPPO smoke-tested, thresholds
+calibrated, cost budget probe-validated). **Only Steps 6–7 remain — the two full runs + overlay.**
 
 ---
 
 ## Step 0 — Session hygiene (every machine day)
+**ALWAYS run training inside the tmux session `thesis_abrabbi`.** Start tmux FIRST, then launch
+everything inside it — a run only survives a dropped NoMachine connection if `train.py` is a child
+of the tmux shell.
 ```
+tmux new -s thesis_abrabbi        # or, if it exists: tmux attach -t thesis_abrabbi
+# --- everything below runs INSIDE that session ---
 conda activate isaaclab
 sudo cpupower frequency-set -g performance
-tmux new -s thesis        # or: tmux attach -t thesis
 cd ~/Abdur_Rabbi_THESIS/IsaacLab
 ```
 Watch: fresh NoMachine terminals start in `(base)` — confirm the prompt shows `(isaaclab)`.
+Detach without stopping the run: **Ctrl-b** then **d**. Reconnect: `tmux attach -t thesis_abrabbi`.
 
 ---
 

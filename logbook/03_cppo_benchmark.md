@@ -48,27 +48,31 @@ showing cPPO respects safety limits while still learning to grasp.
   `LagrangianRunner` branch. Baseline path byte-for-byte unchanged.
 - All 12 files pass `py_compile` (sandbox can't import torch/isaaclab — needs a lab-PC smoke test).
 
-## Constraint thresholds — status
-- `JOINT_LIMIT_MARGIN=0.10 rad` — defensible default, no scene knowledge needed. ✅
-- `COLLISION_Z_FLOOR=0.0` — assumes table top at z=0; **VERIFY** vs the actual table prim /
-  env-origin height on the lab PC.
-- `MANIP_FLOOR=0.02` — **PLACEHOLDER**, must calibrate via `scripts/calibrate_manipulability.py`.
-- `cost_limit=25.0` (episodic-cost budget) — **PLACEHOLDER**; set from the PPO baseline's mean
-  episode cost (aim well below it).
+## Constraint thresholds — status (all CALIBRATED Day 9; see run_log + logbook/calib.log)
+- `JOINT_LIMIT_MARGIN=0.10 rad` — monitored-but-satisfied: baseline min clearance 1.39 rad, arm
+  never nears limits in tabletop grasp → INACTIVE by construction. ✅
+- `COLLISION_Z_FLOOR=0.0` — VERIFIED: baseline min link height 0.125 m above table → arm links
+  never near the table → INACTIVE by construction. Kept as monitored-but-satisfied. ✅
+- `MANIP_FLOOR=0.045` — CALIBRATED (baseline w: min .021 / mean .055 / max .114; p10–p25 → ~20%
+  baseline violation). This is the ONE active constraint (near-singular Jacobian). ✅
+- `cost_limit=25.0` (undiscounted episodic-cost budget) — VALIDATED by the 50-iter probe
+  (λ→6.85 controlled, ~17% reward dip, ~65% cost cut vs natural ~70+). ✅
 
 ## Next steps (order matters)
-0. (Module 02) Retrain PPO on the weld env; visual-verify with play.py. cPPO reuses that env.
-1. Lab-PC smoke test the cPPO wiring: `train ... --agent rsl_rl_cppo_cfg_entry_point
-   --num_envs 64 --max_iterations 5` — confirm it builds cost critic, runs, logs `Loss/cost_lambda`.
-2. Verify `COLLISION_Z_FLOOR` (table height) and run `calibrate_manipulability.py` → set `MANIP_FLOOR`.
-3. Short PPO reference run to read mean episodic cost → set `cost_limit`.
-4. Full cPPO run (1500 iters, re-timed num_envs); overlay cPPO vs PPO in TB (`--logdir logs/rsl_rl`).
-5. Collect success rate + per-term violation rate/cost; write up.
+0. ✅ (Module 02) PPO retrained on the weld env; play-verified. cPPO reuses that env.
+1. ✅ Lab-PC smoke test — cost critic built, runs, logs `Loss/cost_lambda` (logbook/smoke_cppo.log).
+2. ✅ `COLLISION_Z_FLOOR` verified + `calibrate_manipulability.py` run → `MANIP_FLOOR=0.045`.
+3. ✅ 50-iter probe read episodic cost → `cost_limit=25`.
+4. ▶ **IMMEDIATE NEXT — full cPPO run + matched full PPO baseline at floor 0.045 (1500 iters,
+   num_envs=4096); overlay in TB (`--logdir logs/rsl_rl`).** Commands: `03b_cppo_runbook.md` Steps 6–7.
+5. ◻ Collect success rate + per-term violation rate/cost; fill results table; write up.
 
-## Open questions
-- Jacobian body-axis indexing on this fixed-base UR5e — `costs.py` auto-detects (root
-  included/omitted); the calibration script's w distribution is the sanity check (garbage w = wrong index).
-- Does `cost_limit` want undiscounted episodic cost (current) or a per-step rate? Revisit after step 3.
+## Open questions — RESOLVED
+- Jacobian body-axis indexing on this fixed-base UR5e → **RESOLVED**: probe gave
+  `manipulability_mean=0.11` (smooth small-positive w), so `costs.py` auto-detect picked the
+  right index. Biggest untested risk cleared.
+- `cost_limit` — undiscounted episodic cost vs per-step rate → **RESOLVED**: kept undiscounted
+  episodic; probe-validated at 25.
 
 ## run_log.md refs
 Day 9.

@@ -110,3 +110,12 @@ Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 graspin
 - BENCHMARK NOTE: PPO baseline model_1499 was trained at old MANIP_FLOOR=0.02 (cost curve ~0, not
   comparable). Re-run unconstrained PPO at floor 0.045 so PPO vs cPPO use the same cost definition.
 - NEXT: full cPPO run (ur5e_lift_cppo) + full PPO baseline at floor 0.045 (ur5e_lift), then overlay.
+
+## 2026-07-19 (Day 9 cont.)
+- Runbook Step 0: mandated tmux session `thesis_abrabbi` for all training (start tmux first,
+  then activate/run inside it; detach Ctrl-b d).
+- Doc-debt reconcile: 03_cppo_benchmark.md thresholds/next-steps/open-Qs updated to calibrated
+  state (MANIP_FLOOR=0.045, cost_limit=25 validated, Jacobian index resolved); rsl_rl_cppo_cfg.py
+  cost_limit comment un-placeholdered; runbook intro marks Steps 1-5 done, only 6-7 remain.
+- Built results-table scaffold: results/03_cppo_vs_ppo_results.docx (TNR 14, centered caption,
+  PPO vs cPPO, empty cells to fill after the two full runs).
