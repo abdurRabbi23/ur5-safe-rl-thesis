@@ -1,15 +1,18 @@
 # 03 — Safety Constraints & the cPPO vs PPO Benchmark
 
-**Status:** ▶ IN PROGRESS · **Layer:** 1 (the must-pass deliverable) · **Roadmap:** Weeks 9–10
+**Status:** ✅ COMPLETE (2026-07-19) · **Layer:** 1 (the must-pass deliverable — **PASS**) · **Roadmap:** Weeks 9–10
 
 **Goal of this section:** add **safety constraints** to the grasp task and train **cPPO** (a *safe*
 RL algorithm) so the arm learns to grasp *while keeping unsafe behaviour under a fixed budget*. The
 headline result is a fair **cPPO vs plain-PPO** comparison on the identical environment. This is the
 single most important result in the thesis.
 
-**Where we are right now (as of 2026-07-19, Day 9):** everything is *coded, smoke-tested, and
-calibrated*. The two final full training runs and the results overlay are the only remaining steps.
-They are marked `PENDING` below and will be filled in with real numbers when they finish.
+**Where we are right now (as of 2026-07-19, Day 9–10):** DONE. Both full 1500-iter runs (cPPO +
+matched PPO baseline, num_envs=4096) are complete and the benchmark is written up. **Headline: cPPO
+matches PPO on the task (both 100% lift; final reward 166.3 vs 167.2) while cutting time spent near
+singularities by ~60% (viol 6.65% vs 16.86%) — safety at no measurable task cost.** Results table:
+`results/03_cppo_vs_ppo_results.docx`; the four figures are in `assets/` (see §6 / the Results page).
+The Steps 6–7 sections below are kept as the reproducible procedure, now annotated with real numbers.
 
 ---
 
@@ -179,7 +182,7 @@ only remaining work.**
 finish in 5×24 steps, so λ hasn't moved yet. Plumbing is what's under test, not learning.
 ✅ This smoke test **passed** (Day 9, `logbook/smoke_cppo.log`).
 
-**Step 6 — Full cPPO run** `PENDING`:
+**Step 6 — Full cPPO run** ✅ DONE (2026-07-19; 1500 iters, num_envs=4096):
 
 ```bash
 ./isaaclab.sh -p ../ur5_grasp/scripts/train.py \
@@ -200,14 +203,18 @@ Watch the **Lagrangian dynamics** — this *is* the story of the thesis:
 `cost_limit` or drop `lambda_lr`. Reward collapses to 0 while cost → 0 (over-constrained) → same
 fix.
 
-**Step 6b — Matched PPO baseline at floor 0.045** `PENDING` (so both use the same cost definition):
+*Observed (healthy):* `mean_episode_cost` peaked ≈ 80.2 → driven to 2.24 (well under the budget of
+25); `cost_lambda` rose to a 16.7 peak (never near the 100 cap) → relaxed to 0; `viol_singularity`
+fell from a 51.7% peak to 6.65%; final reward 166.3. No railing, no collapse.
+
+**Step 6b — Matched PPO baseline at floor 0.045** ✅ DONE (so both use the same cost definition):
 
 ```bash
 ./isaaclab.sh -p ../ur5_grasp/scripts/train.py \
     --task Isaac-Lift-Cube-UR5e-v0 --headless --num_envs 4096
 ```
 
-**Step 7 — The benchmark deliverable** `PENDING`:
+**Step 7 — The benchmark deliverable** ✅ DONE:
 
 ```bash
 tensorboard --logdir logs/rsl_rl --port 6006 --bind_all
@@ -216,10 +223,11 @@ tensorboard --logdir logs/rsl_rl --port 6006 --bind_all
 `logs/rsl_rl/ur5e_lift` (PPO) and `logs/rsl_rl/ur5e_lift_cppo` (cPPO) overlay automatically. Report,
 per run: **success rate**, **sample efficiency** (reward vs steps), and **constraint-violation
 rate / cost** (`safety/viol_*`). Fill the numbers into `results/03_cppo_vs_ppo_results.docx` and
-`06_Results_and_Experiments.md`.
+`06_Results_and_Experiments.md`. Success measured by `eval_success.py` over 512 episodes.
 
-**The headline (hypothesis to confirm):** *cPPO keeps constraint violations under budget while still
-grasping; PPO grasps but violates freely.*
+**The headline (CONFIRMED):** cPPO keeps constraint violations under budget while grasping just as
+well as PPO — both lift on 100% of episodes at essentially identical reward (166.3 vs 167.2), while
+cPPO spends ~60% less time near singularities (6.65% vs 16.86%). PPO grasps but violates freely.
 
 ---
 
@@ -229,8 +237,8 @@ grasping; PPO grasps but violates freely.*
 - [x] cPPO (separate cost critic) implemented on rsl_rl 3.0.1.
 - [x] Thresholds calibrated so the constraint bites (~20% baseline violation).
 - [x] `cost_limit = 25` validated by a 50-iter probe.
-- [ ] Full cPPO run complete (Step 6). `PENDING`
-- [ ] Matched PPO baseline at floor 0.045 complete (Step 6b). `PENDING`
-- [ ] Overlay + results table filled (Step 7). `PENDING`
+- [x] Full cPPO run complete (Step 6).
+- [x] Matched PPO baseline at floor 0.045 complete (Step 6b).
+- [x] Overlay + results table filled (Step 7); four figures generated to `assets/`.
 
-When Steps 6–7 finish, this page gets the real curves and the final table, and Layer 1 is complete.
+✅ Steps 6–7 finished (2026-07-19), real numbers and the final table are in — **Layer 1 is complete.**

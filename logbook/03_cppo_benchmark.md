@@ -1,14 +1,33 @@
 # Module 03 — Safety Constraints + cPPO vs PPO (Layer 1 deliverable)
 
-Status: ▶ cPPO IMPLEMENTED + smoke/probe PASSED + thresholds calibrated; **pending the 2 full runs**
+Status: ✅ COMPLETE — both full runs done, success evaluated, results table built. **Layer 1 PASS.**
 Chat type: safe-RL / benchmarking
-Last updated: 2026-07-16 (Day 9)
+Last updated: 2026-07-19 (Day 9)
 
 ## ⚡ Pick-up-here (for a new session)
-Everything is coded, smoke-tested, and calibrated. Two things remain: run the full cPPO and a
-matched full PPO baseline, then overlay. Exact commands + what-to-watch: `logbook/03b_cppo_runbook.md`
-Steps 6–7. Verified working: Jacobian/manipulability correct, Lagrangian mechanism engages
-(cost↑ as it grasps, λ self-rises, reward trades off). Locked settings below — do NOT re-tune.
+DONE. cPPO vs PPO benchmark complete; result table at `results/03_cppo_vs_ppo_results.docx`.
+Headline: cPPO matches PPO on task performance (both ~100% success, reward 166.3 vs 167.2) while
+cutting singularity violations ~60% (6.65% vs 16.86%) — safety at no task cost. Numbers in the
+Results section below. Next module: Layer 2 (IBVS) or thesis writing. Locked settings unchanged.
+
+## Results (final, 2026-07-19)
+Two 1500-iter runs, num_envs=4096; success over 512 eval episodes (64 envs, lift > 0.1 m above
+table, goal-reach within 1 cm). TB CSVs archived from the runs.
+
+| Metric | PPO (unconstrained) | cPPO (constrained) |
+|---|---|---|
+| Lift success (%) | 100.0 | 100.0 |
+| Goal-reach success (%) | 100.0 | 99.6 |
+| Final mean reward | 167.2 | 166.3 |
+| Singularity violation rate (%) | 16.86 | 6.65 |
+| Mean safety cost, per step (safety/cost_total) | 0.0201 | 0.0149 |
+| Cost λ, final | N/A (no constraint) | 0.0 |
+
+Lagrangian dynamics (cPPO): mean_episode_cost peaked ≈80.2 → driven to 2.24 (under cost_limit=25);
+cost_lambda rose to 16.7 peak (cap 100, never railed) → relaxed to 0; viol_singularity fell from a
+51.7% peak to 6.65%. Joint-limit & collision constraints stayed satisfied (inactive by construction).
+Eval tool: `ur5_grasp/scripts/eval_success.py` (new). Runs (logs/rsl_rl): `ur5e_lift` (PPO),
+`ur5e_lift_cppo` (cPPO, 2026-07-19_12-05-49).
 
 ### Locked settings (calibrated Day 9, don't re-litigate)
 - `MANIP_FLOOR = 0.045` — the ONE active constraint (baseline w: min .021/mean .055; ~20% violation).
@@ -63,9 +82,10 @@ showing cPPO respects safety limits while still learning to grasp.
 1. ✅ Lab-PC smoke test — cost critic built, runs, logs `Loss/cost_lambda` (logbook/smoke_cppo.log).
 2. ✅ `COLLISION_Z_FLOOR` verified + `calibrate_manipulability.py` run → `MANIP_FLOOR=0.045`.
 3. ✅ 50-iter probe read episodic cost → `cost_limit=25`.
-4. ▶ **IMMEDIATE NEXT — full cPPO run + matched full PPO baseline at floor 0.045 (1500 iters,
-   num_envs=4096); overlay in TB (`--logdir logs/rsl_rl`).** Commands: `03b_cppo_runbook.md` Steps 6–7.
-5. ◻ Collect success rate + per-term violation rate/cost; fill results table; write up.
+4. ✅ Full cPPO run + matched full PPO baseline at floor 0.045 (1500 iters, num_envs=4096); overlaid
+   in TB (`--logdir logs/rsl_rl`). Data archived to `results/tb_csv/`.
+5. ✅ Success rate (eval_success.py, 512 episodes) + per-term violation rate/cost collected; results
+   table `results/03_cppo_vs_ppo_results.docx` filled; write-up + four figures done (2026-07-20).
 
 ## Open questions — RESOLVED
 - Jacobian body-axis indexing on this fixed-base UR5e → **RESOLVED**: probe gave

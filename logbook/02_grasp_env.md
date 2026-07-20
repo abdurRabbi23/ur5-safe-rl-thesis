@@ -1,8 +1,9 @@
 # Module 02 — UR5e Grasp Env + PPO Baseline
 
-Status: ▶ grasp reliable via proximity weld (hold-verified); PPO baseline RETRAIN pending
+Status: ✅ done — grasp reliable via proximity weld (hold-verified); PPO baseline retrained on the
+weld env and play-verified (reused as the cPPO env and the Module 03 unconstrained baseline).
 Chat type: sim env / RL engineering
-Last updated: 2026-07-15 (Day 8)
+Last updated: 2026-07-20 (Day 10)
 
 ## ⚠️ Day-8 correction (read first)
 - The Day-7 checkpoint (`...18-54-03/model_1499.pt`) is **DEAD** — visual verify showed the
@@ -17,7 +18,8 @@ Last updated: 2026-07-15 (Day 8)
   "offset=0" probe hint was an artifact of finger body origins sitting at the flange).
 - IsaacLab pinned to the **v2.3.0 TAG** (`frozen/2.3.0`), not the branch (branch drifted to
   v2.3.1 and broke the URDF-importer version pin).
-- IMMEDIATE NEXT: retrain PPO on the weld env → visual `play.py` check → then Module 03.
+- DONE (Day 9): PPO retrained on the weld env → visual `play.py` check passed → Module 03 benchmark
+  run. This weld env + baseline is the one used for the Layer 1 cPPO-vs-PPO comparison.
 
 ## Goal
 A UR5e + Robotiq 2f-85 cube-lift env (privileged object pose) that trains a PPO grasping
