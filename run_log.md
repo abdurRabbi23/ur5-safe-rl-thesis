@@ -32,7 +32,7 @@
 
 Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 grasping env is heavier per-env — re-time before setting real training budgets.
 
-##Day 6: Spinning Up Parts 1-2 + PPO page read. Notes committed. Khan §3-4 deferred to pre-cPPO week.
+## Day 6: Spinning Up Parts 1-2 + PPO page read. Notes committed. Khan §3-4 deferred to pre-cPPO week.
 
 ## Day 7 — Cowork on lab PC + start UR5e grasp env (Layer 1)
 - Claude desktop (Cowork) now runs on the lab PC with full read/write access to this repo.
