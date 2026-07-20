@@ -2,8 +2,10 @@
 
 Step-by-step to take the freshly-coded cPPO from "compiles" to "benchmarked".
 Run everything on the **lab PC** (RTX 5090), from `~/Abdur_Rabbi_THESIS/IsaacLab`, inside tmux.
-Status (Day 9): Steps 1–5 DONE (baseline retrained + play-verified, cPPO smoke-tested, thresholds
-calibrated, cost budget probe-validated). **Only Steps 6–7 remain — the two full runs + overlay.**
+Status (Day 10): ✅ ALL STEPS DONE (1–7). Baseline retrained + play-verified, cPPO smoke-tested,
+thresholds calibrated, cost budget probe-validated, and the two full 1500-iter runs + overlay
+completed (2026-07-19). Benchmark result: `results/03_cppo_vs_ppo_results.docx`; figures in
+`Thesis_Documentation/assets/`. Runbook kept below as the reproducible procedure. **Layer 1 PASS.**
 
 ---
 

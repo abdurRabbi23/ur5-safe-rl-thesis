@@ -126,3 +126,39 @@ Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 graspin
   07 troubleshooting (all bugs+fixes), 08 glossary, 09 changelog. All referenced paths verified.
   Convention going forward: fold each session's work into the matching Thesis_Documentation page
   + append to its 09_Changelog.md.
+
+## 2026-07-19 (Day 9 cont.) — Module 03 COMPLETE (Layer 1 PASS)
+- Ran both full 1500-iter trainings, num_envs=4096: cPPO (ur5e_lift_cppo) + matched PPO baseline
+  (ur5e_lift) at MANIP_FLOOR=0.045. NOTE: my tee path `logbook/03_cppo_full.log` was wrong (cwd is
+  IsaacLab, logbook is ../logbook) so nothing saved — rsl_rl TB event files hold the real data. Use
+  absolute path next time.
+- Results pulled from TB CSVs. cPPO: reward 166.3, viol_singularity 6.65% (peak 51.7%),
+  cost_total 0.0149, mean_episode_cost 2.24 (peak 80.2, budget 25), cost_lambda peak 16.7 -> 0.
+  PPO: reward 167.2, viol_singularity 16.86% (peak 74.8%), cost_total 0.0201 (no lambda/episode_cost
+  logged — Lagrangian-only metrics, expected).
+- Wrote eval_success.py (new): replays a checkpoint, scores lift + goal-reach over N episodes using
+  the env's own object_is_lifted / object_goal_distance math. Over 512 episodes (lift>0.1 m,
+  goal<1 cm): cPPO 100% lift / 99.6% goal; PPO 100% / 100%. Task success is a tie.
+- HEADLINE: cPPO = same grasping success + reward as PPO, ~60% fewer singularity violations. Safety
+  at no task cost. Layer 1 must-pass = DONE.
+- Deliverable: results/03_cppo_vs_ppo_results.docx (TNR 14, centered caption). Module 03 updated.
+- TODO: commit on lab PC (eval_success.py + logs); optional fill of joint-limit/collision monitored
+  rows (both ~0) from TB.
+
+## 2026-07-20 (Day 10) — Layer 1 figures + tracking sync
+- Archived both runs' TB scalars to `results/tb_csv/` (cppo/ + ppo/, 9 CSVs + README).
+- Generated the four Layer 1 figures from those CSVs (script `results/scripts/make_layer1_figs.py`,
+  reproducible): reward overlay, cost-vs-budget (cost_limit=25 line), cost_lambda dynamics,
+  singularity-violation bars (MANIP_FLOOR=0.045 annotated). Saved PNG (300 dpi) + vector PDF to
+  `Thesis_Documentation/assets/`. Times-New-Roman style (Liberation Serif substitute in sandbox;
+  real TNR picks up automatically when compiled on a machine that has it), centered captions,
+  two-colour palette. Verified each figure visually; numbers match the CSVs and the results doc.
+- Filled the four PENDING figure links in `06_Results_and_Experiments.md` to embed the assets.
+- Swept every lagging tracking file to reflect Layer 1 = DONE (data pulled from run_log Day-9 entry +
+  the TB CSVs; cross-checked against the <10> benchmark session — no new/changed numbers):
+  `logbook/00_INDEX.md` (status line + module table 02/03), `logbook/02_grasp_env.md` (PPO retrain
+  done), `logbook/03_cppo_benchmark.md` (next-steps 4–5 → done), `logbook/03b_cppo_runbook.md`
+  (all steps done), `logbook/07_documentation.md`, and `Thesis_Documentation/` pages 00/03/06/09.
+- Still open: commit on the lab PC. NOTE: `.project-cache/.../memory.md` is read-only in this
+  session — it still describes "Day 8 next / run 2 full trainings" and should be refreshed from the
+  claude.ai project side so future chats start with Layer 1 marked complete.

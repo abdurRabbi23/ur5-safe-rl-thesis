@@ -9,6 +9,23 @@ append a dated line below.
 
 ---
 
+## 2026-07-20 — Layer 1 complete: benchmark numbers + figures synced
+
+- `03_Safety_and_cPPO_Benchmark.md` — status ▶ In progress → **✅ Complete (Layer 1 PASS)**. Runbook
+  Steps 6–7 marked done; filled real Lagrangian dynamics (mean_episode_cost peak 80.2 → 2.24;
+  cost_lambda peak 16.7 → 0; viol_singularity peak 51.7% → 6.65%); headline confirmed (cPPO vs PPO:
+  100%/100% lift, reward 166.3 vs 167.2, viol 6.65% vs 16.86%); checklist all checked.
+- `06_Results_and_Experiments.md` — four figure links filled (were PENDING) to embed the generated
+  plots in `assets/`: reward overlay, cost-vs-budget, λ dynamics, violation bars.
+- `00_START_HERE.md` — section table: 03 and 06 moved to ✅.
+- New assets: `assets/fig_*.png` + `.pdf` (300 dpi + vector); plotting script
+  `results/scripts/make_layer1_figs.py`; archived TB data `results/tb_csv/`.
+- Cross-synced the same status into `logbook/00_INDEX.md`, `logbook/02_grasp_env.md`,
+  `logbook/03_cppo_benchmark.md`, `logbook/03b_cppo_runbook.md`, `logbook/07_documentation.md`,
+  and `run_log.md`.
+
+---
+
 ## 2026-07-19 — Documentation created
 
 - Set up `Thesis_Documentation/` folder inside the thesis working folder.
