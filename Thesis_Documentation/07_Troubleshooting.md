@@ -84,6 +84,17 @@ or lower `lambda_lr`.
 Cause: baseline trained at an old `MANIP_FLOOR` (e.g. 0.02) where its cost is ~0. Fix: re-run the
 unconstrained PPO baseline at the **same floor (0.045)** used by cPPO.
 
+**No success scalar in TensorBoard — can't report a grasp success rate.**
+Cause: training logs reward and cost, not task success. Fix: after training, replay the checkpoint
+with `ur5_grasp/scripts/eval_success.py` (see section 06) — it scores lift and goal-reach over many
+episodes using the env's own math. This is expected, not a bug.
+
+**Piped training log (`... | tee logbook/03_cppo_full.log`) saved an empty / missing file.**
+Cause: training is launched from inside `IsaacLab/`, so a **relative** log path like
+`logbook/03_cppo_full.log` resolves to `IsaacLab/logbook/...`, not the repo's `logbook/`. Fix: use an
+**absolute path** for `tee` (e.g. `~/Abdur_Rabbi_THESIS/logbook/run.log`). The real training data is
+still safe either way — it lives in the rsl_rl TensorBoard event files under `logs/rsl_rl/`.
+
 ---
 
 ## Workflow / infrastructure
