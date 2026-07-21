@@ -71,3 +71,10 @@ append a dated line below.
 - <what changed in the docs and why> (page: NN_*.md)
 - <new result / command / fix documented>
 ```
+
+## 2026-07-19 — Methods chapter drafted
+- Added `Methods_Chapter_Layer1.md`: formal thesis-book prose for the Layer 1 method (CMDP
+  formulation, UR5e env + proximity-weld grasp, MDP/reward, 3-term safety cost with math, cPPO
+  PPO-Lagrangian with combined-advantage + dual-ascent, calibration, hyperparameter Table M1,
+  training + eval protocol). Numbers verified against ur5_grasp/ source. Complements the informal
+  02/03 working-doc pages; this is the version to lift into the thesis book.
