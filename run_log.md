@@ -162,3 +162,8 @@ Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 graspin
 - Still open: commit on the lab PC. NOTE: `.project-cache/.../memory.md` is read-only in this
   session — it still describes "Day 8 next / run 2 full trainings" and should be refreshed from the
   claude.ai project side so future chats start with Layer 1 marked complete.
+
+## 2026-07-19 (Day 9 cont.) — Consolidation: Methods chapter
+- Drafted Thesis_Documentation/Methods_Chapter_Layer1.md (formal Methods prose for Layer 1), pulled
+  from source (env cfg, costs.py, ppo_lagrangian.py, rsl_rl cfgs). Next consolidation items: figures
+  (separate session, CSVs in results/tb_csv/) and typesetting into the KUET thesis book.
