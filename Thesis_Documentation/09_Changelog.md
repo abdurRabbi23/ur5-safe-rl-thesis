@@ -9,6 +9,21 @@ append a dated line below.
 
 ---
 
+## 2026-07-20 — Layer 1 gap-fill (post-sync review)
+
+- Scanned the repo after Layer 1 completion; the earlier same-day sync was already thorough. Filled
+  three remaining gaps for a replicate-from-scratch reader:
+  - `06_Results_and_Experiments.md` — added the **success-rate evaluation procedure**
+    (`ur5_grasp/scripts/eval_success.py`) with exact commands + expected 100% / 99.6% output. This
+    is how the benchmark's success numbers are produced (training logs no success scalar).
+  - `07_Troubleshooting.md` — added two entries: "no success scalar in TensorBoard" (use
+    eval_success.py) and the relative-`tee`-path pitfall (log saved under `IsaacLab/`; use an
+    absolute path — real data is safe in the TB event files).
+  - `logbook/07_documentation.md` — refreshed Current state + Next steps (Layer 1 done; next work is
+    Layer 2/3) and run_log refs.
+
+---
+
 ## 2026-07-20 — Layer 1 complete: benchmark numbers + figures synced
 
 - `03_Safety_and_cPPO_Benchmark.md` — status ▶ In progress → **✅ Complete (Layer 1 PASS)**. Runbook

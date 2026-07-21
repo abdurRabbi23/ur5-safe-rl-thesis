@@ -17,8 +17,9 @@ translates it for a fresh reader.
 ## Current state (Day 10)
 - 10 pages built. 01 env-setup + 02 grasp-env fully written (done work); **03 cppo-benchmark now
   COMPLETE — runbook Steps 6-7 done, real benchmark numbers filled, Layer 1 PASS**; 04 IBVS + 05
-  sim2real are planned outlines; 06 results holds the headline table + the four generated figures
-  (`Thesis_Documentation/assets/`); 07 troubleshooting (all bugs+fixes), 08 glossary, 09 changelog.
+  sim2real are planned outlines; 06 results holds the headline table, the success-eval procedure
+  (`eval_success.py`), and the four generated figures (`Thesis_Documentation/assets/`); 07
+  troubleshooting (all bugs+fixes incl. the success-eval + log-path notes), 08 glossary, 09 changelog.
 - All script/asset paths referenced in the docs verified to exist in the repo.
 
 ## Working convention (keep it in sync)
@@ -50,8 +51,11 @@ where the key lives. If push asks for a password → `ssh-add ~/.ssh/<key>`; if 
 - 06_Results_and_Experiments, 07_Troubleshooting, 08_Glossary, 09_Changelog ← cross-cutting
 
 ## Next steps
-- After the two full runs (Module 03 Steps 6-7): fill the benchmark table in 06 + real curves in 03.
-- Begin 04/05 pages when those layers start.
+- Layer 1 fully documented (sections 01–03, 06). Nothing pending there.
+- When Layer 2 (IBVS) work starts: flesh out `04_Layer2_IBVS.md` from outline → real
+  commands/outputs; add a Layer 2 results block to 06; append to 09_Changelog.md.
+- When Layer 3 (sim-to-real) starts: same for `05_Layer3_SimToReal.md`.
 
 ## run_log.md refs
-Day 9 (2026-07-19): documentation folder created.
+- Day 9 (2026-07-19): documentation folder created.
+- Day 10 (2026-07-20): Layer 1 synced — benchmark numbers, figures, success-eval procedure.

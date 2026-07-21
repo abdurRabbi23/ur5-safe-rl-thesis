@@ -23,6 +23,29 @@ All training uses the same launcher, differing only in flags. Run from
 View any of them: `tensorboard --logdir logs/rsl_rl --port 6006 --bind_all` (multiple runs overlay
 automatically).
 
+### Measuring grasp success rate
+
+Training does **not** log a success scalar, so the success-rate numbers in the benchmark table are
+produced *after* training by replaying each checkpoint with `ur5_grasp/scripts/eval_success.py`. It
+scores two rates using the env's own lift/goal math: **lift success** (cube raised above
+`--min_height`) and **goal-reach** (lifted *and* within `--success_tol` of the goal). Run both agents
+and compare (from `~/Abdur_Rabbi_THESIS/IsaacLab`, inside tmux):
+
+```bash
+# cPPO checkpoint
+./isaaclab.sh -p ../ur5_grasp/scripts/eval_success.py \
+    --task Isaac-Lift-Cube-UR5e-Play-v0 --agent rsl_rl_cppo_cfg_entry_point \
+    --headless --num_envs 64 --episodes 512 --min_height 0.1 --success_tol 0.01
+
+# PPO baseline checkpoint (default agent)
+./isaaclab.sh -p ../ur5_grasp/scripts/eval_success.py \
+    --task Isaac-Lift-Cube-UR5e-Play-v0 \
+    --headless --num_envs 64 --episodes 512 --min_height 0.1 --success_tol 0.01
+```
+
+**Expected (the reported numbers):** cPPO 100.0% lift / 99.6% goal-reach; PPO 100.0% / 100.0%. Each
+loads the newest checkpoint for its experiment automatically.
+
 ---
 
 ## Validation results (foundation) — ✅ done
