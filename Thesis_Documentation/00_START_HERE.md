@@ -43,8 +43,13 @@ Read in order the first time. Later, jump straight to the section you need.
 | 07 | `07_Troubleshooting.md` | Every bug hit + the fix, in one place | ▶ Growing |
 | 08 | `08_Glossary.md` | Plain-English terms for beginners | ✅ Done |
 | 09 | `09_Changelog.md` | Dated log of edits to this documentation | ▶ Ongoing |
+| 10 | `10_Command_Reference.md` | **Every terminal command for the whole thesis, in order, with a why/when note** | ▶ Ongoing |
 
 `assets/` holds screenshots, plots, and diagrams referenced by the pages above.
+
+> **In a hurry / just need the commands?** Jump straight to `10_Command_Reference.md` — it's the
+> full sequential command list (setup → validation → grasp env → cPPO → benchmark → git), plus a
+> one-screen copy-paste quick reference at the bottom.
 
 ---
 
