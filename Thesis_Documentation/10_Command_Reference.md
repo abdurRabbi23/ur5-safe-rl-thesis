@@ -149,18 +149,19 @@ Then open the lab PC's address in a laptop browser, e.g. `http://100.109.10.66:6
 ## 4. UR5e asset prep ✅
 
 Build the robot once. These launch Isaac Sim headless (they use `AppLauncher`), so run them with the
-launcher too. Run from the repo root `~/Abdur_Rabbi_THESIS`.
+launcher too. Run from `~/Abdur_Rabbi_THESIS/IsaacLab` (where `./isaaclab.sh` lives); `ur5_grasp/`
+is a sibling of `IsaacLab/`, so it's reached with the `../` prefix.
 
 **4.1 — Inspect the UR5e asset** (USD path, variants, joint/body names).
 ```bash
-./isaaclab.sh -p ur5_grasp/tools/inspect_ur5e_asset.py
+./isaaclab.sh -p ../ur5_grasp/tools/inspect_ur5e_asset.py
 ```
 *Why/when:* once, before building the env — confirms the Nucleus `ur5e.usd`, its `Robotiq_2f_85`
 gripper variant, and joint names. Writes `ur5_grasp/tools/ur5e_asset_report.txt`.
 
 **4.2 — Build the merged single-articulation USD** (arm + Robotiq 2f-85 as one robot).
 ```bash
-./isaaclab.sh -p ur5_grasp/tools/make_ur5e_robotiq_usd.py
+./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_robotiq_usd.py
 ```
 *Why/when:* once. Stitches the gripper onto the flange and disables its nested articulation root so
 it loads as **one** articulation (12 joints / 16 bodies). Output: `ur5_grasp/assets/ur5e_robotiq_2f85.usd`.
@@ -382,7 +383,7 @@ cd ~/Abdur_Rabbi_THESIS/IsaacLab
 tensorboard --logdir logs/rsl_rl --port 6006 --bind_all
 
 # ── build the robot (once) ───────────────────────────────────────────────────
-./isaaclab.sh -p ../ur5_grasp/tools/inspect_ur5e_asset.py       # (run from repo root as ur5_grasp/tools/...)
+./isaaclab.sh -p ../ur5_grasp/tools/inspect_ur5e_asset.py       # (run from IsaacLab/; ur5_grasp is a sibling → ../)
 ./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_robotiq_usd.py
 
 # ── grasp env + PPO baseline ─────────────────────────────────────────────────

@@ -167,3 +167,4 @@ Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 graspin
 - Drafted Thesis_Documentation/Methods_Chapter_Layer1.md (formal Methods prose for Layer 1), pulled
   from source (env cfg, costs.py, ppo_lagrangian.py, rsl_rl cfgs). Next consolidation items: figures
   (separate session, CSVs in results/tb_csv/) and typesetting into the KUET thesis book.
+[Day 11] Caught & fixed isaaclab.sh path bug in doc commands (missing ../ prefix for ur5_grasp/ scripts, since IsaacLab is a sibling dir not a subdir)
