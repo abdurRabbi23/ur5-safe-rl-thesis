@@ -167,4 +167,19 @@ Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 graspin
 - Drafted Thesis_Documentation/Methods_Chapter_Layer1.md (formal Methods prose for Layer 1), pulled
   from source (env cfg, costs.py, ppo_lagrangian.py, rsl_rl cfgs). Next consolidation items: figures
   (separate session, CSVs in results/tb_csv/) and typesetting into the KUET thesis book.
-[Day 11] Caught & fixed isaaclab.sh path bug in doc commands (missing ../ prefix for ur5_grasp/ scripts, since IsaacLab is a sibling dir not a subdir)
+## 2026-07-22 (Day 11) — Caught & fixed isaaclab.sh path bug in doc commands 
+- missing ../ prefix for ur5_grasp/ scripts, since IsaacLab is a sibling dir not a subdir
+- commited the bug fixed in the github
+
+## 2026-07-24 (Day 13) — Layer 2 kickoff (IBVS), Phase 1 camera test
+- Decision: eye-in-hand, RGB webcam only (no RGB-D). Monocular IBVS with approximate depth;
+  the unmeasured Z becomes the job of the RL-tuned image Jacobian.
+- Added ur5_grasp/scripts/ibvs_camera_test.py — wrist-mounted RGB CameraCfg injected into the
+  PLAY env (Layer 1 files untouched); saves crosshair-overlay frames to results/ibvs_phase1/.
+- PENDING first run on lab PC: ./isaaclab.sh -p ../ur5_grasp/scripts/ibvs_camera_test.py
+  --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --headless --enable_cameras
+- Phase 1 VERIFIED: eye-in-hand RGB camera renders + world->pixel projection correct
+  (on-axis point -> image centre; cube pixel tracks cube). Mount recovered empirically:
+  approach axis = wrist -z; pos=(-3e-05,0.00368,-0.03983) rot=(-0.03285,0.70643,0.70629,0.03228).
+  Gotchas: needs --enable_cameras; CUDA 804 was a driver-update/reboot issue (now fine).
+  Next: Phase 2 — colour-centroid detection + classical IBVS control law.
