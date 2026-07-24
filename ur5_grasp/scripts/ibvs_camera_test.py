@@ -64,6 +64,7 @@ import gymnasium as gym
 
 import isaaclab.sim as sim_utils
 import isaaclab.utils.math as math_utils
+from isaaclab.assets import AssetBaseCfg
 from isaaclab.sensors import CameraCfg
 from isaaclab_tasks.utils import parse_env_cfg
 
@@ -87,9 +88,10 @@ WRIST_CAM_CFG = CameraCfg(
         clipping_range=(0.01, 5.0),
     ),
     offset=CameraCfg.OffsetCfg(
-        # Measured aim: camera +z points at the fingertip grasp point (wrist -z axis).
-        # Recovered from recommend_aim() — stable across episodes.
-        pos=(-3e-05, 0.00368, -0.03983),
+        # Aim (rot) points camera +z at the fingertip grasp point (wrist -z axis).
+        # pos is a STANDOFF: 0.3 m back along the same axis so the lens sits OUTSIDE
+        # the gripper mesh (a 4 cm mount was buried inside it -> black frames).
+        pos=(0.0002, -0.0276, 0.2987),
         rot=(-0.03285, 0.70643, 0.70629, 0.03228),   # (w, x, y, z)
         convention="ros",                            # ROS cam frame: x right, y down, z forward
     ),
@@ -138,22 +140,27 @@ def draw_crosshair(img, u, v, color=(255, 0, 0), size=8):
     return img
 
 
-def detect_centroid_rgb(rgb, seed_uv, tol=45):
-    """Appearance-only cube detector (no privileged pose). Seeds the target colour
-    from a 3x3 patch at `seed_uv`, masks pixels within `tol` (L2 in RGB) of it, and
-    returns (u, v, n_px, seed_rgb). This is the Phase-2 stand-in for the real webcam
-    detector; seeding from ground truth here just validates colour separability and
-    reports the cube's colour so we can hard-code the range for the live loop."""
+def detect_cube(rgb, center_uv, half=75, s_min=0.30, v_min=45):
+    """Colour-blob cube detector. Within a window around `center_uv`, keep the most
+    saturated pixels (the coloured cube) and return their centroid + mean colour.
+    Saturation cleanly rejects the white background/flange and the grey metal, so we
+    don't need to know the cube's colour in advance — we discover it here."""
     h, w, _ = rgb.shape
-    su = min(max(int(round(seed_uv[0])), 1), w - 2)
-    sv = min(max(int(round(seed_uv[1])), 1), h - 2)
-    seed = np.median(rgb[sv - 1:sv + 2, su - 1:su + 2].reshape(-1, 3).astype(np.float32), axis=0)
-    mask = np.linalg.norm(rgb.astype(np.float32) - seed, axis=2) < tol
+    cu = min(max(int(center_uv[0]), 0), w - 1)
+    cv = min(max(int(center_uv[1]), 0), h - 1)
+    u0, u1 = max(0, cu - half), min(w, cu + half)
+    v0, v1 = max(0, cv - half), min(h, cv + half)
+    roi = rgb[v0:v1, u0:u1].astype(np.float32)
+    mx = roi.max(axis=2)
+    mn = roi.min(axis=2)
+    sat = np.where(mx > 1, (mx - mn) / np.clip(mx, 1, None), 0.0)   # HSV saturation
+    mask = (sat > s_min) & (mx > v_min)
     n = int(mask.sum())
-    if n == 0:
-        return None, None, 0, seed
+    if n < 10:
+        return None, None, 0, None
     ys, xs = np.nonzero(mask)
-    return float(xs.mean()), float(ys.mean()), n, seed
+    color = roi[mask].mean(axis=0)
+    return float(xs.mean() + u0), float(ys.mean() + v0), n, color
 
 
 def save_png(path, img):
@@ -172,6 +179,17 @@ def main():
     # attach the eye-in-hand camera to the scene cfg — Layer 1 env files untouched.
     # InteractiveScene iterates cfg.__dict__, so a dynamically added sensor is picked up.
     env_cfg.scene.wrist_cam = WRIST_CAM_CFG
+
+    # Headless training never rendered, so the scene is unlit -> black frames. Add a
+    # dome (ambient fill) + a distant light (directional) so the camera sees the scene.
+    env_cfg.scene.ibvs_dome = AssetBaseCfg(
+        prim_path="/World/ibvsDome",
+        spawn=sim_utils.DomeLightCfg(intensity=3000.0, color=(1.0, 1.0, 1.0)),
+    )
+    env_cfg.scene.ibvs_key = AssetBaseCfg(
+        prim_path="/World/ibvsKey",
+        spawn=sim_utils.DistantLightCfg(intensity=2500.0, color=(1.0, 1.0, 1.0)),
+    )
 
     env = gym.make(args_cli.task, cfg=env_cfg)
     env.reset()
@@ -221,24 +239,24 @@ def main():
             rgb = cam.data.output["rgb"][0, ..., :3].detach().cpu().numpy().astype(np.uint8)
             cube_w = obj.data.root_pos_w[0]
             u, v, z = project_to_pixel(cam, cube_w)                # ground-truth pixel
-            du, dv, npx, seed = detect_centroid_rgb(rgb, (u, v))   # appearance detector
+            du, dv, npx, col = detect_cube(rgb, (u, v))            # appearance detector
 
             img = np.ascontiguousarray(rgb).copy()
             draw_crosshair(img, u, v, color=(255, 0, 0))           # ground truth = red
             if du is not None:
-                draw_crosshair(img, du, dv, color=(0, 255, 0))     # colour centroid = green
+                draw_crosshair(img, du, dv, color=(0, 255, 0))     # detected cube = green
             fname = os.path.join(out_dir, f"frame_{saved:02d}.png")
             save_png(fname, img)
 
             in_view = (0 <= u < rgb.shape[1]) and (0 <= v < rgb.shape[0]) and (z > 0)
-            print(f"[{saved:02d}] cube_world={[round(c, 3) for c in cube_w.tolist()]}  ->  "
-                  f"gt (u,v)=({u:.1f}, {v:.1f})  z_cam={z:.3f}  in_view={in_view}")
+            print(f"[{saved:02d}] gt(u,v)=({u:.1f},{v:.1f})  z_cam={z:.3f}  in_view={in_view}  "
+                  f"frame[min/mean/max]={int(rgb.min())}/{rgb.mean():.0f}/{int(rgb.max())}")
             if du is not None:
                 err = ((du - u) ** 2 + (dv - v) ** 2) ** 0.5
-                print(f"     colour-centroid=({du:.1f}, {dv:.1f})  npx={npx}  "
-                      f"err_vs_gt={err:.1f}px  seed_rgb={[int(c) for c in seed]}")
+                print(f"     cube-blob=({du:.1f}, {dv:.1f})  npx={npx}  "
+                      f"err_vs_gt={err:.1f}px  cube_rgb={[int(c) for c in col]}")
             else:
-                print(f"     colour-centroid: NONE within tol  seed_rgb={[int(c) for c in seed]}")
+                print("     cube-blob: none found in ROI (try larger --half / lower s_min)")
             if saved == 0:
                 print("     intrinsics K=\n" + str(cam.data.intrinsic_matrices[0].cpu().numpy()))
                 print(f"     cam_pos_w={[round(c, 3) for c in cam.data.pos_w[0].tolist()]}")

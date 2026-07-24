@@ -183,3 +183,12 @@ Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 graspin
   approach axis = wrist -z; pos=(-3e-05,0.00368,-0.03983) rot=(-0.03285,0.70643,0.70629,0.03228).
   Gotchas: needs --enable_cameras; CUDA 804 was a driver-update/reboot issue (now fine).
   Next: Phase 2 — colour-centroid detection + classical IBVS control law.
+- Phase 2 (detection) working: colour-blob detector finds the DexCube (violet ~[112,83,190]).
+  Black frames were the camera buried INSIDE the gripper mesh (4cm mount) -> fixed with a 0.3m
+  standoff along the view axis (base env already had a dome light). Mount framing still needs
+  tuning (cube too large/edge, flange occludes). GT world->pixel projection ~50px off but not
+  needed for IBVS (servo on detected centroid). Next: tune mount, then IBVS control law.
+- Phase 2b: wrote ibvs_servo.py (probe-measured image Jacobian + proportional centroid servo).
+  Runs, but BLOCKED on eye-in-hand framing at the RL ready pose (cube too large/at edge ->
+  probe pushes it out of view). Not a code bug. Next: either GUI mount tuning, or start IBVS
+  from a policy-driven pre-grasp pose (recommended) so the camera frames the cube naturally.
