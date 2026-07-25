@@ -2,18 +2,21 @@
 # SPDX-License-Identifier: BSD-3-Clause
 """Layer 2 · Phase 2 — classical IBVS baseline (single centroid, monocular RGB).
 
-Servo the arm so the cube's colour-centroid moves to the image centre, using an
-image Jacobian that the controller MEASURES for itself (two small probe moves)
-rather than assuming a camera convention. Flow:
+Servo the arm so the cube's colour-centroid moves to the image centre, using an image
+Jacobian the controller MEASURES for itself (two small probe moves) rather than assuming a
+camera convention. Flow:
 
-  1. pin the cube at a visible, off-centre spot (repeatable start),
-  2. PROBE: nudge the end-effector along camera-x, then camera-y; measure how the
-     centroid pixel (u,v) moves  ->  a 2x2 image Jacobian  J = d[u,v]/d[cam_x,cam_y],
-  3. SERVO: each step, desired camera-plane move = -lambda * J^-1 * (s - s*),
-     map it to joint targets through the arm Jacobian, step, and log the pixel error.
+  1. settle at the ready pose; the eye-in-hand camera looks along the wrist +z axis at the
+     table and sees the cube (mount recovered with mount_finder.py: beside the gripper,
+     aimed at the grasp region),
+  2. DETECT the cube = the most-saturated blob (the DexCube has bright multi-colour faces),
+  3. PROBE: nudge the end-effector along camera-x, then camera-y; measure how the centroid
+     pixel (u,v) moves  ->  a 2x2 image Jacobian  J = d[u,v]/d[cam_x,cam_y],
+  4. SERVO: each step, desired camera-plane move = -lambda * J^-1 * (s - s*), map it to
+     joint targets through the arm Jacobian, step, log the pixel error.
 
-Success = the logged `err_px` shrinks toward ~0 (cube centred). This is the
-classical baseline the RL-tuned image Jacobian (Phase 3) will be compared against.
+Success = the logged `err_px` shrinks toward ~0 (cube centred). This is the classical
+baseline the RL-tuned image Jacobian (Phase 3) will be compared against.
 
 Run on the lab PC:
     cd ~/Abdur_Rabbi_THESIS/IsaacLab
@@ -61,12 +64,18 @@ from isaaclab_tasks.utils import parse_env_cfg
 
 import ur5_grasp.tasks  # noqa: F401
 
-# ---- locked from Phase 1/2a -------------------------------------------------
-MOUNT_POS = (0.0002, -0.0276, 0.2987)                 # wrist-frame standoff (out of gripper)
-MOUNT_ROT = (-0.03285, 0.70643, 0.70629, 0.03228)     # (w,x,y,z) aim at grasp point
-CUBE_RGB = np.array([112.0, 83.0, 190.0])             # DexCube violet (discovered Phase 2a)
+# ---- eye-in-hand mount (recovered with mount_finder.py, Day 14) -------------
+# Sits beside the gripper and looks along wrist +z at the grasp region. The old mount
+# (0.30 m out, aimed -z) pointed straight back at the gripper and never saw the cube.
+MOUNT_POS = (0.06, 0.0, 0.0)                           # wrist frame: 6 cm to the +x side
+MOUNT_ROT = (0.9894, 0.0, -0.1452, 0.0)               # (w,x,y,z) aim +z toward the grasp region
 ARM_JOINTS = ["shoulder_pan_joint", "shoulder_lift_joint", "elbow_joint",
               "wrist_1_joint", "wrist_2_joint", "wrist_3_joint"]
+# Optional fixed arm config (6 joint angles, rad). None = ready pose, which already frames
+# the cube from this mount. Only override if you want a different vantage.
+HOVER_Q = None
+SAFE_U = (40, 280)                                    # keep the start centroid this far inside the 320x240 frame
+SAFE_V = (30, 210)                                    #   -> probe/servo moves can't push the cube out of view
 
 WRIST_CAM_CFG = CameraCfg(
     prim_path="{ENV_REGEX_NS}/Robot/wrist_3_link/wrist_cam",
@@ -77,15 +86,44 @@ WRIST_CAM_CFG = CameraCfg(
 )
 
 
-def detect_centroid(rgb, tol=50):
-    """Global colour-mask detector: cube = pixels near CUBE_RGB. Returns (u,v,npx)."""
-    d = np.linalg.norm(rgb.astype(np.float32) - CUBE_RGB, axis=2)
-    mask = d < tol
+def detect_cube(rgb, s_min=0.35, v_min=50):
+    """Find the cube = the most-saturated region in the frame. Returns (u, v, npx).
+    The DexCube has bright multi-colour faces, so high saturation cleanly separates it from
+    the grey table/robot and the white background — no need to hard-code a colour."""
+    f = rgb.astype(np.float32)
+    mx = f.max(axis=2); mn = f.min(axis=2)
+    sat = np.where(mx > 1, (mx - mn) / np.clip(mx, 1, None), 0.0)   # HSV saturation
+    mask = (sat > s_min) & (mx > v_min)
     n = int(mask.sum())
-    if n < 20:
+    if n < 30:
         return None, None, 0
     ys, xs = np.nonzero(mask)
     return float(xs.mean()), float(ys.mean()), n
+
+
+def _save_png(path, img):
+    try:
+        from PIL import Image
+        Image.fromarray(img).save(path)
+    except Exception:
+        import imageio.v2 as imageio
+        imageio.imwrite(path, img)
+
+
+def _mark(img, u, v, c=(0, 255, 0), s=8):
+    if u is None:
+        return img
+    h, w, _ = img.shape
+    ui, vi = int(round(u)), int(round(v))
+    if 0 <= ui < w and 0 <= vi < h:
+        col = np.array(c, dtype=np.uint8)
+        img[max(0, vi - s):min(h, vi + s), ui] = col
+        img[vi, max(0, ui - s):min(w, ui + s)] = col
+    return img
+
+
+def _fmt(d):
+    return f"({d[0]:.0f},{d[1]:.0f},n={d[2]})" if d[0] is not None else "None"
 
 
 def main():
@@ -94,12 +132,20 @@ def main():
     env_cfg.scene.wrist_cam = WRIST_CAM_CFG
     env_cfg.scene.ibvs_dome = AssetBaseCfg(prim_path="/World/ibvsDome",
                                            spawn=sim_utils.DomeLightCfg(intensity=3000.0))
+    # Hide the pose-command + ee_frame debug gizmos so they can't pollute the view.
+    try:
+        env_cfg.commands.object_pose.debug_vis = False
+    except AttributeError:
+        pass
+    try:
+        env_cfg.scene.ee_frame.debug_vis = False
+    except AttributeError:
+        pass
     env = gym.make(args_cli.task, cfg=env_cfg)
     env.reset()
 
     scene = env.unwrapped
     cam = scene.scene["wrist_cam"]
-    obj = scene.scene["object"]
     robot = scene.scene["robot"]
     device = scene.device
     out_dir = os.path.join(_REPO_ROOT, "results", "ibvs_phase2")
@@ -112,7 +158,6 @@ def main():
     R_wc_mount = math_utils.matrix_from_quat(torch.tensor([MOUNT_ROT], device=device))[0]
     cx, cy = 160.0, 120.0
     s_target = np.array([cx, cy])
-
     act = torch.zeros(env.action_space.shape, device=device)
 
     def rgb_now():
@@ -128,56 +173,76 @@ def main():
     def R_world_cam():
         wq = robot.data.body_quat_w[0, wrist_bi]
         R_ww = math_utils.matrix_from_quat(wq.unsqueeze(0))[0]
-        return R_ww @ R_wc_mount                   # cam->world
+        return R_ww @ R_wc_mount                    # cam->world
 
-    def step_cam_move(cam_xyz, hold=4):
-        """Command an EE move of `cam_xyz` (camera frame, metres) and step `hold` times."""
+    def step_cam_move(cam_xyz, hold=4, cap=0.08):
+        """Command an EE move of `cam_xyz` (camera frame, metres) and step `hold` times.
+        `cap` bounds the joint step so an ill-conditioned direction can't swing the arm."""
         V = R_world_cam() @ torch.tensor(cam_xyz, dtype=torch.float32, device=device)
         Jp = arm_jac_pos()
         qdot = torch.linalg.pinv(Jp) @ V           # (6,)
-        m = torch.linalg.norm(qdot)                # cap joint step: don't fling near singularities
-        if m > 0.08:
-            qdot = qdot * (0.08 / m)
+        m = torch.linalg.norm(qdot)
+        if m > cap:
+            qdot = qdot * (cap / m)
         q = robot.data.joint_pos[0, arm_ids]
         q_des = q + qdot
         act[0, :6] = (q_des - default_q[0]) / scale
         for _ in range(hold):
             env.step(act)
 
-    # settle, then pin the cube at a visible, slightly off-centre spot
+    # ---- optional fixed arm config; default = ready pose (already frames the cube) ----
+    if HOVER_Q is not None:
+        q_hover = torch.tensor([HOVER_Q], dtype=torch.float32, device=device)
+        robot.write_joint_state_to_sim(q_hover, torch.zeros((1, len(arm_ids)), device=device), joint_ids=arm_ids)
+        act[0, :6] = (q_hover[0] - default_q[0]) / scale
+
+    # ---- settle, then DETECT the real cube on the table ----
     for _ in range(40):
         env.step(act)
-    cpos = cam.data.pos_w[0]
-    fwd = R_world_cam()[:, 2]
-    target = cpos + 0.30 * fwd + torch.tensor([0.03, 0.0, 0.0], device=device)  # farther/smaller, mild off-centre
-    root = torch.zeros((scene.num_envs, 7), device=device); root[:, 0:3] = target; root[:, 3] = 1.0
-    obj.write_root_pose_to_sim(root)
-    obj.write_root_velocity_to_sim(torch.zeros((scene.num_envs, 6), device=device))
-    for _ in range(6):
-        env.step(act)
-
-    u, v, n = detect_centroid(rgb_now())
+    u, v, n = detect_cube(rgb_now())
+    _save_png(os.path.join(out_dir, "debug_start.png"),
+              _mark(np.ascontiguousarray(rgb_now()).copy(), u, v))
     if u is None:
-        print("[abort] cube not visible after pin — adjust mount/pin before servoing.")
+        print("[abort] no cube detected at the start pose — see debug_start.png "
+              "(camera may need re-aiming, or lower detect_cube s_min).")
         env.close(); return
-    print(f"[start] centroid=({u:.1f},{v:.1f}) npx={n}")
+    if not (SAFE_U[0] <= u <= SAFE_U[1] and SAFE_V[0] <= v <= SAFE_V[1]):
+        print(f"[warn] cube starts near a frame edge ({u:.0f},{v:.0f}) — probe may clip it. "
+              f"Consider a different HOVER_Q. Continuing.")
+    err0 = float(np.hypot(u - cx, v - cy))
+    print(f"[start] cube centroid=({u:.1f},{v:.1f}) npx={n} err_px={err0:.1f}  (saved debug_start.png)")
 
     # ---- PROBE: measure image Jacobian J = d[u,v]/d[cam_x, cam_y] ----
-    probe = 0.01  # metres (small so the cube stays in view)
+    # Gentle + adaptive: near the ready pose the arm Jacobian can be ill-conditioned for one
+    # camera axis, so a fixed nudge gets pinv-amplified and swings the view. If a probe loses
+    # the cube, undo it and retry with a smaller nudge AND a tighter joint-step cap.
     cols = []
     for axis in (0, 1):
-        d0 = detect_centroid(rgb_now()); p0 = cam.data.pos_w[0].clone()
-        mv = [0.0, 0.0, 0.0]; mv[axis] = probe
-        step_cam_move(mv, hold=4)
-        d1 = detect_centroid(rgb_now()); p1 = cam.data.pos_w[0].clone()
-        step_cam_move([-mv[0], -mv[1], 0.0], hold=4)           # undo the probe
-        if d0[0] is None or d1[0] is None:
-            print(f"[abort] cube left view during probe on axis {axis} — mount framing too tight.")
+        pr, cap = 0.008, 0.02
+        col = None
+        for _try in range(5):
+            f0 = np.ascontiguousarray(rgb_now()).copy(); d0 = detect_cube(f0); p0 = cam.data.pos_w[0].clone()
+            mv = [0.0, 0.0, 0.0]; mv[axis] = pr
+            step_cam_move(mv, hold=4, cap=cap)
+            f1 = np.ascontiguousarray(rgb_now()).copy(); d1 = detect_cube(f1); p1 = cam.data.pos_w[0].clone()
+            step_cam_move([-mv[0], -mv[1], 0.0], hold=4, cap=cap)   # undo the probe
+            dpc = (R_world_cam().T @ (p1 - p0)).tolist()
+            print(f"[dbg] axis{axis} try{_try} pr={pr:.4f} d0={_fmt(d0)} d1={_fmt(d1)} "
+                  f"dcam=[{dpc[0]:.4f},{dpc[1]:.4f},{dpc[2]:.4f}]")
+            if d0[0] is not None and d1[0] is not None:
+                dp_cam = dpc[axis]
+                if abs(dp_cam) < 1e-5:
+                    dp_cam = pr
+                col = (np.array(d1[:2]) - np.array(d0[:2])) / dp_cam
+                break
+            _save_png(os.path.join(out_dir, f"debug_axis{axis}_try{_try}_d0.png"), _mark(f0, d0[0], d0[1]))
+            _save_png(os.path.join(out_dir, f"debug_axis{axis}_try{_try}_d1.png"), _mark(f1, d1[0], d1[1]))
+            pr *= 0.5; cap *= 0.5                                    # cube left view -> gentler, retry
+        if col is None:
+            print(f"[abort] probe axis {axis} keeps pushing the cube out of view (down to "
+                  f"pr={pr:.4f} m). See debug_axis{axis}_*.png in results/ibvs_phase2/.")
             env.close(); return
-        dp_cam = (R_world_cam().T @ (p1 - p0))[axis].item()    # actual cam-frame displacement
-        if abs(dp_cam) < 1e-5:
-            dp_cam = probe
-        cols.append((np.array(d1[:2]) - np.array(d0[:2])) / dp_cam)
+        cols.append(col)
     J = np.column_stack(cols)                                  # 2x2, pixels per metre
     print(f"[probe] image Jacobian J=\n{np.array2string(J, precision=1)}")
     if abs(np.linalg.det(J)) < 1e-3:
@@ -187,7 +252,7 @@ def main():
     # ---- SERVO ----
     log = []
     for k in range(args_cli.steps):
-        u, v, n = detect_centroid(rgb_now())
+        u, v, n = detect_cube(rgb_now())
         if u is None:
             print(f"[{k:03d}] cube lost from view — stopping."); break
         e = np.array([u, v]) - s_target
@@ -201,6 +266,8 @@ def main():
         d_cam = np.clip(d_cam, -0.01, 0.01)                    # step cap for stability
         step_cam_move([float(d_cam[0]), float(d_cam[1]), 0.0], hold=1)
 
+    _save_png(os.path.join(out_dir, "debug_end.png"),
+              _mark(np.ascontiguousarray(rgb_now()).copy(), *detect_cube(rgb_now())[:2]))
     if log:
         print(f"\n[result] err_px: start={log[0]:.1f} -> end={log[-1]:.1f}  "
               f"({'CONVERGED' if log[-1] < log[0] * 0.5 else 'no clear convergence — check J sign/gain'})")

@@ -1,8 +1,8 @@
 # Module 04 — IBVS Visual Loop (Layer 2, stretch)
 
-Status: 🟢 STARTED — Phase 1 (camera) DONE (2026-07-24, Day 13). Layer 1 signed off.
+Status: 🟢 STARTED — Phase 1 (camera) DONE. Phase 2 framing UNBLOCKED via pin fix (Day 14) — pending lab-PC run. Layer 1 signed off.
 Chat type: vision / IBVS
-Last updated: 2026-07-24 (Day 13)
+Last updated: 2026-07-25 (Day 14)
 
 ## Goal
 Add the image-based visual servoing loop with an RL-tuned image Jacobian (fuzzy state
@@ -44,12 +44,41 @@ it matches Khan 2026's monocular CSRT baseline). Sim camera configured RGB-only 
   checkpoint until the arm hovers above the cube looking down, THEN servo) so framing is
   natural. (b) reuses the trained policy + play.py and is the recommended path.
 
+## Phase 2 resolution (Day 14) — the PIN was broken; the ready pose also looks sideways
+- **Real cause:** `ibvs_servo.py` pinned the cube at a *forced 0.30 m depth* plus a
+  *world-frame* `[0.03,0,0]` nudge. Forcing 0.30 m floats the cube nearer than the table
+  (→ "too large"); a world-frame nudge maps to an unpredictable image direction with the
+  gripper turned (→ "at the edge"). The ready pose itself is fine — `ibvs_camera_test.py`
+  already frames the cube cleanly from it by **projecting the optical axis onto the table**.
+- **First run revealed more:** at the ready pose the camera looks **sideways**, not down
+  (`fwd_z > -0.05`), so projecting onto the table can't work from there — a downward-view
+  assumption aborts. (Confirmed live: `[abort] camera isn't looking down…`.)
+- **Fix that works with the sideways camera — optical-axis STATIC pin:** `cpos + D·fwd`
+  (`D = START_DEPTH_M = 0.30`, the aim point) is dead-centre in the image *for any camera
+  orientation*. Hold the cube STATIC at that fixed world point and let the arm servo the
+  camera onto it. A controlled image-horizontal off-centre (`START_OFFSETS_M`, largest that
+  fits `SAFE_U/V`) gives the servo a real error. `step_cam_move` re-pins the cube every
+  physics step (else it free-falls out of frame). Prints `[start] … err_px=…`.
+- Valid classical *centering* baseline; the cube floats (not on the table), which is fine
+  for the image-Jacobian comparison. For a table-realistic view, set `HOVER_Q` (below).
+- **Policy-driven start dropped** for the baseline: stochastic (noisy err_px curves) and
+  couples a *classical* baseline to the RL policy. If a look-down view is wanted, use the
+  policy ONCE to discover a good hover config, freeze those 6 joints into `HOVER_Q`.
+- **Optional `HOVER_Q`** hook added (default `None`): 6 arm joint angles applied via
+  `write_joint_state_to_sim` before servoing — use only for a table-realistic look-down view.
+- **Mount note:** both scripts fly the **0.30 m standoff** `pos=(0.0002,-0.0276,0.2987)`.
+  The "verified 4 cm mount" below is STALE (that one renders black inside the gripper).
+- **Still to do on the lab PC:** run it, confirm `err_px` shrinks toward ~0 (that = the
+  classical baseline), save the curve to `results/ibvs_phase2/`.
+
 ## Phase 1 result (verified)
 - `ur5_grasp/scripts/ibvs_camera_test.py` — wrist-mounted `CameraCfg` injected into the
   PLAY env (Layer 1 files untouched). Renders RGB; world→pixel projection confirmed
   (on-axis point projects to image centre; cube pixel tracks the cube).
 - **Verified camera mount** (eye-in-hand on `wrist_3_link`, ROS convention):
   `pos=(-3e-05, 0.00368, -0.03983)`, `rot=(-0.03285, 0.70643, 0.70629, 0.03228)`.
+  ⚠️ STALE: this 4 cm `pos` renders black (lens inside the gripper). Live mount in BOTH
+  scripts is the 0.30 m standoff `pos=(0.0002, -0.0276, 0.2987)` (same `rot`).
 - **Approach axis is wrist −z** (not +z). The env `ee_frame` offset `[0,0,0.16]` is
   approximate/sign-flipped vs the true fingertip TCP — camera aim was recovered
   empirically via `recommend_aim()`.
@@ -68,3 +97,4 @@ Shi 2020 (IBVS + Q-learning), Zhang (fuzzy IBVS), Khan 2026 (classical monocular
 
 ## run_log.md refs
 - 2026-07-24 (Day 13) — Layer 2 kickoff + Phase 1 camera verified.
+- 2026-07-25 (Day 14) — Phase 2 framing fix (pin geometry), servo loop untouched.
