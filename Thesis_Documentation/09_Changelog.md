@@ -9,6 +9,26 @@ append a dated line below.
 
 ---
 
+## 2026-07-25 — Layer 2 Phase 2: classical IBVS baseline written up
+
+- `04_Layer2_IBVS.md` — status ⏳ Planned → ▶ In progress. Replaced the outline with the built
+  pipeline (eye-in-hand camera, saturation + largest-blob detection, self-measured image Jacobian,
+  proportional servo), the ~50% centroid-error-reduction result, and an honest account of the
+  servo-convergence limitation (orientation leak; arm cond ≈ 9, not singular) with future work.
+- `Methods_Chapter_Layer2.md` — **new**: formal thesis-book prose for the Layer 2 baseline (camera,
+  detection, self-measured Jacobian, servo law + joint mapping, config, partial results, discussion +
+  link to the RL-tuned extension). Parallels `Methods_Chapter_Layer1.md`; numbers verified against
+  `ibvs_servo.py` and the 2026-07-25 runs.
+- `07_Troubleshooting.md` — added the five Layer 2 bugs + fixes (mount aimed at gripper; wrong cube
+  colour; lagging `cam.data.pos_w`; debug gizmos in frame; phantom second cube from `write_root_pose`).
+- `00_START_HERE.md` — section table: 04 moved to ▶ In progress.
+- New assets: `assets/fig_l2_mount_sees_gripper.png`, `fig_l2_mount_sees_cube.png`,
+  `fig_l2_cube_detected.png` (before/after mount + detection). New scripts committed:
+  `mount_finder.py`, `pose_finder.py`; rewrote `ibvs_servo.py`.
+- Cross-synced into `logbook/04_layer2_ibvs.md` and `run_log.md`.
+
+---
+
 ## 2026-07-20 — Layer 1 gap-fill (post-sync review)
 
 - Scanned the repo after Layer 1 completion; the earlier same-day sync was already thorough. Filled

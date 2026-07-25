@@ -109,3 +109,40 @@ Cause: the TensorBoard *process is down*. Fix: restart it.
 **TensorBoard: page just hangs (never loads).**
 Cause: *network/firewall* — process is fine, traffic isn't reaching it. Fix: check the address /
 VPN (Tailscale) / `--bind_all`.
+
+---
+
+## Layer 2 — camera / IBVS (Phase 2)
+
+**Wrist camera renders black frames.**
+Cause: a camera mounted at the fingertips sits inside the gripper mesh. Fix: stand the lens off the
+wrist — but do not then aim it back at the grasp point (next entry).
+
+**Camera never sees the cube — only the gripper.**
+Cause: the mount was 0.30 m out along the wrist aimed BACK at the grasp point, so the lens looked at
+its own gripper (and a wrist webcam model). Fix: mount beside the gripper and aim along wrist **+z** at
+the grasp region. The cube's wrist-frame position (from `mount_finder.py` → `geometry.txt`) showed it
+lies along wrist +z — the old "approach = wrist −z" note was backwards.
+
+**Cube not detected even though it is clearly in frame.**
+Cause: the detector matched a hard-coded violet colour, but the DexCube has multi-colour faces, so the
+mask never fired. Fix: detect the largest highly-saturated blob (colour-agnostic).
+
+**Image Jacobian comes out wrong; the probe reports zero camera displacement.**
+Cause: `cam.data.pos_w` lags during rapid motion and reads ~0 displacement, corrupting the finite
+difference. Fix: compute the camera world pose from the wrist articulation state
+(`body_pos_w`/`body_quat_w`) plus the fixed mount offset.
+
+**A second, phantom cube appears in view / the centroid jumps between two cubes.**
+Cause: placing the cube with `write_root_pose_to_sim` left a duplicate in the render. Fix: do not
+teleport the cube — freeze the reset randomisation and set a fixed spawn position; use the largest-blob
+detector as a safety net. Also disable the debug-vis markers (`commands.object_pose`, `scene.ee_frame`),
+which otherwise render coloured gizmos into the frame and fool the colour mask.
+
+**IBVS servo halves the error, then the camera dives into the cube and loses it.**
+Cause: not a singularity (arm-Jacobian cond ≈ 9). The wrist orientation leaks through the incremental
+joint-position-target mapping, so the camera slowly pitches and drifts toward the table (optical-axis
+world-z drifted −0.949 → −0.808). Fix (future work): a resolved-rate / operational-space velocity
+controller with a hard orientation constraint, or explicit re-levelling each step. The same failure
+under pseudo-inverse, damped least squares, and Jacobian-transpose confirms it is the arm-motion layer,
+not the image controller.

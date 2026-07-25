@@ -1,100 +1,87 @@
 # Module 04 — IBVS Visual Loop (Layer 2, stretch)
 
-Status: 🟢 STARTED — Phase 1 (camera) DONE. Phase 2 framing UNBLOCKED via pin fix (Day 14) — pending lab-PC run. Layer 1 signed off.
+Status: 🟡 IN PROGRESS — Phase 1 (camera) DONE; Phase 2 (classical IBVS baseline) BUILT, ~50% error
+reduction demonstrated, full convergence blocked by a controller limitation (below). Layer 1 signed
+off and untouched.
 Chat type: vision / IBVS
 Last updated: 2026-07-25 (Day 14)
 
 ## Goal
-Add the image-based visual servoing loop with an RL-tuned image Jacobian (fuzzy state
-coding, mixture parameter β), replacing privileged pose with an eye-in-hand camera.
+Replace privileged pose with an eye-in-hand camera and close the loop in the image. Phase 2 is the
+CLASSICAL IBVS baseline; Phase 3 will add the RL-tuned image Jacobian (fuzzy state coding + mixture β)
+that the baseline is compared against.
 
 ## Hardware decision (Day 13)
-RGB **webcam only** — no RGB-D available. Monocular IBVS with approximate depth; the
-unmeasured Z becomes the job of the RL-tuned image Jacobian (a cleaner contribution, and
-it matches Khan 2026's monocular CSRT baseline). Sim camera configured RGB-only to match.
+Monocular RGB webcam only — no depth. The unmeasured Z is the job of the RL-tuned Jacobian (cleaner
+contribution; matches Khan 2026's monocular baseline). Sim camera configured RGB-only to match.
 
-## Phase plan
+## Phase status
 1. ✅ Camera → cube pixel (eye-in-hand RGB, verified).
-2. 🔶 Classical IBVS baseline — detection WORKING; mount framing + control law to do.
+2. 🟡 Classical IBVS baseline — camera + detection + self-measured Jacobian + servo all WORK; servo
+   halves the centroid error (~43→~20 px) reproducibly, then destabilises (see limitation).
 3. ⏳ RL-tuned image Jacobian (cPPO correction + FOV cost term).
 4. ⏳ Benchmark RL-tuned vs classical + figures.
 
-## Phase 2 progress (Day 13)
-- **Detection works.** Saturated-colour blob detector finds the cube robustly.
-  **DexCube colour ≈ RGB [112, 83, 190]** (violet) — lock this for the live detector.
-- **Lighting:** base lift env already has a dome light (`/World/light`, 3000). Black
-  frames were NOT a lighting problem.
-- **Camera-in-mesh was the black-frame cause.** A 4 cm wrist mount sits *inside* the
-  gripper body → renders the black interior. Fix = STANDOFF along the view axis. Current
-  test mount: `pos=(0.0002, -0.0276, 0.2987)` (0.3 m back). Renders fine but frames the
-  cube too large/at the edge with the flange occluding — MOUNT STILL NEEDS TUNING
-  (side-offset or a quick GUI look) for a clean object view.
-- **Ground-truth world→pixel projection in `ibvs_camera_test.py` is ~50 px off** (camera
-  convention). NOT needed for IBVS (we servo on the detected centroid) — treat as a
-  Phase-1 crutch, don't rely on it.
-- Detector is currently seeded near the (slightly-wrong) GT; for the live loop switch to
-  a GLOBAL colour mask on the locked violet, largest blob = cube centroid.
-- **Phase 2b control script written** (`ur5_grasp/scripts/ibvs_servo.py`): probe-measured
-  2x2 image Jacobian + proportional centroid servo, joint-step capped, lost-detection
-  guarded. BLOCKED on framing — at the RL ready pose the eye-in-hand view frames the cube
-  too large / at the edge, so small probe moves push it out of view (`[abort] cube left
-  view`). Root cause: ready-pose gripper points sideways + camera-convention wobble.
-- **Two ways to unblock (next session):** (a) short Isaac GUI session to place the mount
-  visually; or (b) START IBVS from a policy-driven pre-grasp pose (run the trained
-  checkpoint until the arm hovers above the cube looking down, THEN servo) so framing is
-  natural. (b) reuses the trained policy + play.py and is the recommended path.
+## What works (`ur5_grasp/scripts/ibvs_servo.py`)
+- **Mount (recovered via mount_finder):** `pos=(0.06, 0.0, 0.0)` wrist frame (beside gripper),
+  `rot=(0.9894, 0.0, -0.1452, 0.0)` (w,x,y,z), aimed along wrist **+z** at the grasp region.
+- **Detection:** largest highly-saturated blob = the multi-colour DexCube. Robust to stray pixels /
+  a second coloured object. No colour hard-coded.
+- **Image Jacobian:** self-measured by finite differences (two probe moves), using the ACTUAL camera
+  displacement from the wrist articulation state (not `cam.data.pos_w`, which lags). `ds = J·dc`,
+  2×2, well-conditioned (det ≈ 2.2e6). Re-measured periodically during servo.
+- **Servo:** proportional `dc = −λ J⁻¹ (s−s*)`, mapped to joints via damped least squares on the full
+  6×6 arm Jacobian with orientation + height held; per-step error logged; edge/approach guards.
+- **Deterministic setup:** reset randomisation frozen; cube spawned at `(0.56, 0.16, 0.055)` so every
+  run starts identically, centrally framed.
 
-## Phase 2 resolution (Day 14) — the PIN was broken; the ready pose also looks sideways
-- **Real cause:** `ibvs_servo.py` pinned the cube at a *forced 0.30 m depth* plus a
-  *world-frame* `[0.03,0,0]` nudge. Forcing 0.30 m floats the cube nearer than the table
-  (→ "too large"); a world-frame nudge maps to an unpredictable image direction with the
-  gripper turned (→ "at the edge"). The ready pose itself is fine — `ibvs_camera_test.py`
-  already frames the cube cleanly from it by **projecting the optical axis onto the table**.
-- **First run revealed more:** at the ready pose the camera looks **sideways**, not down
-  (`fwd_z > -0.05`), so projecting onto the table can't work from there — a downward-view
-  assumption aborts. (Confirmed live: `[abort] camera isn't looking down…`.)
-- **Fix that works with the sideways camera — optical-axis STATIC pin:** `cpos + D·fwd`
-  (`D = START_DEPTH_M = 0.30`, the aim point) is dead-centre in the image *for any camera
-  orientation*. Hold the cube STATIC at that fixed world point and let the arm servo the
-  camera onto it. A controlled image-horizontal off-centre (`START_OFFSETS_M`, largest that
-  fits `SAFE_U/V`) gives the servo a real error. `step_cam_move` re-pins the cube every
-  physics step (else it free-falls out of frame). Prints `[start] … err_px=…`.
-- Valid classical *centering* baseline; the cube floats (not on the table), which is fine
-  for the image-Jacobian comparison. For a table-realistic view, set `HOVER_Q` (below).
-- **Policy-driven start dropped** for the baseline: stochastic (noisy err_px curves) and
-  couples a *classical* baseline to the RL policy. If a look-down view is wanted, use the
-  policy ONCE to discover a good hover config, freeze those 6 joints into `HOVER_Q`.
-- **Optional `HOVER_Q`** hook added (default `None`): 6 arm joint angles applied via
-  `write_joint_state_to_sim` before servoing — use only for a table-realistic look-down view.
-- **Mount note:** both scripts fly the **0.30 m standoff** `pos=(0.0002,-0.0276,0.2987)`.
-  The "verified 4 cm mount" below is STALE (that one renders black inside the gripper).
-- **Still to do on the lab PC:** run it, confirm `err_px` shrinks toward ~0 (that = the
-  classical baseline), save the curve to `results/ibvs_phase2/`.
+## Result (verified, repeatable)
+- Camera sees the cube; detection reliable.
+- Image Jacobian measured, det ≈ 2.2e6; arm-Jacobian cond ≈ 9 at the servo pose (NOT singular).
+- Servo reduces centroid error **~43 px → ~20 px (≈50%) every run**, then loses the cube after
+  ~10–30 steps. debug_start/end.png saved each run.
 
-## Phase 1 result (verified)
-- `ur5_grasp/scripts/ibvs_camera_test.py` — wrist-mounted `CameraCfg` injected into the
-  PLAY env (Layer 1 files untouched). Renders RGB; world→pixel projection confirmed
-  (on-axis point projects to image centre; cube pixel tracks the cube).
-- **Verified camera mount** (eye-in-hand on `wrist_3_link`, ROS convention):
-  `pos=(-3e-05, 0.00368, -0.03983)`, `rot=(-0.03285, 0.70643, 0.70629, 0.03228)`.
-  ⚠️ STALE: this 4 cm `pos` renders black (lens inside the gripper). Live mount in BOTH
-  scripts is the 0.30 m standoff `pos=(0.0002, -0.0276, 0.2987)` (same `rot`).
-- **Approach axis is wrist −z** (not +z). The env `ee_frame` offset `[0,0,0.16]` is
-  approximate/sign-flipped vs the true fingertip TCP — camera aim was recovered
-  empirically via `recommend_aim()`.
+## Limitation + diagnosis (Day 14)
+- Not a singularity (arm cond ≈ 9). The servo leaks ORIENTATION: the optical axis tilts during the
+  run (optz world-z −0.949 → −0.808), i.e. the camera pitches toward the table, apparent size grows,
+  target lost. Same failure under pinv, DLS, and Jacobian-transpose → it's the arm-motion layer, not
+  the image controller. Holding wrist orientation strictly through incremental joint-position targets
+  (mixed linear/angular least-squares) is not orientation-tight.
+- **Fix (future work):** resolved-rate / operational-space velocity controller with a HARD orientation
+  constraint (or explicit re-levelling each step); or pick the servo pose by an image-motion
+  manipulability scan. This is a controller sub-project, not gain tuning — and it's exactly what the
+  Phase 3 RL-tuned Jacobian is meant to absorb, so it motivates rather than blocks the contribution.
 
-## Guardrail
-Never let Layer 2 endanger Layer 1. (Layer 1 = pass bar, signed off.)
+## Bugs solved this session (the long road to a working camera)
+1. **Mount aimed backwards.** 0.30 m standoff aimed back at the grasp point → saw only the gripper (+ a
+   wrist webcam model), never the cube. `geometry.txt` from `mount_finder.py` showed the cube sits
+   along wrist **+z** (the old "approach = wrist −z" note was backwards). Fixed with the side-mount.
+2. **Wrong cube colour.** Assumed violet `[112,83,190]`; the DexCube is multi-colour, so the colour
+   mask never matched. Fixed with the saturation + largest-blob detector.
+3. **Lagging camera pose.** `cam.data.pos_w` read ~0 displacement during probes → garbage Jacobian.
+   Fixed by deriving the camera pose from `body_pos_w`/`body_quat_w` + the fixed mount offset.
+4. **Debug gizmos in view.** The command goal-pose / ee_frame markers rendered into the camera and
+   fooled the colour mask. Fixed with `debug_vis=False` on `commands.object_pose` and `scene.ee_frame`.
+5. **Phantom second cube.** Placing the cube with `write_root_pose_to_sim` produced a duplicate cube in
+   view → detector averaged both. Fixed by freezing randomisation + spawning at a fixed pose (no
+   `write_root_pose`); largest-blob detector as the safety net.
 
-## Gotchas (Day 13)
-- Camera sensors REQUIRE `--enable_cameras`; headless training never exercised this path.
-- `CUDA error 804` / "Failed to query CUDA device count" on first camera run = an apt
-  driver update (→580.173) with the old kernel module still loaded. Fix = reboot.
-  Consider `apt-mark hold` on the nvidia driver to freeze the stack.
+## Gotchas (carry forward)
+- Camera sensors REQUIRE `--enable_cameras`; headless training never exercised rendering.
+- `CUDA error 804` / "Failed to query CUDA device count" on first camera run = apt driver auto-update
+  (→580.173) with the old kernel module loaded. Fix = reboot; consider `apt-mark hold` on the driver.
+- Use `Camera`, not `TiledCamera` (hangs on Blackwell).
+
+## Tools written
+- `ibvs_servo.py` — Phase 2 baseline (camera + detection + Jacobian + servo).
+- `ibvs_camera_test.py` — Phase 1 camera smoke test.
+- `mount_finder.py` — camera-mount × arm-pose sweep + wrist-frame geometry reporter (`geometry.txt`).
+- `pose_finder.py` — arm-pose sweep to visualise the wrist-camera view.
 
 ## Key references
 Shi 2020 (IBVS + Q-learning), Zhang (fuzzy IBVS), Khan 2026 (classical monocular baseline).
 
 ## run_log.md refs
 - 2026-07-24 (Day 13) — Layer 2 kickoff + Phase 1 camera verified.
-- 2026-07-25 (Day 14) — Phase 2 framing fix (pin geometry), servo loop untouched.
+- 2026-07-25 (Day 14) — Phase 2 baseline built; mount + detection + Jacobian fixed; ~50% error
+  reduction; servo-convergence limitation diagnosed (orientation leak) and documented.

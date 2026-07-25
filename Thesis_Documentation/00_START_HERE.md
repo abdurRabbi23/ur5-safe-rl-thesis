@@ -37,7 +37,7 @@ Read in order the first time. Later, jump straight to the section you need.
 | 01 | `01_Environment_Setup.md` | Hardware, drivers, Isaac Sim, Isaac Lab, PyTorch, validation | ✅ Done |
 | 02 | `02_Grasp_Environment.md` | UR5e grasp env, gripper, the "weld" fix, PPO baseline | ✅ Done |
 | 03 | `03_Safety_and_cPPO_Benchmark.md` | Safety costs, cPPO, calibration, the core benchmark | ✅ Done (Layer 1 PASS) |
-| 04 | `04_Layer2_IBVS.md` | Image-based visual servoing loop (stretch goal) | ⏳ Planned |
+| 04 | `04_Layer2_IBVS.md` | Image-based visual servoing loop (stretch goal) | ▶ In progress (Phase 2 baseline, ~50%) |
 | 05 | `05_Layer3_SimToReal.md` | Transfer to the real UR5e (optional goal) | ⏳ Planned |
 | 06 | `06_Results_and_Experiments.md` | Configs, TensorBoard, benchmark tables and plots | ✅ Layer 1 results + figures done |
 | 07 | `07_Troubleshooting.md` | Every bug hit + the fix, in one place | ▶ Growing |
