@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<!--
+  ROBOTIS RH-P12-RN — flat URDF vendored for the UR5e Safe-RL thesis.
+  Source: https://github.com/ROBOTIS-GIT/RH-P12-RN (rh_p12_rn_description, Apache-2.0,
+  see LICENSE_ROBOTIS). Derived from urdf/rh_p12_rn.xacro with THREE deliberate changes:
+
+  1. XACRO REMOVED. Plain URDF so Isaac Lab's UrdfConverter can read it directly.
+     Mesh paths are RELATIVE (meshes/*.stl) instead of package:// — package:// does not
+     resolve outside a ROS workspace.
+
+  2. `world` LINK AND `world_fixed` JOINT DROPPED. The gripper mounts to the UR5e
+     flange, so `rh_p12_rn_base` must be the root link. Leaving `world` in would make
+     the converter build an extra root body.
+
+  3. INERTIAS FIXED (the important one). The upstream xacro ships placeholder unit
+     inertias (ixx=iyy=izz=1.0) with the REAL values commented out — a 22 g fingertip
+     with 1.0 kg*m^2 of inertia behaves like a flywheel and will make the solver
+     sluggish and the grasp mushy. The real values are restored below. For rh_*_2 the
+     published ixx/izz round to 0.0, so a 1e-5 floor is applied (a 22 g, ~55 mm link
+     has I ~ m*r^2/12 ~ 5e-6, so 1e-5 is a mildly conservative, solver-safe floor).
+
+  KINEMATICS — note this is a TREE, not a closed loop:
+
+      rh_p12_rn_base
+        |-- rh_p12_rn (rev, axis +x, 0..1.1) --> rh_p12_rn_r1
+        |                                          |-- rh_r2 (rev, axis -x, 0..1.0) --> rh_p12_rn_r2
+        |-- rh_l1     (rev, axis -x, 0..1.1) --> rh_p12_rn_l1
+                                                   |-- rh_l2 (rev, axis +x, 0..1.0) --> rh_p12_rn_l2
+
+  4 joints, 5 links, no loop. Every joint is independently drivable, so unlike the
+  Robotiq 2f-85 there is a direct force path from the drives to the contact pads.
+  The opposed axis signs mean all four joints take the SAME scalar target q to keep
+  the pads parallel: q=0 open (~107 mm between pads), q=1.0 closed.
+-->
+<robot name="rh_p12_rn">
+
+  <!-- ============================ base ============================ -->
+  <link name="rh_p12_rn_base">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/base.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/base.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0.000 0.000 0.032" rpy="0 0 0"/>
+      <mass value="0.236"/>
+      <inertia ixx="0.00017" ixy="0.0" ixz="0.0" iyy="0.00011" iyz="0.0" izz="0.00017"/>
+    </inertial>
+  </link>
+
+  <!-- ======================== right finger ======================== -->
+  <!-- DRIVEN joint on the real hand (single DYNAMIXEL, effort interface). -->
+  <joint name="rh_p12_rn" type="revolute">
+    <parent link="rh_p12_rn_base"/>
+    <child link="rh_p12_rn_r1"/>
+    <origin xyz="0.0 0.008 0.048" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit velocity="6.5" effort="1000" lower="0.0" upper="1.1"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="rh_p12_rn_r1">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/r1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/r1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0.000 0.034 0.004" rpy="0 0 0"/>
+      <mass value="0.068"/>
+      <inertia ixx="0.00004" ixy="0.0" ixz="0.0" iyy="0.00002" iyz="-0.00001" izz="0.00002"/>
+    </inertial>
+  </link>
+
+  <!-- Parallel-motion coupling link: keeps the right pad parallel through the stroke. -->
+  <joint name="rh_r2" type="revolute">
+    <parent link="rh_p12_rn_r1"/>
+    <child link="rh_p12_rn_r2"/>
+    <origin xyz="0.0 0.0493634 0.0285" rpy="0 0 0"/>
+    <axis xyz="-1 0 0"/>
+    <limit velocity="6.5" effort="1000" lower="0.0" upper="1.0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="rh_p12_rn_r2">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/r2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/r2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0.000 0.006 0.011" rpy="0 0 0"/>
+      <mass value="0.022"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+  <!-- ========================= left finger ========================= -->
+  <joint name="rh_l1" type="revolute">
+    <parent link="rh_p12_rn_base"/>
+    <child link="rh_p12_rn_l1"/>
+    <origin xyz="0.0 -0.008 0.048" rpy="0 0 0"/>
+    <axis xyz="-1 0 0"/>
+    <limit velocity="6.5" effort="1000" lower="0.0" upper="1.1"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="rh_p12_rn_l1">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/l1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/l1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0.000 -0.034 0.004" rpy="0 0 0"/>
+      <mass value="0.068"/>
+      <inertia ixx="0.00004" ixy="0.0" ixz="0.0" iyy="0.00002" iyz="0.00001" izz="0.00002"/>
+    </inertial>
+  </link>
+
+  <joint name="rh_l2" type="revolute">
+    <parent link="rh_p12_rn_l1"/>
+    <child link="rh_p12_rn_l2"/>
+    <origin xyz="0.0 -0.0493634 0.0285" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit velocity="6.5" effort="1000" lower="0.0" upper="1.0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="rh_p12_rn_l2">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/l2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/l2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0.000 -0.006 0.011" rpy="0 0 0"/>
+      <mass value="0.022"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+</robot>

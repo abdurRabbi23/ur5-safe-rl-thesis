@@ -1,0 +1,56 @@
+==========================================================================
+BUILD + VALIDATE  ur5e_rhp12.usd   (UR5e + ROBOTIS RH-P12-RN)
+==========================================================================
+urdf       : /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/assets/rh_p12_rn/rh_p12_rn.urdf
+arm USD    : https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/ur5e/ur5e.usd
+output USD : /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/assets/ur5e_rhp12.usd
+
+--- 1. Converting URDF -> USD ---
+    skipped (reusing /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/assets/rh_p12_rn.usd)
+
+--- 2. Authoring merged USD ---
+    mount pos=[0.0, 0.0, 0.0]  rpy=[0.0, 0.0, 0.0] (in wrist_3_link frame)
+    variant Physics -> PhysX
+    variant Gripper -> None
+    variant Sensor -> None
+    disabled nested articulation root at /Robot/RHP12/rh_p12_rn_base
+    wrist prim : /Robot/wrist_3_link
+    base  prim : /Robot/RHP12/rh_p12_rn_base
+    added fixed joint /Robot/rhp12_mount_joint (wrist_3_link -> rh_p12_rn_base)
+    gripper colour rgb=[0.02, 0.02, 0.02] -> displayColor on 0 renderable prims
+    bound /Robot/Looks/GripperColour at /Robot/RHP12 (strongerThanDescendants)
+    no pre-existing material bindings found in the subtree
+    !! WARNING: zero renderable prims found under /Robot/RHP12 — the colour
+       cannot apply. The traversal, not the material, is the problem.
+    wrote /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/assets/ur5e_rhp12.usd
+
+--- 3. Validating + measuring stroke ---
+    SUCCESS: loaded as a single articulation.
+    num joints : 10
+    joint names: ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint', 'rh_l1', 'rh_p12_rn', 'rh_l2', 'rh_r2']
+    num bodies : 12
+    body names : ['base_link', 'shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link', 'rh_p12_rn_base', 'rh_p12_rn_l1', 'rh_p12_rn_r1', 'rh_p12_rn_l2', 'rh_p12_rn_r2']
+
+    --- gripper stroke sweep (pad separation should shrink monotonically) ---
+      q(rad)   pad_gap(m)   tcp_offset_from_wrist(m)
+       0.00     0.1145       0.0767
+       0.10     0.1083       0.0815
+       0.20     0.1012       0.0859
+       0.30     0.0932       0.0900
+       0.40     0.0844       0.0936
+       0.50     0.0749       0.0968
+       0.60     0.0656       0.0993
+       0.70     0.0551       0.1015
+       0.80     0.0442       0.1032
+       0.90     0.0330       0.1044
+       1.00     0.0216       0.1049
+
+    READ THIS TABLE:
+      * pad_gap at q=0.00 should be ~0.10 m (RH-P12-RN opens ~106 mm).
+      * pad_gap should fall smoothly to near 0 at q=1.00. If it does NOT move,
+        the drives are not reaching the joints. If it jumps or oscillates,
+        lower the drive stiffness.
+      * tcp_offset_from_wrist is the number to put in the env's ee_frame
+        OffsetCfg (replaces the Robotiq's 0.16). Use the value at q=0.
+
+[report saved to /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/tools/make_rhp12_report.txt]

@@ -146,3 +146,24 @@ world-z drifted −0.949 → −0.808). Fix (future work): a resolved-rate / ope
 controller with a hard orientation constraint, or explicit re-levelling each step. The same failure
 under pseudo-inverse, damped least squares, and Jacobian-transpose confirms it is the arm-motion layer,
 not the image controller.
+
+## Layer 3 / gripper bugs (RH-P12-RN)
+
+**`RuntimeError: Inplace update to inference tensor outside InferenceMode is not allowed.`**
+Cause: the lift env publishes safety-cost tensors into `self.extras` during `step()`. Because `step()`
+runs inside `torch.inference_mode()`, those buffers become *inference tensors*. A later `env.reset()`
+called **outside** an inference-mode block then tries to update them in place, which PyTorch forbids.
+Scripts that reset only once (`grasp_hold_test.py`) never see this; any script that resets in a loop
+does. Fix: wrap the whole loop — every `env.reset()` included — in a single `torch.inference_mode()`
+block, and allocate the action/scratch tensors inside it too.
+
+**The gripper's TCP moves while it closes.**
+Not a bug, but it breaks the usual "one fixed `ee_frame` offset" assumption. The RH-P12-RN fingers curl
+*forward* as they close, so the pad midpoint travels 0.0767 m (open) → 0.1049 m (closed) from
+`wrist_3_link`. A wrongly guessed offset makes the pads sweep past the object instead of onto it, which
+looks exactly like a too-weak grip. Calibrate empirically with `scripts/rhp12_grasp_sweep.py` and take
+the centre of the holding band, not a single value.
+
+**Gripper joint order is not the order you declared it.**
+The build report returned `[...arm x6, 'rh_l1', 'rh_p12_rn', 'rh_l2', 'rh_r2']`. Always resolve gripper
+joints with `find_joints(names)`, never by positional index.

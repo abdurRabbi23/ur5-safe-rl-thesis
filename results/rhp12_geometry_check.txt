@@ -1,0 +1,58 @@
+==========================================================================
+RH-P12-RN READY-POSE GEOMETRY
+TCP_OFFSET in use : 0.130 m
+==========================================================================
+--------------------------------------------------------------------------
+ PADS OPEN (gripper action >= 0)
+--------------------------------------------------------------------------
+ gripper q (rh_p12_rn, rh_r2, rh_l1, rh_l2) : [+0.000, +0.000, -0.000, -0.000]
+ arm base_link (world)             : [+0.000, +0.000, +0.000]
+ wrist_3_link (world)              : [+0.640, +0.133, +0.342]
+ pad-ORIGIN midpoint (world)       : [+0.633, +0.133, +0.266]
+ RL reach target, ee_frame (world) : [+0.629, +0.133, +0.212]
+ cube (world)                      : [+0.526, +0.177, +0.021]
+
+ >> ee_frame vs pad-origin midpoint: 0.0535 m
+ >> ee_frame  -> cube distance     : 0.2216 m
+ >> pad midpt -> cube distance     : 0.2708 m
+ >> ee_frame height above table    : +0.2124 m
+ >> pad-origin offset along wrist  : [-0.000, +0.000, +0.077]
+
+--------------------------------------------------------------------------
+ PADS CLOSED (gripper action < 0)
+--------------------------------------------------------------------------
+ gripper q (rh_p12_rn, rh_r2, rh_l1, rh_l2) : [+0.999, +0.999, +0.999, +0.999]
+ arm base_link (world)             : [+0.000, +0.000, +0.000]
+ wrist_3_link (world)              : [+0.640, +0.133, +0.342]
+ pad-ORIGIN midpoint (world)       : [+0.631, +0.133, +0.237]
+ RL reach target, ee_frame (world) : [+0.629, +0.133, +0.212]
+ cube (world)                      : [+0.526, +0.177, +0.021]
+
+ >> ee_frame vs pad-origin midpoint: 0.0251 m
+ >> ee_frame  -> cube distance     : 0.2215 m
+ >> pad midpt -> cube distance     : 0.2444 m
+ >> ee_frame height above table    : +0.2123 m
+ >> pad-origin offset along wrist  : [+0.000, -0.000, +0.105]
+
+==========================================================================
+ VERDICT
+==========================================================================
+ WHY TWO MEASUREMENTS: the RH-P12-RN fingers CURL FORWARD as they close, so
+ the grasp centre is not a fixed point on the wrist axis. It travels
+ 0.0765 m (open) -> 0.1049 m (closed), i.e. +0.0284 m.
+ TCP_OFFSET is therefore a CLOSING TCP and must only ever be compared against
+ the CLOSED pad geometry. Comparing it against the open pose is apples to
+ oranges and will look like a large error when nothing is wrong.
+
+ ALSO: pad_mid here is the r2/l2 BODY ORIGIN midpoint, which sits behind the
+ flat contact faces. Expect ee_frame to lead it by roughly the pad half-depth.
+ The authoritative calibration is the CONTACT evidence in
+ results/rhp12_grasp_sweep.txt (face_gap 0.0413 m vs a 0.0412 m cube at
+ TCP_OFFSET = 0.130). If this script and that sweep disagree, THE SWEEP WINS.
+
+ [PASS] ee_frame vs CLOSED pad origins : 0.0251 m   (want < 0.03)
+ [PASS] ee_frame height above table      : +0.2123 m   (want > 0.02)
+ [PASS] ee_frame -> cube distance        : 0.2215 m   (want 0.05 - 0.60)
+
+ >> CLEARED FOR TRAINING.
+==========================================================================

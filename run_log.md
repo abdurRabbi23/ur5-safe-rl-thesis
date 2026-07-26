@@ -208,3 +208,201 @@ Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 graspin
 - Day 14 IBVS servo status: end-to-end loop WORKS partially. Camera (fixed mount) sees the cube; saturation+largest-blob detector is reliable; wrist-derived camera pose fixed the dc=0 bug; image Jacobian is well-conditioned (det ~2.2e6). Servo consistently reduces centroid error 42.6 -> ~20 px (~50%), then the arm arcs the camera INTO the cube (npx explodes 2k->20k) and it diverges — same result across DLS-vs-pinv, orientation-lock (full 6x6 J, zero angular), height-lock (zero world-z), depth-hold, gentle gain/cap, and periodic re-probing. Root cause = poor arm conditioning for camera translation at the ready servo pose; needs a better-conditioned HOVER_Q (a conditioning scan), not more gain tuning. Deterministic setup: randomisation frozen, cube spawned at (0.56,0.16,0.055) to frame centrally. debug_start/end.png saved each run.
 - Day 14 IBVS servo — final diagnosis: arm-Jacobian cond=9 (NOT singular), so translation is physically fine, but the optical axis tilts during servo (optz -0.949 -> -0.808) even with angular rows weighted 25x. Root cause of the persistent ~50%-then-diverge: the incremental joint-target + linear/angular least-squares scheme leaks orientation (camera pitches -> dives at the cube). Fixing it properly needs a resolved-rate/operational-space velocity controller with a hard orientation constraint (or a servo pose chosen by an image-motion manipulability scan) — a control sub-project, not a tuning tweak. RECOMMENDATION: lock in the working pipeline (mount, detection, self-measured image Jacobian, ~50% centroid-error reduction) and document the servo-convergence limitation as future work. Layer 1 remains the defensible thesis.
 - Day 14 write-up: documented Layer 2 Phase 2 properly. Rewrote logbook/04_layer2_ibvs.md (clean final status); replaced Thesis_Documentation/04_Layer2_IBVS.md outline with the built pipeline + ~50% result + honest limitation; added Methods_Chapter_Layer2.md (formal thesis prose, parallels Layer 1); added the 5 Layer 2 bugs to 07_Troubleshooting; added 3 evidence figures (assets/fig_l2_*.png); updated 00_START_HERE + 09_Changelog. Scripts finalised: ibvs_servo.py, mount_finder.py, pose_finder.py.
+
+## 2026-07-26 (Day 16) — RH-P12-RN gripper import started (real contact grasp, replaces the weld)
+- Decision: build the REAL gripper (ROBOTIS RH-P12-RN) as a SEPARATE additive env rather than
+  fixing the Robotiq 2f-85 contact physics. Rationale: the 2f-85 is not the hardware gripper, so
+  perfecting its contact buys no sim-to-real; and swapping the weld inside the Layer 1 env would
+  invalidate both trained policies + all Layer 1 figures. Layer 1 files stay FROZEN.
+- KEY FINDING: the RH-P12-RN URDF is a pure TREE (5 links / 4 revolute joints, no closed loop),
+  unlike the 2f-85 4-bar. Every joint is directly drivable -> there IS a force path to the pads.
+  This is why the 2f-85 could never hold (passive joints, stiffness=0, loop never closed in PhysX).
+- Joint coupling: opposed axis signs (rh_p12_rn +x / rh_r2 -x / rh_l1 -x / rh_l2 +x) mean all four
+  joints take the SAME scalar target q to keep the pads parallel. q=0 open, q=1.0 closed.
+  No PhysX mimic joints and no loop-closure joint needed.
+- Vendored `ur5_grasp/assets/rh_p12_rn/` (flat URDF + 5 STLs + ROBOTIS licence). Three edits vs the
+  upstream xacro: xacro removed / relative mesh paths; `world` link + `world_fixed` joint dropped so
+  rh_p12_rn_base is the root; and INERTIAS FIXED — upstream ships placeholder ixx=iyy=izz=1.0 with
+  the real values commented out (a 22 g fingertip with 1.0 kg*m^2 would behave like a flywheel).
+  rh_*_2 ixx/izz round to 0.0 upstream -> 1e-5 floor applied.
+- Geometry measured from the STLs (sandbox): pad inner faces sit at y=+/-0.0535 in base frame ->
+  ~107 mm max opening (matches the 106 mm spec); fingertip reaches z~0.1165 above the mount face,
+  so TCP is ~0.095-0.10 (vs the Robotiq's 0.16). DexCube is ~4.1 cm (0.0515 * 0.8) -> ample room.
+- Added `ur5_grasp/tools/make_ur5e_rhp12_usd.py`: UrdfConverter (convex_decomposition colliders so
+  the pad faces survive) -> merged single-articulation USD (ur5e.usd with Gripper=None + fixed joint
+  wrist_3_link -> rh_p12_rn_base, nested articulation root disabled) -> validate + STROKE SWEEP that
+  prints pad separation vs q. The sweep is the acceptance test.
+- PENDING on lab PC:
+    cd ~/Abdur_Rabbi_THESIS/IsaacLab
+    ./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_rhp12_usd.py --headless
+  Then paste tools/make_rhp12_report.txt. Next after that: robots/ur5e_rhp12.py + a no-weld
+  task id Isaac-Lift-Cube-UR5e-RHP12-v0, then grasp_hold_test.py for the real contact verdict.
+- BUILD SUCCEEDED first try (tools/make_rhp12_report.txt). Single articulation, 10 joints /
+  12 bodies. Joint order is INTERLEAVED — ['...arm x6', 'rh_l1', 'rh_p12_rn', 'rh_l2', 'rh_r2'] —
+  so always resolve gripper joints by NAME, never by index.
+- Stroke sweep PASSED and is monotonic: pad gap 0.1145 (q=0) -> 0.0216 (q=1.0). Confirms a real
+  force path to the pads, i.e. the thing the Robotiq never had. Default flange mount (pos 0,0,0,
+  identity rot on wrist_3_link) was correct — no --mount_pos/--mount_rpy tuning needed.
+- IMPORTANT FINDING — the TCP is NOT a fixed point. The fingers curl FORWARD as they close, so
+  the pad midpoint travels 0.0767 m (open) -> 0.1049 m (closed) from wrist_3_link. A single
+  guessed ee_frame offset can therefore fail for a purely geometric reason that looks identical
+  to "grip too weak". Calibration must be empirical.
+- Added (Layer 1 untouched, all additive):
+    ur5_grasp/robots/ur5e_rhp12.py            — ArticulationCfg; drives ALL FOUR finger joints
+                                                 (legal here: tree, no loop to fight). Grip force
+                                                 set by effort_limit_sim=5.0 Nm (~100 N at the pad),
+                                                 NOT by stiffness. TCP_OFFSET=0.085 provisional.
+    ur5_grasp/tasks/lift/ur5e_rhp12_env.py    — subclass of UR5eCubeLiftEnv with _apply_weld() as
+                                                 a no-op. Safety-cost channel kept, so a cPPO run
+                                                 here stays comparable with Layer 1.
+    ur5_grasp/tasks/lift/ur5e_rhp12_env_cfg.py— env cfg; gripper action = one binary command over
+                                                 all 4 joints, so the ACTION SPACE is unchanged
+                                                 from Layer 1 (policies stay comparable).
+    ur5_grasp/scripts/rhp12_grasp_sweep.py    — contact-only hold test that sweeps the TCP offset.
+  Registered ids: Isaac-Lift-Cube-UR5e-RHP12-v0 and -RHP12-Play-v0.
+- PENDING on lab PC (the real verdict — does it grip without a weld?):
+    cd ~/Abdur_Rabbi_THESIS/IsaacLab
+    ./isaaclab.sh -p ../ur5_grasp/scripts/rhp12_grasp_sweep.py \
+        --task Isaac-Lift-Cube-UR5e-RHP12-Play-v0 --num_envs 1 --headless
+  Writes results/rhp12_grasp_sweep.txt. If nothing holds, tune in order: pad friction material,
+  then effort_limit_sim, then solver iterations — NOT stiffness (that was the Robotiq failure mode).
+- Bug on first sweep run: `RuntimeError: Inplace update to inference tensor outside InferenceMode`.
+  Cause: the env publishes safety-cost tensors into `self.extras` inside step() (so they are inference
+  tensors), and the sweep called `env.reset()` OUTSIDE inference mode on each iteration. grasp_hold_test.py
+  never hit it because it resets only once. Fix: the whole sweep loop, every reset included, now sits in one
+  `torch.inference_mode()` block with act/scratch tensors allocated inside. Logged in 07_Troubleshooting.md.
+- Sweep run 1: NO offset held, but the data was diagnostic, not just negative. In every row
+  `cube->grasp` ~= `z_drop`, i.e. the cube's displacement was almost purely VERTICAL — it fell
+  straight down rather than being squeezed out sideways or launched. That rules out friction.
+  ROOT CAUSE = test protocol, not the gripper: the cube was released as a free rigid body at the
+  same instant the CLOSE command was issued. The fingers need ~0.2 s to travel; a free body falls
+  ~0.2 m in that time, and the grasp point sits only ~0.065-0.078 m above the table, so the cube
+  always reached the table before the pads met. The middle band (0.070-0.095) shows the cube simply
+  dropping to the table; the outer offsets (0.060 / 0.100 / 0.110) show it batted off the table
+  (drop 0.21-0.26) because the cube was placed inside the palm or beyond the fingertips.
+- FIX: added a SEAT PHASE to rhp12_grasp_sweep.py — the cube is held still (pose re-written, velocity
+  zeroed) for `--seat_steps` (45) while the fingers close around it, then the help stops and the HOLD
+  PHASE runs on contact forces alone. This is a test fixture only; it is switched off before the
+  measurement, so the verdict is still a genuine contact-grasp result.
+- Also added two diagnostic columns that identify WHICH failure any future run has:
+    q_final ~ 1.00 -> fingers closed with nothing in the way => never touched the cube
+                      (geometry / collider problem; friction irrelevant)
+    q_final ~ 0.78 -> fingers stalled on the cube => real contact, residual position error is
+                      being converted to clamp force; a drop then means friction/effort.
+  pad_gap at end of seating is logged alongside it.
+- PENDING re-run on lab PC (same command as before).
+- ✅ SWEEP RUN 2 — **GRIP HOLDS WITH CONTACT FORCES ALONE (no weld).** 4/9 offsets held:
+  0.090 / 0.095 / 0.100 / 0.110. Full table in logbook/05_layer3_sim2real.md.
+  Reading: `q_final` stalled short of 1.0 in EVERY row (0.64-0.78), so the fingers made contact
+  everywhere — no row was a geometry miss. The failures at 0.060-0.085 stall EARLIER with a WIDER
+  pad gap: the cube sits too deep and is caught on the curved proximal r1/l1 links instead of the
+  flat pads, which cannot hold it. From 0.090 the cube sits in the pad region, the fingers close
+  further, and it holds. The holding band brackets the closed-pose TCP of 0.1049 as expected.
+- CAVEAT: the sweep stopped at 0.110, so the band's UPPER edge is unknown and the reported
+  "centre 0.099" is biased low. TCP_OFFSET deliberately NOT changed yet.
+- Module 05 promoted to ACTIVE and rewritten with the full result. NEXT: extend the sweep upward
+  (--offsets "0.100 0.110 0.120 0.130 0.140"), set TCP_OFFSET to the true centre, confirm, then
+  train PPO on Isaac-Lift-Cube-UR5e-RHP12-v0 and compare against the Layer 1 weld baseline.
+- Extended sweep (0.100-0.140): held at ALL FIVE, so "held" alone could not pick a value. Resolved it
+  on physics instead: converted pad_gap (body origins) to the clear opening between pad FACES
+  (face_gap = pad_gap - 0.0078) and compared against the 0.0412 m DexCube.
+    0.100 -> +21.6 mm   0.110 -> +17.1 mm   0.120 -> +14.3 mm   0.130 -> +0.3 mm   0.140 -> -1.6 mm
+  0.100-0.120 are FALSE POSITIVES: they pass a static hold with the pads stopped 14-22 mm wider than
+  the cube, i.e. the cube is WEDGED on the curved proximal r1/l1 links, not held by the flat pads.
+  That survives a static test and fails under real lift accelerations. 0.140 interpenetrates by 1.6 mm.
+- **TCP_OFFSET LOCKED = 0.130** in robots/ur5e_rhp12.py (true flat-pad grip, q stalls 0.875,
+  z_drop 2.9 mm). rhp12_grasp_sweep.py rewritten to report face_gap and select on it rather than on
+  an arithmetic centre-of-band, which was a misleading statistic on a truncated band.
+- NEXT: confirm with --offsets "0.125 0.130 0.135" (env ee_frame now actually uses 0.130), then
+  train PPO on Isaac-Lift-Cube-UR5e-RHP12-v0 vs the Layer 1 weld baseline.
+- ✅ CONFIRMATION RUN — calibration closed. 0.125/0.130/0.135 all HELD; 0.130 gives face_gap 0.0413
+  vs cube 0.0412 (delta +0.1 mm), reproducing the previous run's 0.0415 to within 0.2 mm.
+  q_final 0.876 = fingers stall on the cube and convert the residual 0.124 rad of commanded travel
+  into clamp force. TCP_OFFSET = 0.130 is final.
+- NEXT: smoke-test training (256 envs / 20 iters) before spending GPU hours, then the full PPO run on
+  Isaac-Lift-Cube-UR5e-RHP12-v0 vs the Layer 1 weld baseline. Reward shaping was tuned for the weld
+  (where grasping is free), so a slower curve under real contact is a FINDING about the weld's cost,
+  not a failure — record it either way.
+- Ran the 20-iteration smoke test with the GUI; robot does not grasp. EXPECTED — 20 iterations of PPO
+  is a random policy (the Layer 1 weld env needed 1500 iters; lifting_object went 0.12 -> 2.16 over
+  that run). A smoke test checks the loop runs and geometry is sane, NOT that grasping works.
+- BUT one real risk to rule out first: TCP_OFFSET moved 0.085 -> 0.130, pushing the RL reach target
+  4.5 cm further along wrist +z. The grasp sweep only ever proved the gripper holds a cube TELEPORTED
+  between its pads; it never checked that the reach target the reward chases is somewhere useful. If
+  the frame now sits below the table or off the pads, the reach reward is unlearnable and PPO will
+  never find a grasp — which looks exactly like "the robot can't grasp".
+- Added ur5_grasp/scripts/rhp12_geometry_check.py (zero_agent.py hardcodes Robotiq body names and
+  crashes on this env). Reports at the ready pose: ee_frame vs TRUE pad midpoint, ee_frame height
+  above the table, ee_frame -> cube distance, and the exact OffsetCfg that would land on the pads.
+  Writes results/rhp12_geometry_check.txt.
+- Wrote logbook/HANDOFF_next.md for a fresh training session (overwrote the stale Layer 2 handoff —
+  that work's final state lives in logbook/04_layer2_ibvs.md, nothing lost). Handoff covers: the
+  mandatory geometry check first, smoke test + full train commands, how to read the curve (do NOT
+  judge before ~500 iters; watch Episode_Reward/lifting_object; Layer 1 went 0.12 -> 2.16), the
+  Layer 1 comparison target, what would keep the weld defensible, and the session's gotchas.
+- Refreshed logbook/00_INDEX.md status block + module table (04 closed, 05 ACTIVE).
+- Geometry check PASSED, cleared for training. Closed-pad numbers: ee_frame vs pad origins
+  0.0251 m, height above table +0.2123 m, ee_frame -> cube 0.2731 m. The feared failure (reach
+  target inside the table) did not happen — it sits at +0.212 m, not the guessed ~0.07 m.
+- FIXED rhp12_geometry_check.py before running it. It stepped with a zero action, but
+  BinaryJointPositionAction masks on `action < 0`, so that leaves the gripper OPEN — it was
+  comparing a CLOSING TCP against the open-pose pad origins and gating at < 0.02 m. It would
+  have failed a correct config (0.0535 m) and recommended TCP_OFFSET ~0.077, outside the
+  0.125-0.135 band the contact sweep proved HELD. Now probes open AND closed, gates on closed
+  only, splits BLOCKING (table height, cube distance) from the advisory frame error, and names
+  the contact sweep as the authority. Also fixed the stale '0.085' TCP_OFFSET comments in
+  tasks/lift/ur5e_rhp12_env_cfg.py (actual value is 0.130).
+- Cosmetic: gripper is now rendered near-black so it is distinguishable from the grey UR5e in the GUI
+  (both imported light grey, so the hand blended into the wrist and you could not see open vs closed).
+  Added `colour_gripper()` to tools/make_ur5e_rhp12_usd.py — binds a UsdPreviewSurface to every
+  renderable prim under /Robot/RHP12, authored on the MERGED stage so it overrides the importer's
+  material. New `--gripper_color "r g b"` flag (default "0.02 0.02 0.02"). Mass, inertia, colliders
+  and joints untouched; TCP_OFFSET and all calibration remain valid.
+  Rebuild:  ./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_rhp12_usd.py --headless --skip_convert
+- Gripper colour attempt 1 FAILED (still white). Cause: binding a material on each MESH is not
+  enough — USD resolves bindings by strength, and a binding authored on an ANCESTOR prim with
+  `strongerThanDescendants` beats every binding below it, which is what the URDF importer does.
+  Fix in tools/make_ur5e_rhp12_usd.py: (1) strip every existing binding in the /Robot/RHP12 subtree,
+  (2) bind our material ONCE at the subtree root with strongerThanDescendants, (3) also write
+  `displayColor` on each Gprim to cover meshes that had no material at all. The rebuild now logs how
+  many prims it touched and which bindings it displaced, so a repeat failure is diagnosable.
+- DECIDED to shape the reward up front rather than wait for a stall. Added
+  ur5_grasp/tasks/lift/rhp12_rewards.py::object_lift_progress and wired it into the RH-P12-RN
+  cfg, replacing the 0.04 m step in `lifting_object`. Strict superset: 1.0 at/above 0.04 m
+  (identical to object_is_lifted, so object_goal_distance still switches on at the same point
+  and weight 15.0 keeps its meaning), gated linear ramp below it from the MEASURED resting
+  cube height 0.021 m. Rejected the obvious 'closed gripper near cube' bonus — that predicate
+  IS _apply_weld's latch condition, so it would reinstate the weld in reward-space.
+  near_tol=0.05 blocks farming height by batting the cube. COST: raw episode reward is no
+  longer comparable with Layer 1 (166.3/167.2); the cross-run comparison moves to lift-success
+  % (eval_success.py) and violation % (_apply_cost), neither of which depends on the reward.
+- Smoke test PASSED (20 iters, 256 envs, shaped env): lifting_object 0.1584 nonzero as required,
+  and object_goal_tracking 0.0227 is nonzero too — that term is gated on z > 0.04 m, so the cube
+  already clears the lift threshold by chance. Safety channel live (manip 0.0970/0.0637, costs 0
+  because MANIP_FLOOR 0.045 not breached). object_dropping 4.23% vs Layer 1's ~0% — expected
+  without the weld, but watch it climb.
+- Checked the Layer 1 log: the full 1500-iter run took 11 min 19 s, not 'hours' as the handoff
+  claimed. That kills the shaped-vs-unshaped tradeoff — at 11 min a run you can have both.
+  Added UR5eRHP12LiftEnvCfg_STOCK (+_PLAY) and registered Isaac-Lift-Cube-UR5e-RHP12-Stock-v0 /
+  -Stock-Play-v0: identical contact env, Layer 1's ORIGINAL sparse lift reward. Registered as a
+  task id rather than reverting the shaping by hand so both conditions stay reproducible and the
+  logs self-document which ran. Plan: run Stock then shaped, same --seed 42; the gap between them
+  IS the exploration cost of removing the weld, and Stock's reward stays comparable with Layer 1.
+- BOTH contact runs done, 1500 iters / 4096 envs / seed 42, ~15 min each.
+  FINDING 1: the task is learnable WITHOUT the weld and without reward help — stock-reward run
+  reached lifting_object 13.84/15.0 (94% of the weld run's 14.80). Layer 3's minimum bar cleared.
+  FINDING 2: cost of the weld = -37.6% episode reward (167.18 -> 104.28, identical reward fns so
+  this is a valid comparison). It concentrates in PRECISION, not grasping: lifting_object -6% but
+  object_goal_tracking -35% and fine-grained -90%. A real grip lets the cube shift; the weld pinned
+  it to the TCP.
+  FINDING 3: baseline singularity violation reproduces under contact — weld PPO 16.86% vs contact
+  stock 13.98%. The Layer 1 safety result is NOT an artifact of the weld.
+  FINDING 4 (the big one): the dense lift shaping BACKFIRED. It bought +31% reward over stock and
+  paid 6.5x the singularity violations (91.57% vs 13.98%), cost_total 16x, manipulability_min
+  0.0002 — parked on a singularity. Not transient: flat at ~91% for the last 400 iterations, while
+  stock on the same env and seed learned AWAY from singularities (42% peak -> 14%). Plain PPO has
+  no reason to resist since the cost channel is not in its objective. An innocuous shaping term
+  silently traded safety for reward and only the cost channel caught it — a stronger motivation for
+  cPPO than the Layer 1 numbers themselves.
+  DECISION: stock is the PRIMARY contact result; shaped becomes a separate safe-RL finding.
+  Checkpoints: 2026-07-26_21-36-58 (stock), 2026-07-26_22-30-27 (shaped).

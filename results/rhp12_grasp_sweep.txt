@@ -1,0 +1,41 @@
+==============================================================================
+RH-P12-RN GRASP SWEEP — contact-only hold test (no weld)
+==============================================================================
+task      : Isaac-Lift-Cube-UR5e-RHP12-Play-v0
+hold      : 120 control steps after CLOSE
+hold_tol  : 0.05 m
+
+seat      : 45 control steps with the cube held still
+
+cube width: 0.0412 m  <- face_gap should land ON this for a true pad grip
+
+  offset(m)   q_final   face_gap(m)   cube->grasp(m)   z_drop(m)   verdict
+    0.125     0.831     0.0511         0.0056       +0.0010    HELD
+    0.130     0.876     0.0413         0.0045       +0.0030    HELD
+    0.135     0.883     0.0399         0.0110       -0.0002    HELD
+
+==============================================================================
+ READ q_final FIRST — it says WHICH failure you have:
+   q_final ~ 1.00  the fingers closed all the way with nothing in the way, so
+                   they never touched the cube. That is a GEOMETRY or COLLIDER
+                   problem (wrong offset band, or the convex decomposition
+                   produced no usable pad geometry). Friction is irrelevant.
+   q_final ~ 0.78  the fingers stalled on the cube. Contact is real and the
+                   residual position error is being converted into clamp force.
+                   If it still dropped, NOW it is a friction / effort problem.
+
+ GRIP HOLDS at 3/3 offsets: ['0.125', '0.130', '0.135']
+
+   offset 0.130 m has face_gap 0.0413 vs cube 0.0412  (delta +0.0001)
+   -> that is the TRUE PAD GRIP. Prefer it for TCP_OFFSET.
+
+ Sanity checks before you lock it in:
+   * face_gap MUCH WIDER than the cube but still 'HELD' means the cube is
+     wedged on the curved r1/l1 links, not held by the flat pads. It will
+     hold in a static test and fail under the accelerations of a real lift.
+   * face_gap NARROWER than the cube means the pads are interpenetrating it;
+     the hold is partly solver depenetration, not friction.
+   * if EVERY swept offset held, the band is truncated — extend the sweep
+     until you find the edge, then re-read this line.
+==============================================================================
+[saved to /home/mte/Abdur_Rabbi_THESIS/results/rhp12_grasp_sweep.txt]

@@ -5,13 +5,15 @@ them, each with a one-line *why / when*. Built from `run_log.md`, the `logbook/`
 `Thesis_Documentation/` pages, the `ur5_grasp/` scripts, and the run logs. Use it as a checklist.
 
 **Legend:** ✅ = already run/used · ♻️ = one-time setup (do once per machine) · 🔁 = every session ·
-⏳ = planned, not run yet (Layer 2/3).
+🟡 = built & partly working · ⏳ = planned, not run yet.
 
 **Where you run things**
 - Almost everything runs from `~/Abdur_Rabbi_THESIS/IsaacLab` (the `./isaaclab.sh` launcher lives
   there). The `../ur5_grasp/...` paths in commands are relative to that folder.
 - Git and the figure script run from the repo root `~/Abdur_Rabbi_THESIS`.
 - All training runs **inside `tmux`** so a dropped NoMachine connection can't kill a run.
+- **Anything that uses a camera (all Layer 2 scripts) MUST add `--enable_cameras`** — headless
+  training never turns rendering on, so without it the camera produces nothing.
 
 ---
 
@@ -24,8 +26,11 @@ them, each with a one-line *why / when*. Built from `run_log.md`, the `logbook/`
 6. [Safety constraints + cost calibration + cPPO](#6-safety-constraints--cost-calibration--cppo-)
 7. [Evaluation, benchmark & figures](#7-evaluation-benchmark--figures-)
 8. [Git / end-of-session](#8-git--end-of-session-)
-9. [Appendix A — planned Layer 2 / Layer 3 commands](#appendix-a--planned-layer-2--layer-3-)
-10. [Appendix B — one-screen quick reference](#appendix-b--one-screen-quick-reference)
+9. [Layer 2 — IBVS: camera + classical servo](#9-layer-2--ibvs-camera--classical-servo-)
+10. [Layer 3 — RH-P12-RN real gripper in sim](#10-layer-3--rh-p12-rn-real-gripper-in-sim-)
+11. [Environment diagnostics & fixes](#11-environment-diagnostics--fixes-)
+12. [Appendix A — still-planned commands](#appendix-a--still-planned-commands-)
+13. [Appendix B — one-screen quick reference](#appendix-b--one-screen-quick-reference)
 
 ---
 
@@ -346,25 +351,142 @@ git push origin main
 
 ---
 
-## Appendix A — planned Layer 2 / Layer 3 ⏳
+## 9. Layer 2 — IBVS: camera + classical servo 🟡
 
-Not run yet. Layer 2 starts only after Layer 1 is signed off; Layer 3 only if time allows. Listed so
-nothing is missing — fill in exact commands when the work happens.
+Eye-in-hand vision (monocular RGB, no depth). Run from `~/Abdur_Rabbi_THESIS/IsaacLab`, inside tmux.
+**Every command here needs `--enable_cameras`** (headless mode leaves rendering off otherwise). All
+scripts inject the camera into the **Play** env at run time, so Layer 1 files stay untouched.
 
-**Layer 2 — IBVS (vision).** Reuses the same launcher and the Layer 1 cPPO runner.
-- Add an eye-in-hand **`Camera`** sensor (NOT `TiledCamera` — it hangs on Blackwell).
-- Feature pixel `(u,v)` from RGB-D (colour-centroid in sim; YOLOv8 reserved for Layer 3 clutter).
-- Classical IBVS baseline, then the RL-tuned image-Jacobian correction (fuzzy state coding + blend β).
-- Add one **field-of-view** cost term to `SafetyCostComputer`, then train/eval exactly like §6–§7.
-- Docs to fill: `04_Layer2_IBVS.md`.
+**9.1 — Phase 1 camera smoke test** (does the eye-in-hand camera render?).
+```bash
+./isaaclab.sh -p ../ur5_grasp/scripts/ibvs_camera_test.py \
+    --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --headless --enable_cameras
+```
+*Why/when:* first Layer 2 run — confirms the RGB `Camera` on `wrist_3_link` renders and saves frames.
+Optional: `--frames N` (default 5). (Its world→pixel projection is ~50 px off — fine, IBVS servos on
+the *detected* centroid, not this projection.)
 
-**Layer 3 — sim-to-real (real UR5e).**
-- ROS 2 Humble + `Universal_Robots_ROS2_Driver` bring-up (control the real arm).
-- Load the JIT/ONNX export from `play.py` (§5.5) into a ROS 2 node.
-- Import the real gripper **ROBOTIS RH-P12-RN**: URDF → USD via Isaac Lab's `UrdfConverter`, mount
-  `rh_p12_rn_base` to `tool0`/`wrist_3_link`; then adapt the grasp.
-- Zero-shot test on hardware; measure real grasp success + safety behaviour.
-- Docs to fill: `05_Layer3_SimToReal.md`.
+**9.2 — Mount / geometry finder** (fixes the "camera aimed the wrong way" bug).
+```bash
+./isaaclab.sh -p ../ur5_grasp/scripts/mount_finder.py \
+    --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --headless --enable_cameras
+```
+*Why/when:* when the camera can't see the cube. Sweeps candidate camera mounts × arm poses and writes
+`geometry.txt` (where the cube sits in the wrist frame). This is how the mount was corrected to a side
+mount aimed along wrist **+z**. Optional: `--dwell 40`.
+
+**9.3 — Pose finder** (visualise the look-down view at different arm poses).
+```bash
+./isaaclab.sh -p ../ur5_grasp/scripts/pose_finder.py \
+    --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --enable_cameras
+```
+*Why/when:* to pick an arm pose that frames the cube naturally. Optional: `--q "j1 j2 …"` (joint pose
+to test), `--dwell 60`.
+
+**9.4 — Phase 2 classical IBVS servo** (the baseline itself).
+```bash
+./isaaclab.sh -p ../ur5_grasp/scripts/ibvs_servo.py \
+    --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --headless --enable_cameras
+```
+*Why/when:* runs camera → saturation-blob detection → self-measured 2×2 image Jacobian → proportional
+centroid servo. Writes `debug_start.png` / `debug_end.png` to `results/ibvs_phase2/`. Optional:
+`--gain 0.35` (IBVS λ), `--steps 400`. *Result:* centroid error ~43 px → ~20 px (~50%) every run, then
+destabilises (orientation leak in the arm-motion layer — the Phase 3 RL-tuned Jacobian is meant to
+absorb this).
+
+---
+
+## 10. Layer 3 — RH-P12-RN real gripper in sim 🟡
+
+Imports the real **ROBOTIS RH-P12-RN** gripper and grasps with **real contact forces (no weld)** — a
+parallel env, Layer 1 untouched. Run from `~/Abdur_Rabbi_THESIS/IsaacLab`, inside tmux. Task ids:
+`Isaac-Lift-Cube-UR5e-RHP12-v0` / `-RHP12-Play-v0`.
+
+**10.1 — Build the merged UR5e + RH-P12-RN USD** (URDF → USD → one articulation).
+```bash
+./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_rhp12_usd.py
+```
+*Why/when:* once, to build the asset. Converts the vendored URDF, merges it onto the flange, validates,
+and runs a finger-stroke sweep. Writes `ur5_grasp/assets/ur5e_rhp12.usd` + `tools/make_rhp12_report.txt`
+(loads as 10 joints / 12 bodies). Optional: `--mount_pos "x y z"`, `--mount_rpy "r p y"` (default flange
+mount was already correct), `--skip_convert` (reuse an existing `rh_p12_rn.usd`).
+
+**10.2 — Grasp-hold + TCP calibration sweep** (contact only, weld off).
+```bash
+./isaaclab.sh -p ../ur5_grasp/scripts/rhp12_grasp_sweep.py \
+    --task Isaac-Lift-Cube-UR5e-RHP12-Play-v0 --num_envs 1 --headless
+```
+*Why/when:* the real verdict — does it grip without a weld? Seats the cube while the fingers close, then
+holds on contact forces alone, sweeping the TCP offset. Writes `results/rhp12_grasp_sweep.txt` and
+reports `face_gap` (pad-face opening vs the 41.2 mm cube). *Result:* **`TCP_OFFSET = 0.130`** locked.
+Optional: `--offsets "0.100 0.110 0.120 0.130 0.140"` (default is a wider set), `--seat_steps 45`,
+`--hold_steps 120`. Confirm run used `--offsets "0.125 0.130 0.135"`.
+
+> ⏳ **Next (not run yet):** train PPO on the real-gripper env and compare to the Layer 1 weld baseline:
+> `./isaaclab.sh -p ../ur5_grasp/scripts/train.py --task Isaac-Lift-Cube-UR5e-RHP12-v0 --headless --num_envs 4096`.
+
+---
+
+## 11. Environment diagnostics & fixes 🔧
+
+Handy checks used when the stack misbehaves (from the version-check / GUI-troubleshooting session).
+
+**11.1 — Which Isaac Sim version is active** (confirm 5.0.0, not 5.1).
+```bash
+conda activate isaaclab
+pip list | grep -i isaacsim
+python -c "import isaacsim, os; print(os.path.dirname(isaacsim.__file__))"
+```
+*Why/when:* whenever you suspect a 5.0/5.1 mix-up. Isaac Lab resolves Isaac Sim via the `_isaac_sim`
+symlink → `ISAACSIM_PATH` → the pip `isaacsim` in the active env; the active env is what training uses.
+
+**11.2 — Scan every conda env for a stray Isaac Sim, and locate the IsaacLab clone.**
+```bash
+for e in $(conda env list | awk '!/^#/ && NF {print $1}'); do
+  v=$(conda run -n "$e" pip list 2>/dev/null | awk '/^isaacsim +/{print $2}')
+  [ -n "$v" ] && echo "$e -> $v"
+done
+find /home/mte -maxdepth 3 -iname "IsaacLab" -type d 2>/dev/null
+```
+*Why/when:* to prove no second version is hiding. A missing `_isaac_sim` symlink is *normal* for a pip
+install. Optional guard (put in a `.py`, not bash):
+`import isaacsim; assert isaacsim.__version__.startswith("5.0")`.
+
+**11.3 — Isaac Sim GUI freezes / lags over NoMachine** (is it the GPU or the display?).
+```bash
+watch -n1 nvidia-smi                                                  # GPU ~0% while frozen = display/render issue, not compute
+tail -f ~/.nvidia-omniverse/logs/Kit/Isaac-Sim/*/kit_*.log           # what it logs right before the freeze
+echo $DISPLAY
+nvidia-smi --query-gpu=display_active,display_mode --format=csv
+```
+*Why/when:* GUI unresponsive on the RTX 5090 over NoMachine (a known Vulkan/RTX-handoff friction point).
+
+**11.4 — `CUDA error 804` / "Failed to query CUDA device count" on the first camera run.**
+```bash
+sudo reboot                        # a driver auto-update loaded a new userspace with the old kernel module
+# then, to stop it recurring, pin the driver:
+sudo apt-mark hold nvidia-driver-580
+```
+*Why/when:* the driver drifted off the frozen `580.159.03` (apt auto-update to 580.173) with the old
+kernel module still loaded. A reboot reloads the module; `apt-mark hold` keeps the driver pinned.
+
+---
+
+## Appendix A — still-planned commands ⏳
+
+Genuinely not run yet — listed so the map stays complete.
+
+**Layer 2 — Phase 3 (the RL contribution).** Reuses the Layer 1 cPPO runner.
+- Swap privileged-pose obs for image-feature obs; train the **RL-tuned image-Jacobian** correction
+  (fuzzy state coding + mixture β) with `--agent rsl_rl_cppo_cfg_entry_point`, then benchmark vs the
+  classical baseline (§9.4).
+- Add one **field-of-view** cost term to `SafetyCostComputer`, then eval like §6–§7.
+
+**Layer 3 — sim-to-real (real UR5e hardware).**
+- Train PPO/cPPO on `Isaac-Lift-Cube-UR5e-RHP12-v0` (the env is ready; run not done — see §10).
+- ROS 2 Humble + `Universal_Robots_ROS2_Driver` bring-up; drive the real 1-DOF hand over DYNAMIXEL 2.0.
+- Load the JIT/ONNX export from `play.py` (§5.5) into a ROS 2 node; zero-shot test + measure real grasp
+  success and safety behaviour.
 
 ---
 
@@ -403,9 +525,18 @@ tensorboard --logdir logs/rsl_rl --port 6006 --bind_all
 ./isaaclab.sh -p ../ur5_grasp/scripts/eval_success.py --task Isaac-Lift-Cube-UR5e-Play-v0 --headless --num_envs 64 --episodes 512 --min_height 0.1 --success_tol 0.01
 python ~/Abdur_Rabbi_THESIS/results/scripts/make_layer1_figs.py
 
+# ── Layer 2: IBVS (cameras REQUIRE --enable_cameras) ─────────────────────────
+./isaaclab.sh -p ../ur5_grasp/scripts/ibvs_camera_test.py --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --headless --enable_cameras   # camera smoke
+./isaaclab.sh -p ../ur5_grasp/scripts/mount_finder.py     --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --headless --enable_cameras   # find mount/geometry
+./isaaclab.sh -p ../ur5_grasp/scripts/ibvs_servo.py       --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --headless --enable_cameras   # classical IBVS servo
+
+# ── Layer 3: RH-P12-RN real gripper in sim ───────────────────────────────────
+./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_rhp12_usd.py                                                                                # build merged USD
+./isaaclab.sh -p ../ur5_grasp/scripts/rhp12_grasp_sweep.py --task Isaac-Lift-Cube-UR5e-RHP12-Play-v0 --num_envs 1 --headless              # contact grasp + TCP sweep
+
 # ── commit ───────────────────────────────────────────────────────────────────
 cd ~/Abdur_Rabbi_THESIS && git add -A && git status -s && git commit -m "..." && git push origin main
 ```
 
-*Sources: `run_log.md`, `logbook/01–07`, `logbook/03b_cppo_runbook.md`, `Thesis_Documentation/01–07`,
-and the `ur5_grasp/` scripts.*
+*Sources: `run_log.md`, `logbook/01–07` + `HANDOFF_next.md`, `logbook/03b_cppo_runbook.md`,
+`Thesis_Documentation/01–07`, and the `ur5_grasp/` scripts (Layer 2/3 added 2026-07-26).*
