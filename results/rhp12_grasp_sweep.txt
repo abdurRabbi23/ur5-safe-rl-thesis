@@ -10,9 +10,15 @@ seat      : 45 control steps with the cube held still
 cube width: 0.0412 m  <- face_gap should land ON this for a true pad grip
 
   offset(m)   q_final   face_gap(m)   cube->grasp(m)   z_drop(m)   verdict
-    0.125     0.831     0.0511         0.0056       +0.0010    HELD
-    0.130     0.876     0.0413         0.0045       +0.0030    HELD
-    0.135     0.883     0.0399         0.0110       -0.0002    HELD
+    0.060     0.642     0.0865         0.0789       +0.0783    dropped
+    0.070     0.713     0.0746         0.2548       +0.2507    dropped
+    0.075     0.730     0.0709         0.0638       +0.0623    dropped
+    0.080     0.719     0.0734         0.0548       +0.0561    dropped
+    0.085     0.693     0.0781         0.0550       +0.0525    dropped
+    0.090     0.757     0.0661         0.0255       +0.0241    HELD
+    0.095     0.783     0.0610         0.0179       +0.0144    HELD
+    0.100     0.774     0.0628         0.0295       +0.0281    HELD
+    0.110     0.757     0.0661         0.0191       +0.0164    HELD
 
 ==============================================================================
  READ q_final FIRST — it says WHICH failure you have:
@@ -24,9 +30,9 @@ cube width: 0.0412 m  <- face_gap should land ON this for a true pad grip
                    residual position error is being converted into clamp force.
                    If it still dropped, NOW it is a friction / effort problem.
 
- GRIP HOLDS at 3/3 offsets: ['0.125', '0.130', '0.135']
+ GRIP HOLDS at 4/9 offsets: ['0.090', '0.095', '0.100', '0.110']
 
-   offset 0.130 m has face_gap 0.0413 vs cube 0.0412  (delta +0.0001)
+   offset 0.095 m has face_gap 0.0610 vs cube 0.0412  (delta +0.0198)
    -> that is the TRUE PAD GRIP. Prefer it for TCP_OFFSET.
 
  Sanity checks before you lock it in:

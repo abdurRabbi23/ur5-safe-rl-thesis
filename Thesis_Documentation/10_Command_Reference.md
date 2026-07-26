@@ -404,12 +404,15 @@ parallel env, Layer 1 untouched. Run from `~/Abdur_Rabbi_THESIS/IsaacLab`, insid
 
 **10.1 — Build the merged UR5e + RH-P12-RN USD** (URDF → USD → one articulation).
 ```bash
-./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_rhp12_usd.py
+./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_rhp12_usd.py --headless
 ```
 *Why/when:* once, to build the asset. Converts the vendored URDF, merges it onto the flange, validates,
 and runs a finger-stroke sweep. Writes `ur5_grasp/assets/ur5e_rhp12.usd` + `tools/make_rhp12_report.txt`
 (loads as 10 joints / 12 bodies). Optional: `--mount_pos "x y z"`, `--mount_rpy "r p y"` (default flange
-mount was already correct), `--skip_convert` (reuse an existing `rh_p12_rn.usd`).
+mount was already correct), `--skip_convert` (reuse an existing `rh_p12_rn.usd`),
+`--gripper_color "r g b"` (default `"0.02 0.02 0.02"` — renders the hand near-black so it's
+distinguishable from the grey arm in the GUI). Quick re-colour without reconverting:
+`./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_rhp12_usd.py --headless --skip_convert`.
 
 **10.2 — Grasp-hold + TCP calibration sweep** (contact only, weld off).
 ```bash
@@ -422,8 +425,38 @@ reports `face_gap` (pad-face opening vs the 41.2 mm cube). *Result:* **`TCP_OFFS
 Optional: `--offsets "0.100 0.110 0.120 0.130 0.140"` (default is a wider set), `--seat_steps 45`,
 `--hold_steps 120`. Confirm run used `--offsets "0.125 0.130 0.135"`.
 
-> ⏳ **Next (not run yet):** train PPO on the real-gripper env and compare to the Layer 1 weld baseline:
-> `./isaaclab.sh -p ../ur5_grasp/scripts/train.py --task Isaac-Lift-Cube-UR5e-RHP12-v0 --headless --num_envs 4096`.
+**10.3 — Ready-pose geometry check** (MUST pass before training this env).
+```bash
+./isaaclab.sh -p ../ur5_grasp/scripts/rhp12_geometry_check.py \
+    --task Isaac-Lift-Cube-UR5e-RHP12-Play-v0 --num_envs 1 --headless
+```
+*Why/when:* right before the first RHP12 training run. `zero_agent.py` hardcodes Robotiq body names
+and crashes on this env, so this probe replaces it. At the ready pose it reports the `ee_frame` vs the
+true pad midpoint, its height above the table, and the `ee_frame → cube` distance — catching an
+unlearnable reach target (frame below the table / off the pads) before wasting a training run. Writes
+`results/rhp12_geometry_check.txt`. Optional: `--steps 40`; drop `--headless` to watch (the `ee_frame`
+marker is on). *Result:* passed — frame sits +0.212 m above the table, cleared for training.
+
+**10.4 — Train PPO on the contact env** (the Layer 3 payoff: weld vs real contact). Both runs
+1500 iters, `--num_envs 4096`, **`--seed 42`** so the two conditions are directly comparable.
+```bash
+# Stock reward (Layer-1-comparable sparse lift) — the PRIMARY contact result
+./isaaclab.sh -p ../ur5_grasp/scripts/train.py \
+    --task Isaac-Lift-Cube-UR5e-RHP12-Stock-v0 --headless --num_envs 4096 --seed 42
+
+# Shaped reward (dense lift-progress) — a separate safe-RL finding
+./isaaclab.sh -p ../ur5_grasp/scripts/train.py \
+    --task Isaac-Lift-Cube-UR5e-RHP12-v0 --headless --num_envs 4096 --seed 42
+```
+*Why/when:* after the geometry check, to prove the task is learnable **without the weld** and to
+measure what the weld cost. ~15 min each on the 5090. Cheap smoke first if you like:
+`--num_envs 256 --max_iterations 20`. *Findings:* stock reaches 94% of the weld run's lift reward
+(task learnable without the weld); the weld cost ≈ −37.6% episode reward, concentrated in placement
+precision; and the dense **shaped** reward backfired — it parked the arm on singularities (viol
+91.6% vs stock's 14.0%), which only the safety-cost channel caught (a strong motivation for cPPO).
+Task ids `…-RHP12-Stock-v0` / `-Stock-Play-v0` register the sparse-reward condition reproducibly.
+Success is compared with `eval_success.py` (§7) pointed at `…-RHP12-Play-v0`, not raw reward
+(shaping makes reward non-comparable).
 
 ---
 
@@ -483,7 +516,8 @@ Genuinely not run yet — listed so the map stays complete.
 - Add one **field-of-view** cost term to `SafetyCostComputer`, then eval like §6–§7.
 
 **Layer 3 — sim-to-real (real UR5e hardware).**
-- Train PPO/cPPO on `Isaac-Lift-Cube-UR5e-RHP12-v0` (the env is ready; run not done — see §10).
+- PPO on the contact env is **done** (§10.4). Still to run: **cPPO** on the RH-P12-RN contact env —
+  `./isaaclab.sh -p ../ur5_grasp/scripts/train.py --task Isaac-Lift-Cube-UR5e-RHP12-Stock-v0 --agent rsl_rl_cppo_cfg_entry_point --headless --num_envs 4096 --seed 42`.
 - ROS 2 Humble + `Universal_Robots_ROS2_Driver` bring-up; drive the real 1-DOF hand over DYNAMIXEL 2.0.
 - Load the JIT/ONNX export from `play.py` (§5.5) into a ROS 2 node; zero-shot test + measure real grasp
   success and safety behaviour.
@@ -531,8 +565,11 @@ python ~/Abdur_Rabbi_THESIS/results/scripts/make_layer1_figs.py
 ./isaaclab.sh -p ../ur5_grasp/scripts/ibvs_servo.py       --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --headless --enable_cameras   # classical IBVS servo
 
 # ── Layer 3: RH-P12-RN real gripper in sim ───────────────────────────────────
-./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_rhp12_usd.py                                                                                # build merged USD
-./isaaclab.sh -p ../ur5_grasp/scripts/rhp12_grasp_sweep.py --task Isaac-Lift-Cube-UR5e-RHP12-Play-v0 --num_envs 1 --headless              # contact grasp + TCP sweep
+./isaaclab.sh -p ../ur5_grasp/tools/make_ur5e_rhp12_usd.py --headless                                                                     # build merged USD
+./isaaclab.sh -p ../ur5_grasp/scripts/rhp12_grasp_sweep.py    --task Isaac-Lift-Cube-UR5e-RHP12-Play-v0  --num_envs 1 --headless          # contact grasp + TCP sweep
+./isaaclab.sh -p ../ur5_grasp/scripts/rhp12_geometry_check.py --task Isaac-Lift-Cube-UR5e-RHP12-Play-v0  --num_envs 1 --headless          # ready-pose geometry (before training)
+./isaaclab.sh -p ../ur5_grasp/scripts/train.py --task Isaac-Lift-Cube-UR5e-RHP12-Stock-v0 --headless --num_envs 4096 --seed 42            # PPO, contact, stock reward (primary)
+./isaaclab.sh -p ../ur5_grasp/scripts/train.py --task Isaac-Lift-Cube-UR5e-RHP12-v0       --headless --num_envs 4096 --seed 42            # PPO, contact, shaped reward
 
 # ── commit ───────────────────────────────────────────────────────────────────
 cd ~/Abdur_Rabbi_THESIS && git add -A && git status -s && git commit -m "..." && git push origin main
