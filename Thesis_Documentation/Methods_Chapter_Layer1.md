@@ -41,13 +41,31 @@ initialised on a table in front of the arm, and its target is a goal pose sample
 
 Because the Robotiq 2F-85 is a closed-loop linkage whose passive finger joints transmit no normal
 force to the pads in simulation, contact-based grasping does not hold the cube (verified with
-`grasp_hold_test.py`: the cube falls through the fingers regardless of clamp force). Since the Layer 1
-safe-RL result is independent of the specific grasp mechanism, contact grasping is replaced by a
-*proximity-weld* abstraction: when the policy commands a close action while the cube lies within a
-6 cm tolerance of the end-effector frame, the cube latches to the gripper and its pose tracks the
-end-effector each control step (with its velocity zeroed); an open command releases it and physics
-resumes. This makes "grasp-and-lift" reliable so that both the baseline and the constrained policy
-can learn the task, and defers realistic finger contact to the Layer 3 sim-to-real work.
+`grasp_hold_test.py`: the cube falls through the fingers regardless of clamp force). A subsequent
+diagnostic (`tools/check_gripper_mount.py`) identified the underlying mechanism: in the converted
+USD asset, all nine gripper rigid bodies are reported by the physics articulation view at positions
+coincident with the `wrist_3_link` origin, rather than distributed along the 150 mm gripper body.
+The pad-to-pad separation is nevertheless reproduced correctly (84.4 mm measured against an 85 mm
+specification stroke), confirming that the gripper's internal linkage is intact while its transform
+relative to the wrist is degenerate. Finger contact therefore cannot resolve at the location where
+the gripper geometry is rendered, which fully accounts for the observed pass-through behaviour.
+
+Since the Layer 1 safe-RL result is independent of the specific grasp mechanism, the gripper is
+modelled as a lumped mass at the wrist flange and contact grasping is replaced by a *proximity-weld*
+abstraction. The tool centre point is defined kinematically as a fixed 160 mm offset along the
+`wrist_3_link` approach axis — the position a correctly mounted 2F-85 pad midpoint would occupy —
+and when the policy commands a close action while the cube lies within a 6 cm tolerance of that
+frame, the cube latches and its pose tracks the end-effector each control step (with its velocity
+zeroed); an open command releases it and physics resumes. This makes "grasp-and-lift" reliable so
+that both the baseline and the constrained policy can learn the task, and defers realistic finger
+contact to the Layer 3 sim-to-real work.
+
+Two consequences of this abstraction are stated explicitly. First, the lumped-mass gripper alters
+the wrist inertia relative to a fully articulated model; because the same asset is used for every
+run in the benchmark, this affects all algorithms identically and does not confound the comparison.
+Second, self-collision is disabled in simulation and the collision cost term is a table-plane
+keep-out rather than a link-pair check, so learned configurations are not guaranteed to be
+self-collision-free on hardware. Both are revisited in the Limitations discussion.
 
 ### 2.1 State, action, and reward
 

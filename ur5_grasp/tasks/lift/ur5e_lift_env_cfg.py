@@ -27,6 +27,13 @@ class UR5eCubeLiftEnvCfg(LiftEnvCfg):
     def __post_init__(self):
         super().__post_init__()
 
+        # episode_length_s stays at the base 5.0 s (250 control steps @ 50 Hz).
+        # Day 19: tried 7.0 s alongside the 1.0 rad/s speed cap and REVERTED both — see
+        # ur5e_robotiq.py. Note for anyone tempted again: `cost_limit` in
+        # agents/rsl_rl_cppo_cfg.py is an undiscounted EPISODIC budget over a per-step
+        # cost, so changing episode length silently rescales the constraint and voids the
+        # Day-9 calibration. Change the two together or not at all.
+
         # UR5e + Robotiq 2f-85 as the robot
         self.scene.robot = UR5E_ROBOTIQ_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
 

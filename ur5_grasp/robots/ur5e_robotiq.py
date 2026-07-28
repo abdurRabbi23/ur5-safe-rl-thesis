@@ -25,9 +25,13 @@ _USD_PATH = os.path.normpath(
     os.path.join(os.path.dirname(__file__), "..", "assets", "ur5e_robotiq_2f85.usd")
 )
 
-# Robotiq 2f-85 finger_joint travel: 0.0 = open, ~0.8 rad = closed.
-GRIPPER_OPEN = 0.0
-GRIPPER_CLOSE = 0.8
+# Robotiq 2f-85 finger_joint travel: 0.0 = CLOSED (pads touching), ~0.8 rad = OPEN.
+# Measured Day 18: finger_joint = 0.796 gives an 84.4 mm pad gap against an 85 mm
+# spec stroke. The Layer-1 values were inverted, so a "close" command opened the
+# gripper. Cosmetic for the RL (the weld latches on action sign, not joint value)
+# but visibly wrong in play renders.
+GRIPPER_OPEN = 0.8
+GRIPPER_CLOSE = 0.0
 
 UR5E_ROBOTIQ_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
@@ -76,6 +80,12 @@ UR5E_ROBOTIQ_CFG = ArticulationCfg(
                 "wrist_3_joint",
             ],
             effort_limit_sim=150.0,
+            # DO NOT LOWER. Tried 1.0 rad/s on Day 19 and REVERTED: a full 1500-iter PPO
+            # run gave viol_singularity = 0.0000 from iter 400 onward (vs 15.24% here),
+            # with manipulability_min = 0.0547 sitting above MANIP_FLOOR = 0.045. A slow
+            # arm satisfies the safety constraint by construction, so lambda never
+            # activates and cPPO degenerates to PPO — it erases the Layer-1 result.
+            # Kept as a sensitivity analysis; see logbook/03c and run_log Day 19.
             velocity_limit_sim=3.14,
             stiffness=800.0,
             damping=40.0,
