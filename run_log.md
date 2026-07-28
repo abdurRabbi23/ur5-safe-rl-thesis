@@ -168,3 +168,221 @@ Sweet spot: 8192 (best throughput/time balance, trivial VRAM). Note: UR5 graspin
   from source (env cfg, costs.py, ppo_lagrangian.py, rsl_rl cfgs). Next consolidation items: figures
   (separate session, CSVs in results/tb_csv/) and typesetting into the KUET thesis book.
 [Day 11] Caught & fixed isaaclab.sh path bug in doc commands (missing ../ prefix for ur5_grasp/ scripts, since IsaacLab is a sibling dir not a subdir)
+
+## 2026-07-28 (Day 18) — Restart after Layer 1 + gripper diagnosis
+- **Restart decision:** reset the whole repo to the Layer-1 commit (8d4cb41); deleted all
+  Layer 2 (IBVS) and Layer 3 (RH-P12-RN gripper) work + the Module 08/09 experiments and
+  their checkpoints. Layer 1 is untouched and is the frozen baseline. Old history preserved
+  in tag `backup/pre-layer1-reset` and on origin/main (remote left as-is; local only).
+- **New direction:** fix the real gripper. Layer 1's grasp is a proximity WELD (cube teleported
+  to the gripper frame) — the 2f-85 never physically grips. Goal: make it grip with contact
+  forces. No new gripper, no new algorithm.
+- **Diagnosis (physics-only, scripts/grasp_hold_test.py with new probes):**
+  - Bug 1 — open/close INVERTED. Measured pad gap vs finger_joint: 0.0 = pads touching (CLOSED),
+    0.8 = ~85 mm (OPEN). Layer-1 cfg had GRIPPER_OPEN=0.0/CLOSE=0.8 swapped, so 'close' opened
+    the hand fully. The weld hid this (it latches on action sign, not finger motion).
+  - Bug 2 — reach frame 16 cm off. FrameTransformer used wrist_3 + [0,0,0.16]; real pad midpoint
+    is ~1.3 cm from wrist_3. Exact local offset printed by grasp_lift_test.py.
+  - CLEARED — fingers DO have enabled convexHull colliders (10, incl. both inner_finger pads);
+    checked with tools/check_gripper_colliders.py (needs TraverseInstanceProxies — Isaac assets
+    are instanceable). "No collider" was a false alarm from the first, buggy traversal.
+  - Note: the mid-air freeze test is confounded (post-step teleport lets fingers ratchet through);
+    a proper hold test needs the cube supported without teleport.
+- **Built (Layer 1 untouched):** `-Contact-v0` / `-Contact-Play-v0` variant —
+  `tasks/lift/ur5e_contact_env.py` (UR5eCubeContactEnv: weld no-op, keeps safety cost) +
+  `ur5e_contact_env_cfg.py` (open/close swapped, EE offset corrected) + registration.
+  Smoke test `scripts/grasp_lift_test.py` floats the cube (anti-gravity force) while the fingers
+  close, then releases it to test if friction holds. NEXT: run it, read the [local offset] +
+  HELD/DROPPED verdict; if it slips, tune pad friction / clamp effort; then re-run cPPO vs PPO on
+  -Contact-v0.
+
+## 2026-07-28 (Day 18, cont.) — SCOPE CHANGE: Layer 1 → 4-algorithm comparative benchmark
+- **Contact grasping abandoned.** The 2f-85 will not grip reliably and pad-friction / clamp-effort
+  tuning is a bottomless pit at this deadline. Reverted to the frozen WELD env; `-Contact-v0` is
+  SHELVED (kept registered, not deleted). The Day-18 diagnosis (inverted open/close, EE frame
+  offset, collider false alarm) is repurposed as a thesis subsection justifying the weld
+  abstraction — negative result, not wasted work.
+- **New Layer 1 scope:** comparative analysis over 4 algorithms — PPO, SAC, TD3, cPPO — on one
+  frozen env, 3 seeds each. Supersedes the 2-algorithm cPPO-vs-PPO result.
+- **Decisions locked:**
+  - Cost function UNCHANGED and frozen: 3 terms, `MANIP_FLOOR=0.045`, `cost_limit=25`.
+    **FOV term rejected** for Layer 1 — no camera exists there; it would invalidate the
+    calibration, results doc, all 4 figures and the Methods chapter. FOV moves to Layer 2.
+  - Constraint reporting corrected to "one binding (singularity) + two monitored-and-satisfied
+    (joint-limit, collision)". Do not claim three active constraints.
+  - Framework: PPO+cPPO stay on rsl_rl 3.0.1 (preserves the Module-03 "differs by the constraint
+    alone" argument); SAC+TD3 from skrl; plus a **skrl-PPO bridge run** so the two stacks are
+    anchored and no gap can be attributed to differing implementations.
+  - 3 seeds minimum per algorithm (current Layer 1 is single-seed — fatal for a comparative claim).
+- **Registered hypothesis (recorded before running):** all four will hit ~100% success, so the
+  result lives on the safety axis — SAC (max-entropy) should violate the singularity floor MORE
+  than PPO, TD3 (deterministic) LESS, and only cPPO controls it by construction.
+- Checked the tree: Isaac Lab ships only `skrl_ppo_cfg.yaml` (no SAC/TD3 cfgs anywhere, incl. the
+  Franka lift task). skrl's Runner does support both and IsaacLab's skrl train.py already resolves
+  `--algorithm sac` → `skrl_sac_cfg_entry_point`, so this is YAML + registration, not trainer code.
+- **FLAGGED for verification before any cfg edit:** the Day-18 note records the pad midpoint as
+  ~1.3 cm from `wrist_3`. A 2f-85 is ~150 mm long, so that number looks like it was measured from
+  the gripper base link, or is an instanceable-proxy transform artefact (same class as the earlier
+  false "no colliders" alarm). Re-read the `[local offset]` print from grasp_lift_test.py and
+  sanity-check against physical gripper length BEFORE editing `ur5e_lift_env_cfg.py`.
+- Wrote `logbook/03c_multialgo_benchmark.md` (goal, locked decisions, run matrix, fairness
+  protocol, cut order with TD3 as first-cut). Updated `logbook/00_INDEX.md` status + module table.
+- Schedule locked: writing must be finished 2026-08-11. Training wall-clock is not the constraint;
+  untested skrl off-policy is. Gates: env frozen Jul 29 → PPO+cPPO seeds Jul 30 (pass bar restored)
+  → skrl cfgs + bridge Jul 31–Aug 2 → SAC Aug 3–4 → TD3 Aug 5–6 (**HARD CUT Aug 6 EOD**) →
+  figures + writing Aug 7–11. Full table in `logbook/03c_multialgo_benchmark.md`.
+
+## 2026-07-28 (Day 18, evening) — Step 0 CLOSED: EE offset verified, change REJECTED
+- **Outcome: only ONE env change goes into the freeze** — the gripper open/close swap. The EE
+  offset stays at `[0, 0, 0.16]`. Applying the flagged "fix" would have been wrong.
+- Built `tools/check_gripper_mount.py` (prints every body in the `wrist_3` local frame, pad gap,
+  reach frame, and a plausibility check; `--hold` keeps the GUI alive for inspection).
+- **Gripper inversion CONFIRMED — apply it.** `finger_joint = 0.796` → 84.4 mm pad gap vs an
+  85 mm spec stroke. So 0.8 = OPEN, 0.0 = pads touching = CLOSED. `robots/ur5e_robotiq.py` has
+  these backwards.
+- **EE offset `[0,0,0.16]` VERIFIED CORRECT — do not change.** `wrist_2_link` sits at local −Z,
+  so +Z is the forward tool axis; 0.16 m matches flange d6 (0.0996) + 2F-85 body (~0.13). GUI
+  confirms the marker lands at a sensible grasp height along the approach direction.
+- **The "~1.3 cm" figure is an artefact.** Measured `[0, +0.0135, 0]` off collapsed gripper
+  bodies. `_TCP_OFFSET = (-0.013, 0, 0)` in the contact cfg is invalid; stays shelved.
+- **`base_link` name-collision theory is DEAD.** Isaac auto-renames the gripper base to
+  `base_link_0`. No duplicates; both fixed joints resolve cleanly.
+- **Root cause found:** all nine gripper bodies (idx 7–15) report *exactly* `[0,0,0]` in the
+  `wrist_3` frame — degenerate. But the contact run measured an 84.4 mm pad gap, so they are not
+  statically collapsed, they are *unreliable*. Gripper `body_pos_w` cannot be trusted in this
+  asset. This fully explains the Day-18 finger pass-through: contact cannot resolve where the
+  geometry renders. Arm transforms are exact (UR5e DH to 4 decimals) — the defect is gripper-only.
+- **Confirmed case (B), impact = renders only.** GUI shows the gripper drawn at the wrist with the
+  welded cube floating 16 cm out at the TCP. All four Layer-1 figures are matplotlib plots off TB
+  scalars — zero renders in the deliverable set.
+- **Decided NOT to rebuild the gripper USD.** Every frozen consumer reads arm bodies only
+  (`MONITORED_BODIES` = idx 3/4/6, `EE_BODY` = 6, Jacobian = arm joints, weld → synthetic
+  `ee_frame`). Nothing touches idx 7–15. Rebuilding `make_ur5e_robotiq_usd.py` = days of
+  shelved-branch work fixing something that appears in no deliverable.
+- **Written into `Thesis_Documentation/Methods_Chapter_Layer1.md` §2** as a declared abstraction
+  (lumped-mass gripper + kinematic 160 mm TCP + proximity weld) with the mechanism stated, plus
+  two consequences: altered wrist inertia (identical across runs → not a confound) and disabled
+  self-collision (Layer 3 caveat). Turns a negative result into a defensible methods paragraph.
+- **Qualitative figure identified and PARKED to Aug 7–11.** Paired play runs show PPO folded /
+  tucked-wrist vs cPPO extended — matches the measured viol_singularity gap (16.86% vs 6.65%).
+  Not yet valid: camera and seed unmatched, and "folded" ≠ "singular" for a 6-DOF arm, so each
+  panel needs its measured Yoshikawa `w` in the caption. These checkpoints are superseded by the
+  post-freeze 3-seed runs anyway — doing it now is throwaway work.
+- Fixed stale PPO checkpoint pointer in `00_INDEX.md` (`2026-07-12_18-54-03` does not exist; the
+  real weld-retrained run is `2026-07-19_16-29-57`).
+- **NEXT (Jul 29):** swap the gripper constants → `play.py` sanity-check → freeze + git-tag →
+  launch PPO ×3 seeds. Jul 30 gate is intact.
+
+## 2026-07-29 (Day 19) — Env changes applied: gripper convention, 1 rad/s speed cap, 7 s episode
+Pre-freeze env work. Three changes went in; the env is now ready to freeze + tag.
+
+**1. Gripper open/close convention corrected** (`robots/ur5e_robotiq.py`).
+`GRIPPER_OPEN` 0.0 → 0.8, `GRIPPER_CLOSE` 0.8 → 0.0, and the misleading comment above them
+rewritten. Confirmed by Day-18 measurement (`finger_joint = 0.796` → 84.4 mm pad gap vs 85 mm
+spec stroke). Three consumers, all resolved: the init pose (now genuinely open) and the two
+`BinaryJointPositionActionCfg` command exprs in `ur5e_lift_env_cfg.py`. The shelved
+`ur5e_contact_env_cfg.py` was left alone — it has its own `_TRUE` constants and is off the
+Layer-1 path.
+
+**`play.py` sanity check: weld latches — GATE PASSED.** The stale 2026-07-19 PPO checkpoint
+places the cube sloppily and misses the target pose. This is EXPECTED and is not a blocker:
+the policy obs is `joint_pos_rel` over all 12 joints, and `default_joint_pos["finger_joint"]`
+moved 0.0 → 0.8, so a close command now reads as −0.8 where the policy was trained on +0.8.
+One obs dimension flipped sign (plus the coupled knuckle joints) → out-of-distribution input
+for a checkpoint that is being discarded anyway. The weld itself is kinematic
+(`write_root_pose_to_sim`), so finger contact cannot break it. Retraining resolves it.
+
+**2. Arm joint speed capped at 1.0 rad/s** (`robots/ur5e_robotiq.py`, `velocity_limit_sim`
+3.14 → 1.0 on the `"arm"` actuator). Previous speed was π rad/s ≈ 180°/s. Rationale: a
+plausible real-UR5e operating speed, which strengthens the Layer-3 sim-to-real argument, and
+a *safety* thesis should not be running the arm at 180°/s. PhysX enforces it hard, so it
+applies to train and play alike with no extra flags. Gripper actuators left at 2.0 rad/s
+(finger travel, not arm motion). Verified by a 150-iter probe at `num_envs=4096`: reward
+curve is near-identical in shape and trajectory to `ur5e_lift/2026-07-19_16-29-57` at matched
+iteration count. Task remains feasible.
+
+**3. Episode length 5.0 s → 7.0 s** (`ur5e_lift_env_cfg.py`). 250 → 350 control steps at
+50 Hz. Pairs with the slower arm.
+
+**4. `cost_limit` HELD at 25 — deliberate, and NOT the Day-9 number.** The budget is an
+undiscounted *episodic* sum of a *per-step* cost. Lengthening the episode by 40% therefore
+changes what the number means: the per-step allowance falls from 25/250 = 0.100 to
+25/350 = 0.071, i.e. **~30% tighter**. Rescaling to 35 would have preserved the Day-9
+calibration; holding at 25 is a deliberate choice to run a stricter safety budget.
+**Consequence for the write-up: the Day-9 calibration can no longer be cited as the
+justification for 25.** It must be re-evidenced by the Day-19 cPPO probe. This is exactly the
+Lagrangian silent-failure mode flagged in the project notes — training would have looked
+fine while the constraint quietly did something other than what the Methods chapter claimed.
+
+**Correction to an earlier estimate:** 7 s episodes do NOT cost ~40% more compute. The rsl_rl
+budget is `max_iterations × num_steps_per_env × num_envs` (1500 × 24 × 4096), independent of
+episode length. Longer episodes mean fewer *completed* episodes inside the same step budget →
+marginally noisier episodic statistics and fewer distinct cube spawns seen. `eval_success.py`
+at 512 episodes takes ~40% longer wall-clock; irrelevant. SAC/TD3 schedule risk unchanged.
+
+**Confirmed, no work needed:** the Layer-1 task is *already* "grasp a randomly spawned cube,
+carry it to a randomised target". `reset_object_position` samples uniformly over
+x ∈ (−0.1, 0.1), y ∈ (−0.25, 0.25) around [0.5, 0, 0.055], and the `object_pose` command
+drives `object_goal_tracking`. `MANIP_FLOOR = 0.045` also needs no change — it is a per-step
+threshold on joint configuration, untouched by timing.
+
+**NEXT:** re-run the 150-iter PPO probe (env moved again) + a 50-iter cPPO probe to
+re-evidence `cost_limit=25` at 350 steps. On the cPPO probe watch **lambda**: it must rise
+from 0 and settle — saturating at `lambda_max=100` means 25 is unreachably tight, sitting at
+0 means it is not binding and cPPO has nothing to do. Then freeze + git-tag and launch
+PPO ×3 seeds. Jul 30 gate still reachable.
+
+## 2026-07-29 (Day 19, cont.) — Speed cap and 7 s episode REVERTED: they erased the safety signal
+The 1.0 rad/s cap and 7.0 s episode from earlier today are both **reverted**. A full 1500-iter
+PPO run (`ur5e_lift/2026-07-28_23-24-42_ppo_s1_vel1_ep7`) showed they destroy the phenomenon
+Layer 1 measures.
+
+**`safety/viol_singularity`, 100-iter blocks:**
+
+| iters | PPO 7 s / 1.0 rad/s | PPO 5 s / 3.14 (old) | cPPO 5 s / 3.14 (old) |
+|---|---|---|---|
+| 0–99 | 7.45% | 18.25% | 7.55% |
+| 100–199 | 0.00% | 49.37% | 3.00% |
+| 200–299 | 1.72% | 66.83% | 6.31% |
+| 300–399 | 0.66% | 29.23% | 7.90% |
+| 400–499 | 0.06% | 56.26% | 5.10% |
+| 500–1399 | 0.00% | 7–19% | 4–6% |
+| **1400–1499** | **0.0000%** | **15.24%** | **6.38%** |
+
+Exactly zero from iteration 400 to 1500. Only 4.5% of iterations register any violation at all
+(all before iter 400) against 96.8% for the old run. Converged `manipulability_min = 0.0547`,
+**above** `MANIP_FLOOR = 0.045` — the arm never approaches a singularity. `cost_total = 0.0000`.
+
+**Task performance was unaffected:** `lifting_object` 14.44 vs 14.79, `position_error` 0.1625 vs
+0.1582, zero drops, `mean_episode_length` 350/350. Not a broken policy — a policy that solves the
+task and is safe *by construction*.
+
+**Why this is fatal to the benchmark:** with no violations, lambda never activates, the Lagrangian
+term is identically zero, and cPPO's gradient becomes the same gradient as PPO's. Four algorithms
+× three seeds would produce a cost column of zeros and no safety axis. The registered hypothesis
+(SAC's entropy drives it into singularities, TD3's determinism does not) would have nothing to be
+measured against.
+
+**Cause isolated.** The 5 s / 1.0 rad/s probe run acted as an accidental ablation:
+43.2% → 7.1% from the speed cap alone (matched iters 100–149), then 7.1% → 0.19% from the extra
+2 s. **The speed cap did it.** At π rad/s the policy can whip the wrist through low-manipulability
+configurations because recovery is cheap; at 1 rad/s it physically cannot leave a well-conditioned
+region near the ready pose.
+
+**Reverted:**
+- `velocity_limit_sim` 1.0 → **3.14** (`"arm"` actuator) — with a DO-NOT-LOWER note in the file.
+- `episode_length_s` back to the base **5.0 s**; the override is removed, with a note that
+  `cost_limit` is an episodic budget and the two must move together or not at all.
+- `cost_limit` = 25 with the **Day-9 calibration restored** as its justification (valid again at
+  250 steps).
+
+**The env is now identical to `2026-07-19_16-29-57` except for the gripper OPEN/CLOSE swap** —
+exactly one change from the proven pass-bar environment. Ready to freeze.
+
+**KEEP THIS RUN — it is a thesis result, not a failure.** "Constraint violations under this cost
+function are a function of commanded joint velocity; at 1 rad/s an unconstrained policy satisfies
+the constraint by construction with no task-performance penalty." It pre-empts the obvious examiner
+question *"why not just slow the robot down?"*, it is a genuine sensitivity analysis on
+`velocity_limit_sim`, and it feeds the Layer-3 hardware discussion. Log dir retained.
+
+**NEXT:** commit shelved contact files separately → freeze + git-tag → PPO ×3 seeds.

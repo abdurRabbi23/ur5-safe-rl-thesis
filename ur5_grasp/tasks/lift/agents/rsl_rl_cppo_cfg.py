@@ -24,6 +24,9 @@ class RslRlCppoAlgorithmCfg(RslRlPpoAlgorithmCfg):
     # --- constrained-RL knobs ---
     cost_limit: float = 25.0            # CALIBRATED Day 9 (undiscounted episodic-cost budget).
                                         # 50-iter probe: ~65% cost cut vs natural ~70+, ~17% reward dip, lambda controlled.
+                                        # Valid only at episode_length_s = 5.0 (250 steps @ 50 Hz): the budget is
+                                        # EPISODIC over a per-step cost, so any change to episode length rescales
+                                        # the constraint and voids this calibration. Day 19 tried 7.0 s and reverted.
     lambda_lr: float = 0.035            # dual-ascent step for the Lagrange multiplier
     lambda_init: float = 0.0
     lambda_max: float = 100.0
