@@ -28,3 +28,26 @@ gym.register(
     },
     disable_env_checker=True,
 )
+
+# --- Contact-grasp variant (post-Layer-1): real finger contact, no weld ------------
+gym.register(
+    id="Isaac-Lift-Cube-UR5e-Contact-v0",
+    entry_point=f"{__name__}.ur5e_contact_env:UR5eCubeContactEnv",
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.ur5e_contact_env_cfg:UR5eCubeContactEnvCfg",
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:UR5eLiftPPORunnerCfg",
+        "rsl_rl_cppo_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCPPORunnerCfg",
+    },
+    disable_env_checker=True,
+)
+
+gym.register(
+    id="Isaac-Lift-Cube-UR5e-Contact-Play-v0",
+    entry_point=f"{__name__}.ur5e_contact_env:UR5eCubeContactEnv",
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.ur5e_contact_env_cfg:UR5eCubeContactEnvCfg_PLAY",
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:UR5eLiftPPORunnerCfg",
+        "rsl_rl_cppo_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCPPORunnerCfg",
+    },
+    disable_env_checker=True,
+)
