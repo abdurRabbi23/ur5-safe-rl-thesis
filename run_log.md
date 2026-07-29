@@ -476,3 +476,15 @@ first commit inside it, don't let it accumulate uncommitted history either way.
 
 **NEXT:** from inside `Comparison test/`, launch PPO ×3 seeds, then cPPO ×3 seeds (commands in
 `logbook/09_comparison_test.md` / `HANDOFF.md`).
+
+**Committed** (`ed12dd0`): `Comparison test/` joins the main repo, per Touhid's call — not a
+separate repo. Hit a real blocker first: `.git/index.lock` was a stale 0-byte file left behind by
+an earlier `git status` in this sandboxed session (the mount's file-delete restriction meant `git`
+itself couldn't clean up its own lock file, so every git command failed with "Another git process
+seems to be running"). Fixed via `allow_cowork_file_delete` on the VM-mapped path (the
+`/home/...` path form was rejected — needed the `/sessions/.../mnt/...` form) then `rm`. Also had
+to set local git identity (`user.name`/`user.email`, matching the existing commit history —
+Abdur Rabbi <abrabbi9999@gmail.com>) since this sandbox had none configured. `.gitignore`'s
+`logs/` and `__pycache__/` rules apply repo-wide (no leading slash), so `Comparison test/logs/`
+will be excluded automatically once training starts — confirmed before committing, nothing extra
+needed in `.gitignore`.
