@@ -6,7 +6,7 @@ Opened: 2026-07-29 (Day 19, evening)
 
 ## ⚡ Pick-up-here (for a new session)
 The 4-algorithm comparison (PPO/SAC/TD3/cPPO) planned in `03c_multialgo_benchmark.md` is being
-**redone from scratch in a dedicated folder**, `Comparison test/`, instead of continuing inside
+**redone from scratch in a dedicated folder**, `Comparison_test/`, instead of continuing inside
 the main `ur5_grasp/` + `IsaacLab/logs/` sprawl. Reasons (Touhid's call, Day 19): a clean,
 self-contained record of the full run matrix, separate from the Day 18 restart / shelved
 contact-env history in the main folder.
@@ -16,7 +16,7 @@ apply unchanged.** That file remains the decision record — read it for *why*. 
 *where and how* for the redo.
 
 ## What "redo from scratch" means here
-- **Every run in the matrix is retrained inside `Comparison test/`**, including PPO ×3 seeds —
+- **Every run in the matrix is retrained inside `Comparison_test/`**, including PPO ×3 seeds —
   even though PPO ×3 already completed once in the main folder (`IsaacLab/logs/rsl_rl/ur5e_lift/
   ..._ppo_s1/s2/s3`). Those are **not** reused. This folder's results must all come from runs
   launched inside it, on its own copy of the code, so the whole 15-run matrix has one consistent
@@ -33,7 +33,7 @@ Abdur_Rabbi_THESIS/
 │                            Not duplicated — too large, no need to.
 ├── ur5_grasp/             ← main folder's frozen code (layer1-env-freeze). Reference only,
 │                            do not train against this copy for the comparison test.
-└── Comparison test/       ← NEW. All comparison-test work happens here.
+└── Comparison_test/       ← NEW. All comparison-test work happens here.
     ├── ur5_grasp/         ← working COPY of the frozen code (copied 2026-07-29, matches
     │                         b8f0727 exactly at copy time). Train against THIS copy.
     ├── configs/            ← skrl YAML configs (sac, td3, ppo-bridge) go here once written —
@@ -61,11 +61,11 @@ where `train.py` itself lives. `isaaclab.sh` does not `cd` anywhere before launc
 
 - The old workflow (`cd IsaacLab/ && ./isaaclab.sh -p ../ur5_grasp/scripts/train.py`) writes logs
   to `IsaacLab/logs/rsl_rl/...` because cwd = `IsaacLab/`.
-- **To get logs inside `Comparison test/`, run from `Comparison test/` as cwd and call
+- **To get logs inside `Comparison_test/`, run from `Comparison_test/` as cwd and call
   `isaaclab.sh` by relative path the other way:**
 
 ```bash
-cd "$HOME/Abdur_Rabbi_THESIS/Comparison test"
+cd "$HOME/Abdur_Rabbi_THESIS/Comparison_test"
 
 ../IsaacLab/isaaclab.sh -p ur5_grasp/scripts/train.py \
     --task Isaac-Lift-Cube-UR5e-v0 --headless --num_envs 4096 --seed 1 --run_name ppo_s1
@@ -75,30 +75,48 @@ cd "$HOME/Abdur_Rabbi_THESIS/Comparison test"
     --agent rsl_rl_cppo_cfg_entry_point
 ```
 
-This lands runs at `Comparison test/logs/rsl_rl/ur5e_lift/<timestamp>_ppo_s1/` and
-`Comparison test/logs/rsl_rl/ur5e_lift_cppo/<timestamp>_cppo_s1/` — self-contained, no cross-talk
+This lands runs at `Comparison_test/logs/rsl_rl/ur5e_lift/<timestamp>_ppo_s1/` and
+`Comparison_test/logs/rsl_rl/ur5e_lift_cppo/<timestamp>_cppo_s1/` — self-contained, no cross-talk
 with the main folder's `IsaacLab/logs/`. skrl runs (SAC/TD3/bridge, once configs exist) will
 follow the equivalent `logs/skrl/<experiment_name>/...` pattern — confirm the exact skrl log-path
 line the same way before the first SAC run, don't assume it matches rsl_rl's.
 
-**The folder name has a space in it.** Always quote it (`"Comparison test"` or
-`"$HOME/Abdur_Rabbi_THESIS/Comparison test"`) in every shell command, including inside tmux and
-any `cd` in scripts. This is the single easiest thing to get bitten by here — a stray unquoted
-path will silently `cd` to the wrong place or fail with a confusing "no such file" from `cd`
-splitting on the space.
+**Folder renamed 2026-07-30 (Day 22): `Comparison test` → `Comparison_test`.** The space is
+gone, so shell quoting is no longer required and the whole class of "stray unquoted path
+silently `cd`s to the wrong place" bugs is retired. Note that `run_log.md` and
+`run_log_new.md` entries dated before Day 22 still show the old spaced name — those are a
+dated record and were deliberately NOT rewritten. Every instructional file and all code
+were updated.
+
+## ⚠️ Second log-path gotcha: `experiment_name` comes from the AGENT cfg, not the task
+Found Day 22 when `smoke_sg` (SimpleGripper, `ur5e_simple_gripper.usd`) landed in
+`logs/rsl_rl/ur5e_lift/` — **the same directory as the weld-env PPO runs**, because both use
+`UR5eLiftPPORunnerCfg`, whose `experiment_name = "ur5e_lift"`. The task ID does not appear in
+the log path at all. So two runs on physically different robots become indistinguishable by
+directory, and anything that globs `logs/rsl_rl/ur5e_lift/*` — `make_layer1_figs.py`, the
+cross-run table in `summarize_runs.py`, a future reader — will silently average two different
+environments into one comparison.
+
+Mitigated (not fixed) by moving the two SimpleGripper runs to
+`logs/rsl_rl/ur5e_lift_simplegripper/`. **The real fix, if the SimpleGripper is ever trained
+beyond a smoke test, is a separate agent cfg with its own `experiment_name`.** Until then:
+`--run_name` is the only thing distinguishing envs in `ur5e_lift/`, so never reuse a run name
+across tasks. Verify which env a run actually used by reading
+`<run_dir>/params/env.yaml` — rsl_rl dumps the resolved cfg there, and grepping it for the
+USD filename is definitive.
 
 ## Two copies of `ur5_grasp/` now exist — keep them straight
 - `Abdur_Rabbi_THESIS/ur5_grasp/` — the main folder's copy. Git-tracked, tagged
   `layer1-env-freeze`. This is the **source of truth** for the env/cost-function definition.
-- `Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/` — a working copy. Train against this one. If a real
+- `Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/` — a working copy. Train against this one. If a real
   bug in the frozen env is found here, the fix must be ported back to the main copy — do not let
   the two silently diverge on anything that affects the comparison (env, costs, reward). New
   files that are specific to this run (skrl configs, new scripts) can live only in the
-  `Comparison test/` copy.
+  `Comparison_test/` copy.
 
-> **Correction (Day 22).** This section used to say the `Comparison test/` copy is "**not**
+> **Correction (Day 22).** This section used to say the `Comparison_test/` copy is "**not**
 > git-tracked as part of the main repo (a plain filesystem copy)". That is FALSE — checked
-> directly: `git ls-files "Comparison test"` returns tracked files and `git status` lists five
+> directly: `git ls-files Comparison_test` returns tracked files and `git status` lists five
 > *modified* tracked files under it. The folder is in the repo. It matters because the
 > fairness protocol's "env frozen and tagged before run 1" is achievable here with an ordinary
 > commit + tag, rather than needing a separate provenance mechanism.
@@ -128,7 +146,7 @@ contact grasp.
 > alarm as fact and Day 21 + `docs/HANDOFF_robotiq_2f85.md` inherited it. Only the degenerate
 > body positions survive as an objection — and that finding contradicts itself (all nine
 > gripper bodies at `[0,0,0]`, yet an 84.4 mm pad gap measured between two of them in the same
-> session) and has never been diagnosed. See Day 22 in `Comparison test/run_log_new.md`.
+> session) and has never been diagnosed. See Day 22 in `Comparison_test/run_log_new.md`.
 > **This does not change the Day-21 scope call:** the SimpleGripper remains the Layer-1
 > deliverable and the matrix does not wait for the 2f-85.
 
@@ -138,7 +156,7 @@ weld env and had never been validated — a weld env teleports the cube to whate
 TCP names, so it could not have caught this), and the grasp point sat at the finger midpoint
 rather than between the tips.
 
-All gripper geometry now lives in **one** file, `Comparison test/ur5_grasp/robots/
+All gripper geometry now lives in **one** file, `Comparison_test/ur5_grasp/robots/
 gripper_geometry.py`, imported by the USD builder, the training env cfg, the grasp test and
 the live demo. The tool axis is measured by `tools/check_wrist_frame.py`, not assumed.
 
@@ -223,7 +241,7 @@ uncommitted JSON. Commit it as part of the freeze.
    `ppo_s1`/`s2`/`s3` and `cppo_s1`/`s2`/`s3` to match the main folder.
 3. `../IsaacLab/isaaclab.sh -p ur5_grasp/tools/summarize_runs.py` — read the reports.
 4. Author the skrl configs (`configs/skrl_ppo_cfg.yaml`, `skrl_sac_cfg.yaml`, `skrl_td3_cfg.yaml`)
-   and register the entry points in `Comparison test/ur5_grasp/tasks/lift/__init__.py` — mirrors
+   and register the entry points in `Comparison_test/ur5_grasp/tasks/lift/__init__.py` — mirrors
    03c "Next steps" item 2, just pointed at this copy.
 5. Smoke-test each new algorithm at 50 iters before committing to a full run.
 6. Remaining runs in cut order (skrl-PPO bridge ×3, SAC ×3, TD3 ×3).
@@ -232,7 +250,7 @@ uncommitted JSON. Commit it as part of the freeze.
    `summarize_runs.py` now populates automatically; regenerate the results table.
 
 ## Refs
-Daily timeline scoped to this folder: `Comparison test/run_log_new.md` (dual-tracked — every entry there also appears in the project-wide `run_log.md`). Read it first if picking up work only inside `Comparison test/`.
+Daily timeline scoped to this folder: `Comparison_test/run_log_new.md` (dual-tracked — every entry there also appears in the project-wide `run_log.md`). Read it first if picking up work only inside `Comparison_test/`.
 
 Decision record / rationale: `logbook/03c_multialgo_benchmark.md` (unchanged, still the source of
 truth for *why*). This file is the *where*. Import note + folder creation: `run_log.md`, Day 19.

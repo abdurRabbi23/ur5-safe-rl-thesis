@@ -2,7 +2,7 @@
 
 Status: ◻ decision record — still the source of truth for the WHY (hypothesis, fairness
 protocol, cut order, schedule). The WHERE moved 2026-07-29 to a dedicated folder,
-`Comparison test/`, redone from scratch there. **Read `logbook/09_comparison_test.md` for
+`Comparison_test/`, redone from scratch there. **Read `logbook/09_comparison_test.md` for
 current work; everything below is unchanged and still binding.**
 Chat type: safe-RL / benchmarking
 Opened: 2026-07-28 (Day 18)

@@ -4,12 +4,13 @@ Updated 2026-07-30 (Day 22). Overwrite whenever the next action changes.
 
 ```
 Read logbook/00_INDEX.md, then logbook/09_comparison_test.md, then the entries dated
-"2026-07-30 (Day 22...)" in Comparison test/run_log_new.md. Read them before touching code.
+"2026-07-30 (Day 22...)" in Comparison_test/run_log_new.md. Read them before touching code.
 
-WORKING FOLDER: "Comparison test/" — the name has a space, quote it in every shell command.
-    cd ~/Abdur_Rabbi_THESIS/"Comparison test"
+WORKING FOLDER: Comparison_test/  (RENAMED 2026-07-30 from "Comparison test" — the space is
+gone, so quoting is no longer required. Older run_log entries still show the old name.)
+    cd ~/Abdur_Rabbi_THESIS/Comparison_test
     ../IsaacLab/isaaclab.sh -p ur5_grasp/scripts/<script>.py
-Log paths are CWD-relative, so always cd into "Comparison test/" first.
+Log paths are CWD-relative, so always cd into Comparison_test/ first.
 
 SANDBOX LIMIT: you cannot run Isaac Sim (no GPU). Touhid runs everything on his lab PC.
 Write code, give exact commands, and READ THE REPORT FILES the scripts write — do not ask
@@ -34,7 +35,7 @@ still unlaunched.
   released. It is now a ~50-iter smoke train only, and stands in the thesis as a separately
   demonstrated real-contact grasp. Mount + TCP confirmed by eye in the GUI (Day 21); builder
   geometry check reads "error 0.00 mm -> OK". ALL its geometry lives in ONE file,
-  Comparison test/ur5_grasp/robots/gripper_geometry.py — every consumer imports from it.
+  Comparison_test/ur5_grasp/robots/gripper_geometry.py — every consumer imports from it.
   DO NOT re-derive or hand-copy it.
 - IMPORT TRAP: tasks/lift/__init__.py registers the SimpleGripper cfg alongside -v0, so
   gripper_geometry.py runs at package-import time and raises FileNotFoundError if
@@ -47,7 +48,7 @@ still unlaunched.
   3.14 rad/s — *** DO NOT LOWER velocity_limit_sim ***, it zeroes the safety signal and
   collapses cPPO into PPO.
 
-NEXT ACTION — nothing else is open. From inside "Comparison test/":
+NEXT ACTION — nothing else is open. From inside "Comparison_test/":
   0. git add ur5_grasp/assets/wrist_frame.json + the Day-21/22 changes; commit; re-tag.
      The fairness protocol requires the env frozen and stamped BEFORE run 1.
   1. Smoke train, 50 iters, WELD env, PPO:
@@ -68,6 +69,6 @@ DEADLINES: TD3 hard cut 2026-08-06 EOD, writing due 2026-08-11, 15 runs unlaunch
 anything not on the list above as out of scope unless Touhid says otherwise, and push back
 if a request risks the deadline.
 
-Update Comparison test/run_log_new.md AND run_log.md with a dated entry for whatever happens,
+Update Comparison_test/run_log_new.md AND run_log.md with a dated entry for whatever happens,
 and keep logbook/09_comparison_test.md pointed at the current state.
 ```
