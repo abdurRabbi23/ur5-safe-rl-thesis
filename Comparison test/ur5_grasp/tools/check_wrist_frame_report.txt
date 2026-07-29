@@ -1,0 +1,32 @@
+==============================================================================
+MEASURE  wrist_3_link tool axis   (UR5e, arm only)
+==============================================================================
+source USD : https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/ur5e/ur5e.usd
+
+body names : ['base_link', 'shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link']
+joint names: ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
+
+--- 1. invariant-axis test (wrist_3_joint: 0.0 -> 0.7 rad) ---
+    local X : dot(before, after) = +0.764842
+    local Y : dot(before, after) = +0.764842
+    local Z : dot(before, after) = +1.000000
+    -> invariant axis = local Z (the other two should read ~+0.765 = cos(probe_angle))
+
+--- 2. outward-sign test (vector from wrist_2_link origin to wrist_3_link origin) ---
+    world  : [-0.002071, 7.9e-05, -0.099578]   (|d| = 0.0996 m; a UR5e's d6 is 0.0996 m)
+    in wrist_3_link's own frame: [0.0, -0.0, 0.0996]
+    component on local Z = +1.000000 (should be ~+-1.0 if the link really extends along its own rotation axis)
+
+==============================================================================
+RESULT: the UR5e tool axis is  +Z  of wrist_3_link
+        TOOL_AXIS = (0.0, 0.0, 1.0)
+==============================================================================
+NOTE: this says +Z, which is what the current asset already uses. If the gripper
+      still looks sideways in the GUI, the problem is NOT the mount axis — it is
+      the ROLL about it, or the finger geometry. Say so before rebuilding.
+
+wrote /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/assets/wrist_frame.json
+
+NEXT: rebuild the gripper asset, which now reads this file:
+    ../IsaacLab/isaaclab.sh -p ur5_grasp/tools/make_ur5e_simple_gripper_usd.py --headless
+[report saved to /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/tools/check_wrist_frame_report.txt]

@@ -2,7 +2,7 @@
 BUILD + VALIDATE  ur5e_robotiq_2f85.usd
 ======================================================================
 source USD : https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/ur5e/ur5e.usd
-output USD : /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/assets/ur5e_robotiq_2f85.usd
+output USD : /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/assets/ur5e_robotiq_2f85.usd
 
 --- 1. Authoring local USD ---
     variant Physics -> PhysX
@@ -10,7 +10,7 @@ output USD : /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/assets/ur5e_robotiq_2f85.usd
     variant Sensor -> None
     removed UsdPhysics.ArticulationRootAPI from gripper: True
     set physxArticulation:articulationEnabled = False on gripper
-    wrote /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/assets/ur5e_robotiq_2f85.usd
+    wrote /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/assets/ur5e_robotiq_2f85.usd
 
 --- 2. Validating single articulation ---
     SUCCESS: loaded as a single articulation.
@@ -19,4 +19,4 @@ output USD : /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/assets/ur5e_robotiq_2f85.usd
     num bodies : 16
     body names : ['base_link', 'shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link', 'base_link_0', 'left_outer_knuckle', 'right_outer_knuckle', 'left_outer_finger', 'right_outer_finger', 'left_inner_finger', 'right_inner_finger', 'left_inner_knuckle', 'right_inner_knuckle']
 
-[report saved to /home/mte/Abdur_Rabbi_THESIS/ur5_grasp/tools/make_usd_report.txt]
+[report saved to /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/tools/make_usd_report.txt]

@@ -1,0 +1,23 @@
+{
+  "tool_axis_wrist3_link": [
+    0.0,
+    0.0,
+    1.0
+  ],
+  "invariant_axis": "z",
+  "sign": 1.0,
+  "invariant_dot_products": {
+    "x": 0.764842,
+    "y": 0.764842,
+    "z": 1.0
+  },
+  "wrist2_to_wrist3_local": [
+    0.0,
+    -0.0,
+    0.0996
+  ],
+  "wrist2_to_wrist3_distance_m": 0.0996,
+  "probe_angle_rad": 0.7,
+  "source_usd": "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/ur5e/ur5e.usd",
+  "measured_utc": "2026-07-29T18:23:23Z"
+}

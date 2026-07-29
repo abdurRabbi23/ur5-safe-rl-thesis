@@ -24,7 +24,29 @@ from isaaclab.app import AppLauncher
 # --- TOUHID: make external package + Isaac Lab's cli_args importable -------------
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _REPO_ROOT = os.path.normpath(os.path.join(_HERE, "..", ".."))
-_CLI_ARGS_DIR = os.path.join(_REPO_ROOT, "IsaacLab", "scripts", "reinforcement_learning", "rsl_rl")
+# Comparison-test copy sits one directory DEEPER than the main folder's ur5_grasp/,
+# so "two levels up from this script" (_REPO_ROOT) no longer lands next to IsaacLab/ --
+# it lands in "Comparison test/" instead (IsaacLab/ is one level further up, at the
+# project root). Rather than hardcode a directory count that breaks again if this
+# package ever moves, search upward for whichever ancestor actually contains
+# IsaacLab/isaaclab.sh (same "search by identity, not by guessed depth" fix as
+# make_ur5e_simple_gripper_usd.py used for the wrist_3_link mount prim).
+def _find_isaaclab_root(start_dir: str) -> str:
+    d = start_dir
+    for _ in range(8):
+        candidate = os.path.join(d, "IsaacLab", "isaaclab.sh")
+        if os.path.isfile(candidate):
+            return os.path.join(d, "IsaacLab")
+        parent = os.path.dirname(d)
+        if parent == d:
+            break
+        d = parent
+    raise RuntimeError(
+        f"Could not find an IsaacLab/ install by walking up from {start_dir}. "
+        "Expected IsaacLab/isaaclab.sh in some ancestor directory."
+    )
+
+_CLI_ARGS_DIR = os.path.join(_find_isaaclab_root(_HERE), "scripts", "reinforcement_learning", "rsl_rl")
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 if _CLI_ARGS_DIR not in sys.path:

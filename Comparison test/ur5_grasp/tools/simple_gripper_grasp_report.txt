@@ -1,0 +1,64 @@
+==============================================================================
+SIMPLE GRIPPER — pinned-close contact grasp test
+==============================================================================
+task     : Isaac-Lift-Cube-UR5e-SimpleGripper-Play-v0   num_envs: 1
+report   : /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/tools/simple_gripper_grasp_report.txt
+
+--- resolved geometry (robots/gripper_geometry.py) ---
+gripper geometry (all distances from wrist_3_link origin, metres):
+    TOOL_AXIS (measured)   : [0.0, 0.0, 1.0]
+    MOUNT_ROLL_DEG         : 0.0
+    MOUNT_QUAT (w,x,y,z)   : [1.0, 0.0, 0.0, 0.0]
+    plate  (BASE_THICK)    : 0.000 -> 0.030  (centre 0.015, flush on flange)
+    fingers (FINGER_LEN)   : 0.030 -> 0.100  (centre 0.065)
+    TCP / grasp point      : 0.075  (= TIP_Z 0.100 - GRASP_INSET 0.025)
+    finger geom offset     : 0.050  (inside the body, NOT in the joint)
+    finger rest gap        : 0.030   travel each: 0.035
+    TCP_OFFSET_POS (w3)    : [0.0, 0.0, 0.075]
+
+[progress] parsing env cfg ...
+[progress] gym.make ... (scene construction happens here)
+[progress] env.reset ...
+[progress] scene up.
+[progress] body names : ['base_link', 'shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link', 'base_link_0', 'left_finger', 'right_finger']
+[progress] joint names: ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint', 'left_finger_joint', 'right_finger_joint']
+[local offset] measured wrist_3->TCP = [+0.0000, +0.0000, +0.0750] m
+[local offset] geometry says it should be [0.0, 0.0, 0.075] m (TCP_Z 0.075 along the measured tool axis [0.0, 0.0, 1.0])
+[segment] wrist_3->mount (base_link_0) = [+0.0000, +0.0000, +0.0150] m (expect [0.0, 0.0, 0.015], the FixedJoint)
+[segment] mount->TCP, in the GRIPPER's own frame = [+0.0000, -0.0000, +0.0600] m (expect [0, 0, +0.0600] — pure +Z, since the gripper frame's +Z IS the approach axis)
+
+[placed cube at TCP z=0.269] closing (pinned)...
+
+  step   30 [pinned] cube z=+0.269 (pad +0.269) HELD | left=+0.0350 right=-0.0350 | pad gap=100.0 mm
+  step   40 [pinned] cube z=+0.267 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step   50 [pinned] cube z=+0.267 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step   60 [pinned] cube z=+0.267 (pad +0.269) HELD | left=+0.0163 right=-0.0164 | pad gap= 62.8 mm
+  step   70 [pinned] cube z=+0.267 (pad +0.269) HELD | left=+0.0163 right=-0.0164 | pad gap= 62.8 mm
+  step   80 [pinned] cube z=+0.267 (pad +0.269) HELD | left=+0.0163 right=-0.0164 | pad gap= 62.8 mm
+  step   90 [HOLD  ] cube z=+0.267 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+
+[step 90] pin released — grip must now hold the cube alone
+
+  step  100 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step  110 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0164 | pad gap= 62.8 mm
+  step  120 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step  130 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0164 | pad gap= 62.8 mm
+  step  140 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step  150 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step  160 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step  170 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step  180 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0164 | pad gap= 62.8 mm
+  step  190 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step  200 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0164 | pad gap= 62.8 mm
+  step  210 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step  220 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+  step  230 [HOLD  ] cube z=+0.268 (pad +0.269) HELD | left=+0.0163 right=-0.0165 | pad gap= 62.8 mm
+
+================= SIMPLE GRIPPER CONTACT GRASP RESULT =================
+ left_finger_joint=+0.0163  right_finger_joint=-0.0165
+ (both near 0 = pads closed all the way through, no obstruction; either
+  stalled well short of 0 = pads clamped the cube -> real contact)
+ cube held at z=+0.268 (pad +0.269) after release -> GRIP HOLDS
+=========================================================================
+
+[report saved to /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/tools/simple_gripper_grasp_report.txt]
