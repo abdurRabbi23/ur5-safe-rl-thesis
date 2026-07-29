@@ -1,0 +1,51 @@
+==============================================================================
+BUILD + VALIDATE  ur5e_simple_gripper.usd
+==============================================================================
+source USD : https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/UniversalRobots/ur5e/ur5e.usd
+output USD : /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/assets/ur5e_simple_gripper.usd
+
+--- 0. Resolved geometry (robots/gripper_geometry.py) ---
+gripper geometry (all distances from wrist_3_link origin, metres):
+    TOOL_AXIS (measured)   : [0.0, 0.0, 1.0]
+    MOUNT_ROLL_DEG         : 0.0
+    MOUNT_QUAT (w,x,y,z)   : [1.0, 0.0, 0.0, 0.0]
+    plate  (BASE_THICK)    : 0.000 -> 0.030  (centre 0.015, flush on flange)
+    fingers (FINGER_LEN)   : 0.030 -> 0.100  (centre 0.065)
+    TCP / grasp point      : 0.075  (= TIP_Z 0.100 - GRASP_INSET 0.025)
+    finger geom offset     : 0.050  (inside the body, NOT in the joint)
+    finger rest gap        : 0.030   travel each: 0.035
+    TCP_OFFSET_POS (w3)    : [0.0, 0.0, 0.075]
+
+--- 1. Authoring local USD (arm-only reference + custom finger joints) ---
+    variant Physics -> PhysX
+    variant Gripper -> None
+    variant Sensor -> None
+    mount body found: /Robot/wrist_3_link
+    wrote /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/assets/ur5e_simple_gripper.usd
+
+--- 2. Validating single articulation ---
+    SUCCESS: loaded as a single articulation.
+    num joints : 8
+    joint names: ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint', 'left_finger_joint', 'right_finger_joint']
+    num bodies : 10
+    body names : ['base_link', 'shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link', 'base_link_0', 'left_finger', 'right_finger']
+
+    Expected: 8 joints (6 arm + left_finger_joint + right_finger_joint),
+    10 bodies (7 arm + base_link + left_finger + right_finger). The fixed
+    mount_joint has no DOF so it will not appear in joint_names.
+    NOTE: the gripper plate is reported as 'base_link_0' — the arm already has a
+    'base_link', so Isaac Lab de-duplicates the name. Cosmetic, but do not use
+    body_names=['base_link'] anywhere expecting the gripper.
+
+--- 3. post-spawn geometry check (left_finger origin in wrist_3_link's frame) ---
+    left_finger_joint at read time : +0.00000 m (parked target 0.0; open would be +0.035)
+    expected : [0.015, 0.0, 0.015]
+    measured : [0.015, -0.0, 0.015]
+    error    : 0.00 mm
+    -> OK. The mount transform PhysX resolved matches what was authored.
+
+    finger tip (wrist_3 frame) : [0.015, 0.0, 0.1]
+    TCP        (wrist_3 frame) : [0.0, 0.0, 0.075]
+    TCP sits 25 mm back from the tips, between the fingers.
+
+[report saved to /home/mte/Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/tools/make_simple_gripper_report.txt]

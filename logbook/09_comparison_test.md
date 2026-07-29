@@ -90,12 +90,18 @@ splitting on the space.
 ## Two copies of `ur5_grasp/` now exist — keep them straight
 - `Abdur_Rabbi_THESIS/ur5_grasp/` — the main folder's copy. Git-tracked, tagged
   `layer1-env-freeze`. This is the **source of truth** for the env/cost-function definition.
-- `Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/` — a working copy, **not** git-tracked as part of
-  the main repo (it's a plain filesystem copy, made 2026-07-29). Train against this one. If a real
+- `Abdur_Rabbi_THESIS/Comparison test/ur5_grasp/` — a working copy. Train against this one. If a real
   bug in the frozen env is found here, the fix must be ported back to the main copy — do not let
   the two silently diverge on anything that affects the comparison (env, costs, reward). New
   files that are specific to this run (skrl configs, new scripts) can live only in the
   `Comparison test/` copy.
+
+> **Correction (Day 22).** This section used to say the `Comparison test/` copy is "**not**
+> git-tracked as part of the main repo (a plain filesystem copy)". That is FALSE — checked
+> directly: `git ls-files "Comparison test"` returns tracked files and `git status` lists five
+> *modified* tracked files under it. The folder is in the repo. It matters because the
+> fairness protocol's "env frozen and tagged before run 1" is achievable here with an ordinary
+> commit + tag, rather than needing a separate provenance mechanism.
 
 ## Run matrix (unchanged from 03c, restated for convenience)
 | Algorithm | Framework | Envs | Seeds | Status |
@@ -109,18 +115,124 @@ splitting on the space.
 Cut order, fairness protocol, registered hypothesis, and the schedule (writing due 2026-08-11,
 TD3 hard cut 2026-08-06 EOD) are all unchanged — see `03c_multialgo_benchmark.md`.
 
+## ⚠️ Day 20–21: the run matrix is BLOCKED on a gripper rebuild
+The Robotiq 2f-85 asset was abandoned on Day 20 (closed 4-bar linkage folded into a foreign
+articulation → degenerate body positions ~~+ missing finger colliders~~) and replaced with a
+hand-built simple two-finger prismatic gripper, which gave this project its first real
+contact grasp.
+
+> **Correction (Day 22).** The "missing finger colliders" half of that is **FALSE** and was
+> already retracted on Day 18 (`run_log.md` lines 186–188): the pads DO have 10 enabled
+> convexHull colliders; "no collider" was a false alarm from a traversal that omitted
+> `TraverseInstanceProxies` on an instanceable asset. The Day-20 entry reinstated the false
+> alarm as fact and Day 21 + `docs/HANDOFF_robotiq_2f85.md` inherited it. Only the degenerate
+> body positions survive as an objection — and that finding contradicts itself (all nine
+> gripper bodies at `[0,0,0]`, yet an 84.4 mm pad gap measured between two of them in the same
+> session) and has never been diagnosed. See Day 22 in `Comparison test/run_log_new.md`.
+> **This does not change the Day-21 scope call:** the SimpleGripper remains the Layer-1
+> deliverable and the matrix does not wait for the 2f-85.
+
+Day 21 then fixed two faults in the SimpleGripper build: it was mounted along
+`wrist_3_link`'s **+Z** and came out sideways (the +Z figure was inherited from the frozen
+weld env and had never been validated — a weld env teleports the cube to whatever point the
+TCP names, so it could not have caught this), and the grasp point sat at the finger midpoint
+rather than between the tips.
+
+All gripper geometry now lives in **one** file, `Comparison test/ur5_grasp/robots/
+gripper_geometry.py`, imported by the USD builder, the training env cfg, the grasp test and
+the live demo. The tool axis is measured by `tools/check_wrist_frame.py`, not assumed.
+
+**Steps 1–2 below cannot start until the gripper clears its checks** — see `HANDOFF.md` for
+the three lab-PC runs, in order, and `run_log_new.md` (2026-07-30, Day 21) for the full
+reasoning. The matrix will then target `-SimpleGripper-v0`, not the old weld `-v0`.
+
+## ✅ Day 22: the gripper gate is CLEARED. The matrix is unblocked.
+`make_ur5e_simple_gripper_usd.py` re-run on the lab PC — section 3 reads **`error 0.00 mm`,
+"OK. The mount transform PhysX resolved matches what was authored"**, with `left_finger_joint`
+parked at exactly 0.0 (the Day-21 fix to the check working as intended). Together with the
+Day-21 close (mount + TCP confirmed by eye in the GUI), the SimpleGripper is DONE.
+
+**Remaining before the matrix launches** — mechanical, no open questions:
+1. `simple_gripper_grasp_test.py` on `-SimpleGripper-Play-v0`, `--num_envs 1`
+2. ~50-iter smoke train on `-SimpleGripper-v0`
+3. re-freeze + re-tag the Layer-1 env; repoint the matrix at `-SimpleGripper-v0`
+4. PPO ×3, then cPPO ×3
+
+## ❌ Day 22: the Robotiq 2f-85 is CLOSED — permanently, on schedule grounds
+Reopened this session under `docs/HANDOFF_robotiq_2f85.md` and closed the same day. **Not
+because the asset was shown to be broken** — that was never established, and the evidence
+leans the other way:
+- the pads have **10 enabled `convexHull` colliders** (fresh run) — reason #2 for the Day-20
+  abandonment is definitively FALSE, confirming the Day-18 retraction;
+- at `finger_joint = 0.8` the pads separated by **84.9 mm** against an 85 mm spec stroke — the
+  4-bar linkage WORKS and PhysX resolved distinct pad transforms.
+
+The diagnostic written for it (`tools/check_robotiq_pads.py`) printed a confident STOP verdict
+from **three unvalidated premises** — the project's fifth instrument failure, documented in
+full at the top of that script and in `run_log_new.md` Day 22. Its verdict line must not be
+trusted; its collider audit can be.
+
+**Open hypothesis, recorded and never tested:** nothing may be wrong with the 2f-85 at all, and
+every `[0,0,0]` in this thread — Day 18's included — may be the same class of instrument bug.
+Closed anyway: three sessions consumed, two more rounds needed for a validated TCP, deliverable
+already working, TD3 hard cut Aug 6, writing due Aug 11, and Layer-3 hardware is an RH-P12-RN.
+
+**Thesis value:** the honest negative result is stronger than the old one — *one stated reason
+was a retracted false alarm reinstated as fact three sessions later, the other was never
+diagnosed, and the workstream closed because the deliverable succeeded without it.* Methods
+paragraph on diagnostic discipline, not on a broken asset.
+
+## ✅ Day 22 (cont.): grasp test PASSED, and the matrix is repointed at the WELD env `-v0`
+
+`ur5_grasp/tools/simple_gripper_grasp_report.txt` (01:19, found unread on disk):
+fingers stalled at a **62.8 mm pad gap** against a 30 mm closed target — obstructed by the
+cube, not passing through — and the cube held at z = +0.268 for 140 steps after the pin
+released. Every authored segment resolved to its designed value to 4 dp. **The SimpleGripper
+is a working contact grasp.** (Cube is therefore ~63 mm across.)
+
+**Decision (Touhid, Day 22): the 15-run matrix runs on `Isaac-Lift-Cube-UR5e-v0`**, the frozen
+weld env — reversing the Day-20/21 repoint to `-SimpleGripper-v0`. `-v0` is frozen, tagged, and
+already produced the Day-10 headline; the 2f-85 is genuinely present and driven in it, with only
+the *grasp* abstracted as a weld (declared in Methods §2). `03c`'s locked schedule had these six
+runs finishing today and the count is zero of fifteen, so the deciding factor is schedule, not
+fidelity. The SimpleGripper is reduced to a ~50-iter smoke train and stands as a separately
+demonstrated real-contact result.
+
+⚠️ **Fragility on the launch path — fix before run 1.** `tasks/lift/__init__.py` registers the
+SimpleGripper cfg alongside `-v0`, so importing the task package imports `gripper_geometry.py`,
+which raises `FileNotFoundError` at import time if `assets/wrist_frame.json` is missing — and
+that file is currently **untracked**. The frozen weld env's importability therefore depends on an
+uncommitted JSON. Commit it as part of the freeze.
+
+**Instruments added Day 22** (both verified as far as a GPU-free sandbox allows; see
+`run_log_new.md` for what was and was not verified):
+- `run_ppo_cppo_seeds.sh` — rewritten. No longer aborts the batch on one failed run; captures
+  per-run exit codes and wall-clock, verifies each run by its checkpoint on disk rather than by
+  stdout, writes a flushed `logs/batch_report.txt`.
+- `ur5_grasp/tools/summarize_runs.py` — new. TensorBoard event files → flushed text report +
+  per-tag CSVs in `results/tb_csv/`. Replaces the manual, unreproducible export that
+  `make_layer1_figs.py` still expects from a dead sandbox path.
+
 ## Next steps
-1. Launch PPO ×3 seeds from inside `Comparison test/` (commands above), seeds 1/2/3, matching the
-   main folder's naming convention (`ppo_s1`/`s2`/`s3`) so results are easy to cross-reference.
-2. Launch cPPO ×3 seeds the same way.
-3. Author the skrl configs (`configs/skrl_ppo_cfg.yaml`, `skrl_sac_cfg.yaml`, `skrl_td3_cfg.yaml`)
+0. **Freeze:** commit `assets/wrist_frame.json` + Day-21/22 changes, then re-tag. Fairness
+   protocol requires the env frozen and stamped before run 1.
+1. **Smoke trains, 50 iters each, in this order** — `-v0` PPO, `-v0` cPPO, then
+   `-SimpleGripper-v0`. Do not skip the `-v0` pair: it has never been trained inside this folder,
+   and both `train.py` and `tasks/lift/__init__.py` have changed since the freeze.
+2. `./run_ppo_cppo_seeds.sh` — PPO ×3 then cPPO ×3 on `-v0`, seeds 1/2/3, naming
+   `ppo_s1`/`s2`/`s3` and `cppo_s1`/`s2`/`s3` to match the main folder.
+3. `../IsaacLab/isaaclab.sh -p ur5_grasp/tools/summarize_runs.py` — read the reports.
+4. Author the skrl configs (`configs/skrl_ppo_cfg.yaml`, `skrl_sac_cfg.yaml`, `skrl_td3_cfg.yaml`)
    and register the entry points in `Comparison test/ur5_grasp/tasks/lift/__init__.py` — mirrors
    03c "Next steps" item 2, just pointed at this copy.
-4. Smoke-test each new algorithm at 50 iters before committing to a full run.
-5. Full run matrix in cut order.
-6. Extend `results/scripts/make_layer1_figs.py` (copied in already) from 2 series to 4 + seed
-   bands; regenerate the results table.
+5. Smoke-test each new algorithm at 50 iters before committing to a full run.
+6. Remaining runs in cut order (skrl-PPO bridge ×3, SAC ×3, TD3 ×3).
+7. Extend `results/scripts/make_layer1_figs.py` from 2 series to 4 + seed bands and **repoint its
+   hardcoded `DATA` path** (currently a dead sandbox path) at `results/tb_csv/`, which
+   `summarize_runs.py` now populates automatically; regenerate the results table.
 
 ## Refs
+Daily timeline scoped to this folder: `Comparison test/run_log_new.md` (dual-tracked — every entry there also appears in the project-wide `run_log.md`). Read it first if picking up work only inside `Comparison test/`.
+
 Decision record / rationale: `logbook/03c_multialgo_benchmark.md` (unchanged, still the source of
 truth for *why*). This file is the *where*. Import note + folder creation: `run_log.md`, Day 19.

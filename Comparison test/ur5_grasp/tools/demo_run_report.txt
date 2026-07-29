@@ -1,0 +1,231 @@
+==============================================================================
+LIVE GRASP DEMO — simple two-finger gripper
+==============================================================================
+gripper geometry (all distances from wrist_3_link origin, metres):
+    TOOL_AXIS (measured)   : [0.0, 0.0, 1.0]
+    MOUNT_ROLL_DEG         : 0.0
+    MOUNT_QUAT (w,x,y,z)   : [1.0, 0.0, 0.0, 0.0]
+    plate  (BASE_THICK)    : 0.000 -> 0.030  (centre 0.015, flush on flange)
+    fingers (FINGER_LEN)   : 0.030 -> 0.100  (centre 0.065)
+    TCP / grasp point      : 0.075  (= TIP_Z 0.100 - GRASP_INSET 0.025)
+    finger geom offset     : 0.050  (inside the body, NOT in the joint)
+    finger rest gap        : 0.030   travel each: 0.035
+    TCP_OFFSET_POS (w3)    : [0.0, 0.0, 0.075]
+
+[demo] creating simulation context...
+[demo] building scene (downloads table + DexCube from the Isaac asset server on a cold cache — this is the slow step)...
+[demo] scene built. resetting sim...
+[demo] sim reset done.
+[demo] body names : ['base_link', 'shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link', 'base_link_0', 'left_finger', 'right_finger']
+[demo] joint names: ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint', 'left_finger_joint', 'right_finger_joint']
+[demo] painted 3 gripper prims black (expected 3: base_link + left_finger + right_finger per env)
+[demo] setup complete. Close the viewport window or Ctrl+C to stop.
+[demo] home TCP (pad midpoint) world pos: [0.6336327791213989, 0.13333746790885925, 0.26931580901145935]  quat(wxyz): [-0.028808772563934326, -0.7064390182495117, 0.7065767049789429, 0.029380083084106445]
+
+[demo] === cycle 1 === cube at (0.500, -0.000, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0350 right=-0.0316 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0345 right=-0.0312 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0346 right=-0.0310 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0346 right=-0.0310 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0346 right=-0.0310 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 1 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 2 === cube at (0.567, -0.058, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0314 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0303 right=-0.0348 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0298 right=-0.0347 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0294 right=-0.0346 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0287 right=-0.0345 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 2 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 3 === cube at (0.669, -0.040, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0281 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0272 right=-0.0349 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0271 right=-0.0348 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0268 right=-0.0349 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0266 right=-0.0347 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 3 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 4 === cube at (0.651, -0.162, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0303 right=-0.0221 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0158 right=-0.0196 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0146 right=-0.0194 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0136 right=-0.0188 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0123 right=-0.0182 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 4 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 5 === cube at (0.716, -0.177, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0186 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0184 right=-0.0342 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0183 right=-0.0336 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0184 right=-0.0332 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0180 right=-0.0328 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.175 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.175 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.175 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.175 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.175 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.175 (table z~+0.021) -> HELD
+[demo] cycle 5 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.175, end-of-hold z=+0.175)
+
+[demo] === cycle 6 === cube at (0.698, -0.172, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0238 right=-0.0328 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0230 right=-0.0328 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0225 right=-0.0325 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0225 right=-0.0325 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0225 right=-0.0325 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 6 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 7 === cube at (0.556, -0.096, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0294 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0291 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0291 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0291 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0291 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 7 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 8 === cube at (0.576, -0.145, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0265 right=-0.0280 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0229 right=-0.0275 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0210 right=-0.0270 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0204 right=-0.0266 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0198 right=-0.0263 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 8 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 9 === cube at (0.546, -0.259, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0324 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0217 right=-0.0350 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0197 right=-0.0347 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0181 right=-0.0344 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0172 right=-0.0343 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 9 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 10 === cube at (0.468, -0.275, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0301 right=-0.0333 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0083 right=-0.0311 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0062 right=-0.0303 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0053 right=-0.0300 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0040 right=-0.0290 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 10 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 11 === cube at (0.483, -0.270, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0300 right=-0.0348 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0126 right=-0.0330 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0103 right=-0.0322 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0076 right=-0.0309 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0060 right=-0.0305 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 11 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)
+
+[demo] === cycle 12 === cube at (0.456, -0.360, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0299 right=-0.0348 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0053 right=-0.0326 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0039 right=-0.0320 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0030 right=-0.0320 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0032 right=-0.0319 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.190 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.190 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.190 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.190 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.190 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.190 (table z~+0.021) -> HELD
+[demo] cycle 12 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.190, end-of-hold z=+0.190)
+
+[demo] === cycle 13 === cube at (0.440, -0.348, 0.021)
+[demo] closing fingers...
+    close step   0  left=+0.0300 right=-0.0324 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  30  left=+0.0020 right=-0.0294 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  60  left=+0.0009 right=-0.0293 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step  90  left=+0.0001 right=-0.0292 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+    close step 120  left=+0.0001 right=-0.0293 (both ~0.0350/-0.0350 = fully open/no contact; stalled well short = real contact on the cube)
+[demo] lifting...
+    hold step   0  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step  50  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 100  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 150  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 200  cube z=+0.021 (table z~+0.021) -> HELD
+    hold step 250  cube z=+0.021 (table z~+0.021) -> HELD
+[demo] cycle 13 result: GRIP HOLDS -- cube lifted and held in the air (start-of-hold z=+0.021, end-of-hold z=+0.021)

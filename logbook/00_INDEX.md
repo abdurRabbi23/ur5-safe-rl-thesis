@@ -37,7 +37,25 @@ fairness protocol, cut order, schedule — all still binding); `09` is where the
 happen now. Nothing is reused from the main folder's earlier PPO ×3 seeds — this folder's matrix
 is trained fresh, start to finish, on its own copy of `ur5_grasp/`.
 
-**IMMEDIATE NEXT (inside `Comparison test/`): launch PPO ×3 seeds, then cPPO ×3 seeds.**
+**Update 2026-07-30 (Day 22): gripper gate CLEARED, grasp test PASSED, matrix repointed at the
+WELD env `-v0`.** The Robotiq 2f-85 was replaced (Day 20) by a hand-built simple two-finger
+gripper; Day 21 measured the mount axis instead of inheriting it and moved the TCP between the
+finger tips (both confirmed by eye in the GUI); Day 22's builder re-run reads `error 0.00 mm ->
+OK`, and the grasp test then **passed** — fingers stalled at a 62.8 mm pad gap against a 30 mm
+closed target and the cube held after the pin released. Gripper geometry is settled and lives in
+ONE file, `Comparison test/ur5_grasp/robots/gripper_geometry.py` — do not re-derive it.
+
+**The 15-run matrix runs on `Isaac-Lift-Cube-UR5e-v0`** (frozen weld env, 2f-85 present and
+driven, grasp abstracted as a weld) — reversing the Day-20/21 repoint to `-SimpleGripper-v0`.
+Decided on schedule grounds: `03c` had these six runs finishing Day 22 and the count is zero of
+fifteen. The SimpleGripper is reduced to a ~50-iter smoke train and stands in the thesis as a
+separately demonstrated real-contact grasp. The 2f-85 *contact* study stays **closed
+permanently** — on schedule grounds, not because it was shown broken (its pads do have colliders
+and its linkage does work; see `09`).
+
+**IMMEDIATE NEXT (inside `Comparison test/`): commit + re-tag → three 50-iter smoke trains
+(`-v0` PPO, `-v0` cPPO, `-SimpleGripper-v0`) → `./run_ppo_cppo_seeds.sh` → `summarize_runs.py`.**
+Exact commands in `logbook/HANDOFF.md`.
 
 ### Historical status (2026-07-20, Day 10) — the 2-algorithm result
 Roadmap week ~9–10 zone. **Module 03 (Layer 1) is COMPLETE — the must-pass deliverable is DONE.**
