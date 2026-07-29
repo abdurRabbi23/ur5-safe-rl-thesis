@@ -386,3 +386,93 @@ question *"why not just slow the robot down?"*, it is a genuine sensitivity anal
 `velocity_limit_sim`, and it feeds the Layer-3 hardware discussion. Log dir retained.
 
 **NEXT:** commit shelved contact files separately → freeze + git-tag → PPO ×3 seeds.
+
+## 2026-07-29 (Day 19, cont.) — Freeze landed; PPO ×3 seeds already done; new Cowork session picked up
+Status check from a new Cowork session (folder freshly connected) found the above "NEXT" already
+executed, just not logged: shelved contact files committed (`a9acc1a`), freeze committed
+(`b8f0727`, "gripper OPEN/CLOSE convention corrected; velocity/episode experiment reverted"),
+tagged `layer1-env-freeze`. **PPO ×3 seeds ran to completion** — `ur5e_lift/2026-07-28_23-53-22_ppo_s1`,
+`…00-05-10_ppo_s2`, `…00-17-05_ppo_s3`, all to `model_1499.pt`. Jul 30 gate (pass bar restored) is
+effectively already hit a day early. **cPPO ×3 seeds have NOT started** — only the superseded
+100-iter probe (`probe_cppo_ep7_cl25`) exists. That is the actual next action, not "launch PPO".
+
+**Git divergence found:** local `main` has 2 commits origin doesn't (`a9acc1a`, `b8f0727` above);
+`origin/main` has 6 commits local doesn't (`0596d8b`…`0c320cf`, all Layer 2 IBVS + RH-P12 gripper
+work — evidently pushed from the lab-PC session while this laptop-side clone worked the Layer-1
+restart). No conflicts yet (clean split), but needs a pull/merge before either side pushes further,
+or the freeze tag ends up on a history the lab PC doesn't have. Open task, not yet resolved.
+
+**Project-memory import:** pulled a full handoff dump from the original "THESIS 4200" Claude
+Project (custom instructions + its `memory.md` + uploaded-knowledge list — that project has no
+raw transcripts, so this is its distilled summary, not literal recovery). Written into
+`logbook/08_project_context.md` (new module) + a role/working-principles section added to
+`CLAUDE.md`. Key findings, reconciled against this repo:
+- **Scope-pivot memory was stale.** The old project's memory records the PPO/SAC/TD3/cPPO pivot
+  as an open, unresolved debate with no title agreed. It's actually resolved — Day 18 here, with
+  a registered hypothesis, fairness protocol, and cut order already written in `03c`. No action;
+  just don't reopen it as if live.
+- **KUET admin details captured for the first time in this repo:** BSc Mechatronics, supervisor
+  Dr. Md. Helal-An-Nahiyan, IEEE citation style, the 6-chapter KUET structure incl. the easy-to-miss
+  Ch.5 SDG-mapping requirement. Full table in `08_project_context.md`.
+- **Font size conflict is real and still open** (12 pt per project instructions vs 14 pt per a
+  separate note) — already flagged in `06_writing.md` since Day 7, still unconfirmed.
+- **Genuinely missing, not just undocumented:** defense date, submission deadline, page limit —
+  need to come from the supervisor directly. Also the Xia 2024 (UR5e safe DRL) reference has no
+  PDF anywhere, old project or this repo.
+- **Reference papers (Fawad Khan cPPO paper, Shahid, Shi, Zhang, the thesis proposal doc, and Md
+  Masrul Khan's predecessor thesis book) exist only in the old Project's uploads — none are in
+  this working folder.** Needed before lit-review/Chapter 2 writing happens in this session.
+- **Robotiq 2F-85 rejection note is superseded by what actually shipped** — old memory says
+  "rejected, use simple prismatic gripper"; the frozen env instead keeps the real 2F-85 asset and
+  sidesteps the same mimic-joint problem via the kinematic weld. Already the accepted framing in
+  `Methods_Chapter_Layer1.md` §2; no change needed, just noted for consistency.
+
+**NEXT:** launch cPPO ×3 seeds (rsl_rl, on the frozen env). Resolve the git divergence before any
+further pushes. Get defense date / deadline / page limit / font size from the supervisor.
+
+## 2026-07-29 (Day 19, evening) — New folder: `Comparison test/`, benchmark redone from scratch
+Decision: the 4-algorithm comparative benchmark moves out of the main `ur5_grasp/`/
+`IsaacLab/logs/` sprawl into a dedicated folder, `Comparison test/`, and is retrained **completely
+fresh there — including PPO, even though PPO ×3 seeds already finished in the main folder.**
+Rationale (Touhid's call): one self-contained, clean provenance for the whole 15-run matrix,
+separate from the Day 18 restart / shelved contact-env history.
+
+Confirmed with the user before building: (1) redo everything, including PPO — not reusing the
+main folder's `ppo_s1/s2/s3`; (2) the env/algorithm code (`ur5_grasp/`) gets copied into the new
+folder as a working copy, rather than the new folder just holding configs/results while code
+stays only in the main `ur5_grasp/`.
+
+**Built:**
+- `Comparison test/ur5_grasp/` — full copy of the main folder's `ur5_grasp/` (matches the
+  `layer1-env-freeze` / `b8f0727` state exactly at copy time; `__pycache__` excluded).
+- `Comparison test/configs/`, `results/` (with `make_layer1_figs.py` pre-copied), `docs/`.
+- `Comparison test/runs/{ppo,cppo,sac,td3,skrl_ppo_bridge}/` — created as placeholders, then
+  found to be the WRONG structure (see gotcha below). Left in place, empty, harmless; not where
+  real output lands. Delete permission for these five empty dirs was denied by the mount (minor,
+  not worth chasing).
+
+**Technical gotcha found before any training ran (would have wasted a full session otherwise):**
+read `train.py` / `eval_success.py` / `calibrate_manipulability.py` directly — `log_root_path` is
+computed as `os.path.abspath(os.path.join("logs", "rsl_rl", experiment_name))`, i.e. relative to
+the **process's cwd**, not to where the script file lives. Also confirmed `isaaclab.sh` never
+`cd`s internally (`extract_python_exe` + `${python_exe} "$@"` only). So the *old* workflow
+(`cd IsaacLab/ && ./isaaclab.sh -p ../ur5_grasp/scripts/train.py`) writes logs to
+`IsaacLab/logs/...` purely because cwd = `IsaacLab/` at call time — **the log location has never
+been tied to script location.** To land logs inside `Comparison test/`, the new session must `cd`
+there FIRST and call IsaacLab by relative path the other way: `../IsaacLab/isaaclab.sh -p
+ur5_grasp/scripts/train.py ...`. Written up with exact commands in the new module file. Also
+flagged: the folder name has a space (`Comparison test`) — every shell command referencing it
+needs quoting, otherwise `cd` silently splits on the space.
+
+**Docs written:** `logbook/09_comparison_test.md` (new, active module — folder layout, the log-path
+gotcha, the two-copies-of-ur5_grasp bookkeeping note, restated run matrix, next steps).
+`logbook/03c_multialgo_benchmark.md` re-scoped to "decision record only" (hypothesis, fairness
+protocol, cut order, schedule all still binding) with a pointer to `09` for current work.
+`00_INDEX.md` and `HANDOFF.md` updated to point new sessions at `09` first.
+
+**Not yet decided, flagged for the new session:** whether `Comparison test/` becomes part of the
+main git repo (currently a plain filesystem copy, untracked) or gets its own — decide before the
+first commit inside it, don't let it accumulate uncommitted history either way.
+
+**NEXT:** from inside `Comparison test/`, launch PPO ×3 seeds, then cPPO ×3 seeds (commands in
+`logbook/09_comparison_test.md` / `HANDOFF.md`).

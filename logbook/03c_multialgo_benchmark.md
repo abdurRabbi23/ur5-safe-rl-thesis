@@ -1,6 +1,9 @@
 # Module 03c — Layer 1 Expanded: 4-Algorithm Comparative Benchmark
 
-Status: ▶ ACTIVE — supersedes the 2-algorithm Layer 1 result in `03_cppo_benchmark.md`
+Status: ◻ decision record — still the source of truth for the WHY (hypothesis, fairness
+protocol, cut order, schedule). The WHERE moved 2026-07-29 to a dedicated folder,
+`Comparison test/`, redone from scratch there. **Read `logbook/09_comparison_test.md` for
+current work; everything below is unchanged and still binding.**
 Chat type: safe-RL / benchmarking
 Opened: 2026-07-28 (Day 18)
 

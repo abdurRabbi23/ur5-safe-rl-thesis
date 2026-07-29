@@ -23,26 +23,21 @@ Safe Adaptive IBVS with constrained RL (cPPO) for precision grasping on a UR5e, 
 real. Three layers: L1 safe-RL grasping in sim (must-pass), L2 IBVS visual loop
 (stretch), L3 sim-to-real on the physical UR5e (optional). See project instructions.
 
-## Current status (updated 2026-07-28, Day 18)
-**SCOPE CHANGE — Layer 1 expanded to a 4-algorithm comparative benchmark (PPO, SAC, TD3, cPPO).**
-Active module is now `logbook/03c_multialgo_benchmark.md` — read that, not the section below, for
-current work. Contact-grasp (`-Contact-v0`) is SHELVED; the grasp stays a WELD and the Day-18
-gripper diagnosis becomes a thesis subsection justifying the abstraction. Cost function is
-unchanged and frozen (3 terms, one binding: `MANIP_FLOOR=0.045`, `cost_limit=25`; **no FOV term**).
-Framework: PPO+cPPO stay on rsl_rl, SAC+TD3 come from skrl, with a skrl-PPO bridge run for
-framework equivalence. 3 seeds per algorithm.
-**Step 0 CLOSED (Day 18 evening):** EE offset verified — `[0,0,0.16]` is correct, the "1.3 cm"
-figure was an artefact of collapsed gripper bodies, and the gripper USD is NOT being rebuilt
-(visual defect only; no frozen consumer reads gripper bodies). Only ONE env change goes into the
-freeze: the `GRIPPER_OPEN`/`GRIPPER_CLOSE` swap.
-**Day 19 (Jul 29) — env settled, ONE change from the proven env.** Gripper OPEN/CLOSE convention
-corrected (`play.py` weld gate passed). A 1.0 rad/s arm speed cap and a 7 s episode were tried and
-**REVERTED**: a full 1500-iter PPO run gave `viol_singularity` = **0.0000%** converged (vs 15.24%)
-with `manipulability_min` above the floor — a slow arm satisfies the constraint by construction,
-lambda never activates, and cPPO degenerates to PPO. ⛔ **Do not lower `velocity_limit_sim`.**
-That run is KEPT as a sensitivity analysis for Discussion. `cost_limit=25` and `MANIP_FLOOR=0.045`
-retain their Day-9 calibrations. Details in `03c`.
-**IMMEDIATE NEXT: commit shelved contact files → freeze + git-tag → launch PPO ×3 seeds.**
+## Current status (updated 2026-07-29, Day 19 evening)
+**Layer 1 env is FROZEN and TAGGED** (`layer1-env-freeze`, commit `b8f0727`). Contact-grasp
+(`-Contact-v0`) is SHELVED; the grasp stays a WELD, the Day-18 gripper diagnosis is a thesis
+subsection justifying the abstraction. Cost function frozen (3 terms, one binding:
+`MANIP_FLOOR=0.045`, `cost_limit=25`; no FOV term). Arm speed 3.14 rad/s / 5.0 s episodes — do
+NOT lower `velocity_limit_sim` (kills the safety signal, see `03c`).
+
+**The 4-algorithm comparative benchmark (PPO/SAC/TD3/cPPO) is being redone from scratch in a
+dedicated folder, `Comparison test/`, as of Day 19 evening — read `logbook/09_comparison_test.md`
+for current work.** `03c_multialgo_benchmark.md` is now the decision record only (hypothesis,
+fairness protocol, cut order, schedule — all still binding); `09` is where the runs actually
+happen now. Nothing is reused from the main folder's earlier PPO ×3 seeds — this folder's matrix
+is trained fresh, start to finish, on its own copy of `ur5_grasp/`.
+
+**IMMEDIATE NEXT (inside `Comparison test/`): launch PPO ×3 seeds, then cPPO ×3 seeds.**
 
 ### Historical status (2026-07-20, Day 10) — the 2-algorithm result
 Roadmap week ~9–10 zone. **Module 03 (Layer 1) is COMPLETE — the must-pass deliverable is DONE.**
@@ -62,11 +57,13 @@ reproduce commands: `Thesis_Documentation/06_Results_and_Experiments.md`.
 | `01_env_setup.md` | Stack install, Isaac validation, reaching tasks | ✅ done |
 | `02_grasp_env.md` | UR5e lift env, weld grasp, PPO baseline | ✅ done (weld + PPO baseline retrained, play-verified) |
 | `03_cppo_benchmark.md` | Safety constraints + cPPO vs PPO (2-algorithm Layer 1) | ✅ done — superseded by 03c, kept as historical record |
-| `03c_multialgo_benchmark.md` | 4-algorithm comparative benchmark: PPO/SAC/TD3/cPPO (**Layer 1 deliverable**) | ▶ ACTIVE — start here |
+| `03c_multialgo_benchmark.md` | 4-algorithm comparative benchmark — decisions/hypothesis/protocol | ◻ decision record — still binding, see `09` for current work |
+| `09_comparison_test.md` | Same benchmark, redone from scratch in `Comparison test/` (**Layer 1 deliverable, current work**) | ▶ ACTIVE — start here |
 | `04_layer2_ibvs.md` | IBVS visual loop, RL-tuned image Jacobian (Layer 2) | ⏳ later |
 | `05_layer3_sim2real.md` | ROS 2 transfer to physical UR5e + RH-P12-RN (Layer 3) | ⏳ later |
 | `06_writing.md` | Thesis chapters, figures, defense prep | ◻ ongoing |
 | `07_documentation.md` | Beginner replicate-from-scratch guide (`Thesis_Documentation/`) | ▶ ongoing, parallel |
+| `08_project_context.md` | KUET admin details, supervisor, references, role/working-principles (imported from the old Claude Project) | ◻ reference — read once, revisit if a row changes |
 
 ## Key pointers
 - Beginner docs: `Thesis_Documentation/` (start at `00_START_HERE.md`) — the cleaned-up,

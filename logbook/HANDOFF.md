@@ -1,41 +1,49 @@
 # HANDOFF — paste this into a new session
 
-Written 2026-07-29 (Day 19). Overwrite this file whenever the next action changes.
+Written 2026-07-29 (Day 19, evening). Overwrite this file whenever the next action changes.
 
 ```
-Read logbook/00_INDEX.md and logbook/03c_multialgo_benchmark.md, then continue Layer 1.
+Read logbook/00_INDEX.md, logbook/09_comparison_test.md, and logbook/03c_multialgo_benchmark.md
+(decisions/hypothesis/protocol, still binding), then work inside the "Comparison test/" folder.
 
-State: Step 0 CLOSED (Day 18) — EE offset [0,0,0.16] verified correct, do NOT change it;
-the "1.3 cm" figure was an artefact; gripper USD is NOT being rebuilt (visual only).
+CONTEXT: the 4-algorithm benchmark (PPO/SAC/TD3/cPPO) is being redone from scratch, start to
+finish, inside Abdur_Rabbi_THESIS/Comparison test/ — NOT continued in the main ur5_grasp/ /
+IsaacLab/logs/ folders. That's a deliberate Day-19 decision for a clean, self-contained record.
+Nothing from the main folder's earlier PPO x3 seeds is reused.
 
-Day 19: env is SETTLED and is ONE change away from the proven 2026-07-19 env.
-1. APPLIED: GRIPPER_OPEN=0.8 / GRIPPER_CLOSE=0.0 (was backwards). play.py gate PASSED —
-   weld latches. The stale checkpoint places sloppily because joint_pos_rel on
-   finger_joint flipped sign; OOD for a checkpoint being discarded. Not a bug.
-2. REVERTED: arm velocity_limit_sim is back at 3.14. Tried 1.0 rad/s; a full 1500-iter
-   PPO run gave viol_singularity = 0.0000% converged (vs 15.24%) and manipulability_min
-   0.0547, above the 0.045 floor. A slow arm satisfies the constraint by construction =>
-   lambda never activates => cPPO's gradient equals PPO's => no safety axis, no result.
-   *** DO NOT LOWER velocity_limit_sim. ***
-3. REVERTED: episode_length_s is back at 5.0 s. cost_limit is an EPISODIC budget over a
-   per-step cost, so episode length and cost_limit must move together or not at all.
-4. cost_limit=25 and MANIP_FLOOR=0.045 keep their Day-9 calibrations. Cost function
-   frozen: 3 terms, one binding, no FOV term.
-5. KEEP logs/rsl_rl/ur5e_lift/2026-07-28_23-24-42_ppo_s1_vel1_ep7 — it is the velocity
-   sensitivity analysis for Discussion, not a failed run.
+SETUP ALREADY DONE (Day 19 evening):
+- "Comparison test/" created with ur5_grasp/ (working copy of the frozen env, copied from the
+  main folder's tagged layer1-env-freeze / b8f0727 state), configs/, results/ (with
+  make_layer1_figs.py copied in as a starting point), docs/.
+- Confirmed by reading the code: rsl_rl log paths are CWD-relative, not script-location-relative.
+  To get logs inside Comparison test/, you MUST cd there first and call IsaacLab by relative path
+  the other way. Exact commands are in logbook/09_comparison_test.md - use them as written.
+- The folder name has a space in it ("Comparison test") - always quote the path in shell
+  commands.
 
-Next action:
-1. Commit the shelved contact-env files SEPARATELY (working tree is dirty) so the tag
-   points at a clean, reproducible tree.
-2. Freeze + git-tag the env. Nothing in ur5e_robotiq.py, ur5e_lift_env*.py or costs.py
-   changes after this. No re-probe needed — this is the proven env.
-3. Launch PPO x3 seeds (rsl_rl). Gate = PPO + cPPO seeds done.
+STATE OF THE ENV (unchanged, frozen): EE offset [0,0,0.16] verified correct - don't touch it.
+Gripper OPEN/CLOSE convention corrected (0.8=OPEN/0.0=CLOSE). Arm speed 3.14 rad/s, 5.0 s
+episodes - *** DO NOT LOWER velocity_limit_sim ***, a 1.0 rad/s probe zeroed the safety signal
+(kept as a Discussion sensitivity-analysis run in the main folder's logs, not reproduced here).
+cost_limit=25 / MANIP_FLOOR=0.045 are the Day-9 calibrations, still valid.
 
-Working tree is dirty with shelved contact-env files — commit those separately BEFORE
-the freeze commit so the tag points at a clean, reproducible tree.
+NEXT ACTION: cd into "Comparison test/", launch PPO x3 seeds (seed 1/2/3, run_name ppo_s1/s2/s3
+to match the main folder's naming convention), then cPPO x3 seeds. Commands in
+logbook/09_comparison_test.md.
 
-Cut order is in 03c. TD3 is first cut, HARD CUT Aug 6 EOD. Writing due Aug 11.
-Do not let the parked qualitative pose figure (Aug 7-11 block) pull work forward.
+AFTER PPO+cPPO (pass bar restored, everything past this is upside, per 03c's cut order):
+author skrl configs for SAC/TD3/bridge inside Comparison test/configs/, smoke-test each at
+50 iters, then run the full matrix. TD3 is first cut, HARD CUT Aug 6 EOD. Writing due Aug 11.
+
+OPEN, non-blocking (unrelated to this move, still true):
+1. Git divergence on the main repo: local main has 2 commits origin doesn't; origin has 6
+   Layer-2 commits local doesn't. Needs a pull/merge before either side pushes further.
+   "Comparison test/" is a plain filesystem copy, not yet git-tracked - decide before the first
+   commit whether it goes into the same repo or its own.
+2. Admin gaps from the supervisor: defense date, submission deadline, page limit, font size
+   (12pt vs 14pt conflict). See logbook/08_project_context.md.
+3. Reference PDFs (Fawad Khan cPPO paper, Shahid, Shi, Zhang, thesis proposal, Md Masrul Khan's
+   thesis book) exist only in the old Claude Project's uploads, not in this folder.
 ```
 
 ## Settled — do not re-litigate
@@ -53,27 +61,42 @@ Do not let the parked qualitative pose figure (Aug 7-11 block) pull work forward
 | Episode length | **5.0 s.** Coupled to `cost_limit`; move both or neither |
 | Random cube + random target | already in the base env, nothing to build |
 | Slow-motion for viewing | use `play.py --slow 5` — playback only, does not touch the env |
+| Where the comparison-test work happens | `Comparison test/`, NOT the main `ur5_grasp/`/`IsaacLab/logs/` — decided Day 19 |
+| Main folder's PPO ×3 seeds | NOT reused — the new folder retrains everything, including PPO |
+| rsl_rl log path | CWD-relative — cd into `Comparison test/` before invoking `isaaclab.sh` |
+| Scope pivot (PPO/SAC/TD3/cPPO) | resolved Day 18, don't reopen — see `08_project_context.md` |
 
 ## Useful commands
 
 ```bash
+# main-folder playback / diagnostics (unchanged)
 cd ~/Abdur_Rabbi_THESIS/IsaacLab
 
-# mount diagnostic (--hold keeps the GUI open)
 ./isaaclab.sh -p ../ur5_grasp/tools/check_gripper_mount.py --headless
 ./isaaclab.sh -p ../ur5_grasp/tools/check_gripper_mount.py --hold
 
-# play PPO (default agent)
 ./isaaclab.sh -p ../ur5_grasp/scripts/play.py \
     --task Isaac-Lift-Cube-UR5e-Play-v0 --num_envs 1 --seed 42
 
-# play cPPO (also switches the runner to LagrangianRunner)
 ./isaaclab.sh -p ../ur5_grasp/scripts/play.py \
     --task Isaac-Lift-Cube-UR5e-Play-v0 \
     --agent rsl_rl_cppo_cfg_entry_point --num_envs 1 --seed 42
 ```
 
-Pre-freeze checkpoints (superseded once the 3-seed runs land):
+```bash
+# comparison-test training (NEW — run from inside "Comparison test/", note the quoting)
+cd "$HOME/Abdur_Rabbi_THESIS/Comparison test"
 
-- PPO — `IsaacLab/logs/rsl_rl/ur5e_lift/2026-07-19_16-29-57/model_1499.pt`
-- cPPO — `IsaacLab/logs/rsl_rl/ur5e_lift_cppo/2026-07-19_12-05-49/model_1499.pt`
+../IsaacLab/isaaclab.sh -p ur5_grasp/scripts/train.py \
+    --task Isaac-Lift-Cube-UR5e-v0 --headless --num_envs 4096 --seed 1 --run_name ppo_s1
+
+../IsaacLab/isaaclab.sh -p ur5_grasp/scripts/train.py \
+    --task Isaac-Lift-Cube-UR5e-v0 --headless --num_envs 4096 --seed 1 --run_name cppo_s1 \
+    --agent rsl_rl_cppo_cfg_entry_point
+```
+
+Pre-existing checkpoints (main folder, NOT part of the comparison-test matrix — reference only):
+
+- PPO ×3 seeds (main folder, not reused) — `IsaacLab/logs/rsl_rl/ur5e_lift/2026-07-28_23-53-22_ppo_s1/model_1499.pt` (+ `s2`, `s3`)
+- PPO (pre-freeze, Day-9 2-algorithm record) — `IsaacLab/logs/rsl_rl/ur5e_lift/2026-07-19_16-29-57/model_1499.pt`
+- cPPO (pre-freeze, Day-9 2-algorithm record) — `IsaacLab/logs/rsl_rl/ur5e_lift_cppo/2026-07-19_12-05-49/model_1499.pt`
