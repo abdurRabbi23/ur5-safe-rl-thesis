@@ -1,0 +1,333 @@
+==============================================================================
+TRAINING RUN SUMMARY
+==============================================================================
+log root : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl
+report   : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/summarize_runs_report.txt
+
+found 4 run(s)
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke
+------------------------------------------------------------------------------
+  iterations logged : 49
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           231.9900 |     229.2100
+    Train/mean_episode_length/time      231.9900 |     229.2100
+    Train/mean_reward                     1.2709 |       1.3450
+    Train/mean_reward/time                1.2709 |       1.3450
+    safety/cost_collision                 0.0000 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0000 |       0.0000
+    safety/cost_total                     0.0000 |       0.0000
+    safety/manipulability_min             0.0706 |       0.0723
+    safety/viol_collision                 0.0000 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.0000 |       0.0000
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-07-30_01-49-46_smoke_ppo
+------------------------------------------------------------------------------
+  iterations logged : 49
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           246.8500 |     247.1700
+    Train/mean_episode_length/time      246.8500 |     247.1700
+    Train/mean_reward                    65.4736 |      64.8504
+    Train/mean_reward/time               65.4736 |      64.8504
+    safety/cost_collision                 0.0000 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.5455 |       0.5666
+    safety/cost_total                     0.5455 |       0.5666
+    safety/manipulability_min          5.728e-06 |    4.905e-06
+    safety/viol_collision                 0.0000 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.7186 |       0.7279
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-07-30_01-53-47_smoke_sg
+------------------------------------------------------------------------------
+  iterations logged : 49
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           162.7120 |     148.3700
+    Train/mean_episode_length/time      162.7120 |     148.3700
+    Train/mean_reward                     2.6078 |       2.4232
+    Train/mean_reward/time                2.6078 |       2.4232
+    safety/cost_collision              5.037e-05 |    5.130e-05
+    safety/cost_joint_limit               0.0014 |       0.0028
+    safety/cost_singularity               0.1293 |       0.1506
+    safety/cost_total                     0.1308 |       0.1534
+    safety/manipulability_min          1.991e-05 |    1.148e-06
+    safety/viol_collision                 0.0014 |       0.0013
+    safety/viol_joint_limit               0.0030 |       0.0061
+    safety/viol_singularity               0.2501 |       0.2690
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo
+------------------------------------------------------------------------------
+  iterations logged : 49
+  scalar tags       : 36
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_lambda                     19.3985 |      19.1795
+    Loss/cost_value_function              0.2057 |       0.0075
+    Loss/mean_episode_cost               35.1233 |       9.8563
+    Train/mean_episode_length           247.0520 |     249.5100
+    Train/mean_episode_length/time      247.0520 |     249.5100
+    Train/mean_reward                    73.6100 |      73.2143
+    Train/mean_reward/time               73.6100 |      73.2143
+    safety/cost_collision              2.247e-07 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity            6.384e-04 |       0.0000
+    safety/cost_total                  6.386e-04 |       0.0000
+    safety/manipulability_min             0.0472 |       0.0620
+    safety/viol_collision              1.221e-05 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.0035 |       0.0000
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+==============================================================================
+CROSS-RUN TABLE
+==============================================================================
+
+Loss/cost_lambda   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49              n/a
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49              n/a
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49              n/a
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49          19.3985
+
+Loss/cost_value_function   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49              n/a
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49              n/a
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49              n/a
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49           0.2057
+
+Loss/mean_episode_cost   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49              n/a
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49              n/a
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49              n/a
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49          35.1233
+
+Train/mean_episode_length   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49         231.9900
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49         246.8500
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49         162.7120
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49         247.0520
+
+Train/mean_episode_length/time   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49         231.9900
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49         246.8500
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49         162.7120
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49         247.0520
+
+Train/mean_reward   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           1.2709
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49          65.4736
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49           2.6078
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49          73.6100
+
+Train/mean_reward/time   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           1.2709
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49          65.4736
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49           2.6078
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49          73.6100
+
+safety/cost_collision   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49           0.0000
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49        5.037e-05
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49        2.247e-07
+
+safety/cost_joint_limit   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49           0.0000
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49           0.0014
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49           0.0000
+
+safety/cost_singularity   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49           0.5455
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49           0.1293
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49        6.384e-04
+
+safety/cost_total   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49           0.5455
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49           0.1308
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49        6.386e-04
+
+safety/manipulability_min   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0706
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49        5.728e-06
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49        1.991e-05
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49           0.0472
+
+safety/viol_collision   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49           0.0000
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49           0.0014
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49        1.221e-05
+
+safety/viol_joint_limit   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49           0.0000
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49           0.0030
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49           0.0000
+
+safety/viol_singularity   (tail-mean over last 10% of iterations)
+    ur5e_lift/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
+    ur5e_lift/2026-07-30_01-49-46_smoke_ppo            iters=49           0.7186
+    ur5e_lift/2026-07-30_01-53-47_smoke_sg             iters=49           0.2501
+    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo      iters=49           0.0035
+
+==============================================================================
+CSVs written to: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/results/tb_csv
+==============================================================================
+
+[report saved to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/summarize_runs_report.txt]

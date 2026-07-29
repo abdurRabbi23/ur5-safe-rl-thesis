@@ -31,7 +31,7 @@ subsection justifying the abstraction. Cost function frozen (3 terms, one bindin
 NOT lower `velocity_limit_sim` (kills the safety signal, see `03c`).
 
 **The 4-algorithm comparative benchmark (PPO/SAC/TD3/cPPO) is being redone from scratch in a
-dedicated folder, `Comparison test/`, as of Day 19 evening — read `logbook/09_comparison_test.md`
+dedicated folder, `Comparison_test/`, as of Day 19 evening — read `logbook/09_comparison_test.md`
 for current work.** `03c_multialgo_benchmark.md` is now the decision record only (hypothesis,
 fairness protocol, cut order, schedule — all still binding); `09` is where the runs actually
 happen now. Nothing is reused from the main folder's earlier PPO ×3 seeds — this folder's matrix
@@ -43,7 +43,7 @@ gripper; Day 21 measured the mount axis instead of inheriting it and moved the T
 finger tips (both confirmed by eye in the GUI); Day 22's builder re-run reads `error 0.00 mm ->
 OK`, and the grasp test then **passed** — fingers stalled at a 62.8 mm pad gap against a 30 mm
 closed target and the cube held after the pin released. Gripper geometry is settled and lives in
-ONE file, `Comparison test/ur5_grasp/robots/gripper_geometry.py` — do not re-derive it.
+ONE file, `Comparison_test/ur5_grasp/robots/gripper_geometry.py` — do not re-derive it.
 
 **The 15-run matrix runs on `Isaac-Lift-Cube-UR5e-v0`** (frozen weld env, 2f-85 present and
 driven, grasp abstracted as a weld) — reversing the Day-20/21 repoint to `-SimpleGripper-v0`.
@@ -53,7 +53,7 @@ separately demonstrated real-contact grasp. The 2f-85 *contact* study stays **cl
 permanently** — on schedule grounds, not because it was shown broken (its pads do have colliders
 and its linkage does work; see `09`).
 
-**IMMEDIATE NEXT (inside `Comparison test/`): commit + re-tag → three 50-iter smoke trains
+**IMMEDIATE NEXT (inside `Comparison_test/`): commit + re-tag → three 50-iter smoke trains
 (`-v0` PPO, `-v0` cPPO, `-SimpleGripper-v0`) → `./run_ppo_cppo_seeds.sh` → `summarize_runs.py`.**
 Exact commands in `logbook/HANDOFF.md`.
 
@@ -76,7 +76,7 @@ reproduce commands: `Thesis_Documentation/06_Results_and_Experiments.md`.
 | `02_grasp_env.md` | UR5e lift env, weld grasp, PPO baseline | ✅ done (weld + PPO baseline retrained, play-verified) |
 | `03_cppo_benchmark.md` | Safety constraints + cPPO vs PPO (2-algorithm Layer 1) | ✅ done — superseded by 03c, kept as historical record |
 | `03c_multialgo_benchmark.md` | 4-algorithm comparative benchmark — decisions/hypothesis/protocol | ◻ decision record — still binding, see `09` for current work |
-| `09_comparison_test.md` | Same benchmark, redone from scratch in `Comparison test/` (**Layer 1 deliverable, current work**) | ▶ ACTIVE — start here |
+| `09_comparison_test.md` | Same benchmark, redone from scratch in `Comparison_test/` (**Layer 1 deliverable, current work**) | ▶ ACTIVE — start here |
 | `04_layer2_ibvs.md` | IBVS visual loop, RL-tuned image Jacobian (Layer 2) | ⏳ later |
 | `05_layer3_sim2real.md` | ROS 2 transfer to physical UR5e + RH-P12-RN (Layer 3) | ⏳ later |
 | `06_writing.md` | Thesis chapters, figures, defense prep | ◻ ongoing |
