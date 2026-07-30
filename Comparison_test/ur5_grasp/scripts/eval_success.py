@@ -74,6 +74,19 @@ parser.add_argument("--seed", type=int, default=None, help="Seed used for the en
 parser.add_argument("--episodes", type=int, default=300, help="Number of completed episodes to score over.")
 parser.add_argument("--min_height", type=float, default=0.04, help="Lift-success height threshold (m).")
 parser.add_argument("--success_tol", type=float, default=0.05, help="Goal-reach distance tolerance (m).")
+# TOUHID (Day 22): this script had 9 print() calls and wrote NO file, so its result could not
+# survive `simulation_app.close()` — the same trap that has now cost this project five separate
+# results. It APPENDS to one report so a whole sweep of checkpoints accumulates in a single
+# readable file, plus a CSV row per run for the results table.
+parser.add_argument(
+    "--report",
+    type=str,
+    default=None,
+    help="Report file to APPEND to. Default: ur5_grasp/tools/eval_success_report.txt",
+)
+parser.add_argument(
+    "--label", type=str, default=None, help="Short name for this run in the report (e.g. ppo_s1)."
+)
 cli_args.add_rsl_rl_args(parser)
 AppLauncher.add_app_launcher_args(parser)
 args_cli, hydra_args = parser.parse_known_args()
@@ -110,6 +123,23 @@ from isaaclab_tasks.utils.hydra import hydra_task_config
 
 import ur5_grasp.tasks  # noqa: F401  # TOUHID: registers Isaac-Lift-Cube-UR5e-v0
 
+# ---------------------------------------------------------------------------------------
+# TOUHID (Day 22): flushed report machinery. print() alone is not enough — see --report.
+# Anchored to THIS FILE so the report lands in ur5_grasp/tools/ no matter the cwd.
+# ---------------------------------------------------------------------------------------
+_TOOLS_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools"))
+_REPORT_PATH = args_cli.report or os.path.join(_TOOLS_DIR, "eval_success_report.txt")
+_CSV_PATH = os.path.join(_TOOLS_DIR, "eval_success_results.csv")
+_FH = None
+
+
+def log(msg: str = "") -> None:
+    """print + write + flush. Every line of output goes through here."""
+    print(msg)
+    if _FH is not None:
+        _FH.write(msg + "\n")
+        _FH.flush()
+
 
 @hydra_task_config(args_cli.task, args_cli.agent)
 def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agent_cfg: RslRlBaseRunnerCfg):
@@ -122,12 +152,18 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     env_cfg.sim.device = args_cli.device if args_cli.device is not None else env_cfg.sim.device
 
     log_root_path = os.path.abspath(os.path.join("logs", "rsl_rl", agent_cfg.experiment_name))
-    print(f"[INFO] Loading experiment from directory: {log_root_path}")
+    log("")
+    log("=" * 60)
+    log(f"EVAL  label={args_cli.label or '(none)'}   task={task_name}")
+    log("=" * 60)
+    log(f"[progress] experiment dir : {log_root_path}")
     if args_cli.checkpoint:
         resume_path = retrieve_file_path(args_cli.checkpoint)
     else:
         resume_path = get_checkpoint_path(log_root_path, agent_cfg.load_run, agent_cfg.load_checkpoint)
-    print(f"[INFO] Loading model checkpoint from: {resume_path}")
+    log(f"[progress] checkpoint     : {resume_path}")
+    log(f"[progress] num_envs={env_cfg.scene.num_envs}  seed={agent_cfg.seed}  agent={args_cli.agent}")
+    log("[progress] building scene (gym.make) ...")
 
     env = gym.make(args_cli.task, cfg=env_cfg, render_mode=None)
     if isinstance(env.unwrapped, DirectMARLEnv):
@@ -152,8 +188,8 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
 
     lift_hits, goal_hits, n_done = 0, 0, 0
     obs = env.get_observations()
-    print(f"[INFO] Scoring over {args_cli.episodes} episodes "
-          f"(lift>{args_cli.min_height} m, goal<{args_cli.success_tol} m)...")
+    log("[progress] policy loaded, scene up. Scoring "
+        f"{args_cli.episodes} episodes (lift>{args_cli.min_height} m, goal<{args_cli.success_tol} m) ...")
 
     while n_done < args_cli.episodes:
         with torch.inference_mode():
@@ -177,16 +213,44 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
 
     lift_rate = 100.0 * lift_hits / max(n_done, 1)
     goal_rate = 100.0 * goal_hits / max(n_done, 1)
-    print("\n" + "=" * 52)
-    print(f"  Agent            : {agent_cfg.experiment_name}")
-    print(f"  Episodes scored  : {n_done}")
-    print(f"  Lift success     : {lift_rate:.1f}%   ({lift_hits}/{n_done})")
-    print(f"  Goal-reach succ. : {goal_rate:.1f}%   ({goal_hits}/{n_done})")
-    print("=" * 52 + "\n")
+    log("")
+    log("-" * 52)
+    log(f"  Label            : {args_cli.label or '(none)'}")
+    log(f"  Agent            : {agent_cfg.experiment_name}")
+    log(f"  Checkpoint       : {resume_path}")
+    log(f"  Episodes scored  : {n_done}")
+    log(f"  Lift success     : {lift_rate:.1f}%   ({lift_hits}/{n_done})")
+    log(f"  Goal-reach succ. : {goal_rate:.1f}%   ({goal_hits}/{n_done})")
+    log("-" * 52)
+
+    # Machine-readable row so the results table can be built without re-parsing prose.
+    write_header = not os.path.exists(_CSV_PATH)
+    with open(_CSV_PATH, "a") as fh:
+        if write_header:
+            fh.write("label,experiment,task,seed,episodes,lift_pct,goal_pct,checkpoint\n")
+        fh.write(
+            f"{args_cli.label or ''},{agent_cfg.experiment_name},{task_name},"
+            f"{agent_cfg.seed},{n_done},{lift_rate:.2f},{goal_rate:.2f},{resume_path}\n"
+        )
+    log(f"  [csv row appended to {_CSV_PATH}]")
 
     env.close()
 
 
 if __name__ == "__main__":
-    main()
-    simulation_app.close()
+    os.makedirs(_TOOLS_DIR, exist_ok=True)
+    # APPEND, not truncate: a sweep over six checkpoints accumulates into one readable file.
+    _FH = open(_REPORT_PATH, "a")
+    try:
+        main()
+    except Exception:  # noqa: BLE001 — the traceback must land IN the report, not on a lost stream
+        import traceback
+
+        log("")
+        log("UNHANDLED EXCEPTION:")
+        log(traceback.format_exc())
+        raise
+    finally:
+        log(f"[report appended to {_REPORT_PATH}]")
+        _FH.close()
+        simulation_app.close()
