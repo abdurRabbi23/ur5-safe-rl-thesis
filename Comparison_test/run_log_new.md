@@ -937,3 +937,72 @@ if the SimpleGripper is ever trained past a smoke test: give it its own agent cf
 
 ### NEXT
 `./run_ppo_cppo_seeds.sh`, then `summarize_runs.py`. Nothing else is open.
+
+## 2026-07-30 (Day 22, close) — MATRIX RUN: PPO x3 + cPPO x3 complete. Day-10's headline does NOT reproduce.
+
+All 6 runs OK, 10-11 min each, 66 min total (my 4-6 h estimate was wrong; `03c`'s 12-15 min was
+right). `logs/batch_report.txt`, git `d57063a`, 0 dirty paths, 31 checkpoints per run.
+
+### Results, 1500 iters, tail-mean over last 10%, mean of 3 seeds
+| | PPO | cPPO |
+|---|---|---|
+| `Train/mean_reward` | 132.0  (141.9 / 90.8 / 163.3) | **162.8**  (163.9 / 166.2 / 158.3) |
+| `viol_singularity` | **83.7%**  (73.9 / 85.4 / 91.9) | 42.3%  (54.8 / 13.8 / 58.2) |
+| `viol_joint_limit` | **30.3%**  (35.4 / 55.4 / 0.0) | 0.85%  (0.9 / 0.0 / 1.6) |
+| `cost_total` | 1.005 | 0.073 |
+| `Loss/cost_lambda` | — | 0.155 / 0.0 / 0.059 |
+| `mean_episode_cost` | — | 24.26 / 9.78 / 20.89  (limit 25) |
+
+cPPO beats PPO on **both** axes, consistently across all three seeds.
+
+### ❌ Day-10's headline does NOT reproduce — and the cause is NOT a code change
+Day 10: cPPO viol 6.65% vs PPO 16.86%, reward 166.3 vs 167.2. Now: 42.3% vs 83.7% — ~5x higher
+in **both** arms.
+
+Checked before speculating: `ur5e_lift_env.py`, `ur5e_lift_env_cfg.py`, `costs.py`,
+`ur5e_robotiq.py` and `ppo_lagrangian.py` in this folder are **byte-identical to
+`layer1-env-freeze`** (`git show layer1-env-freeze:… | diff`). The runs' own dumped
+`params/env.yaml` confirms `velocity_limit_sim: 3.14`, `episode_length_s: 5.0`, and
+`params/agent.yaml` confirms `cost_limit: 25.0`, `lambda_lr: 0.035`, `lambda_init: 0.0`.
+**Nothing changed.**
+
+Most likely reading: **Day-10's numbers came from a single seed that happened to land well.**
+Three seeds now show PPO's singularity violation at 74-92% and reward from 90.8 to 163.3 — a
+72-point spread. That is not a stable baseline, and one draw from it is not a result. This is
+precisely why `03c` mandated 3 seeds. Decision (Touhid): **retire the Day-10 headline**; the
+3-seed figures are the thesis numbers, with a Methods paragraph on why the picture changed.
+
+### Why lambda collapsed to ~0 — the ALGORITHM is right, the CONSTRAINT is too loose
+`mean_episode_cost` = 24.26 / 9.78 / 20.89, all under `cost_limit = 25`. So the Lagrangian did
+exactly what it was told: it met the budget, so lambda decayed toward 0. Correct behaviour.
+
+But `costs.py` line 123 computes `c_manip = clamp(1 - w/manip_floor, 0, 1)` — a *margin*, not a
+count — while `viol_singularity` is the binary fraction `(w < floor)`. A budget of 25 spread over
+250 steps permits ~0.1 cost/step, i.e. `w ≈ 0.0405` against a floor of 0.045: **the arm can sit
+just 10% under the floor essentially permanently and still satisfy the constraint.** Hence 42%
+violation with the budget met. The Day-9 calibration of `cost_limit = 25` no longer describes
+this system.
+
+### ⚠ cPPO now BEATS PPO on reward (162.8 vs 132.0) — flagged at 50 iters, now confirmed
+Predicted last session as a thing to watch; it survived 3 seeds, so it is not noise.
+Plausible mechanism, NOT yet tested: unconstrained PPO drives into joint limits (30% of steps,
+55% on seed 2) and singularities (84%), and those states wreck its own learning; the cost term
+keeps cPPO in a well-conditioned region, acting as a regulariser. That upgrades the claim from
+"safety at no task cost" to "safety improves task performance" — stronger, but an examiner will
+probe it, and it needs the success-rate numbers before it can be asserted at all.
+
+### Still missing: SUCCESS RATE
+No success scalar is logged during training. The "100% lift" claim comes only from
+`eval_success.py`. Until that runs, the headline is unsupported.
+
+**`eval_success.py` wrote no file** — 9 `print()` calls, zero `_FH`. Fifth instance of the same
+trap; caught BEFORE running this time, by grepping for `_FH`/`log()` per the standing rule.
+Fixed: flushed report that **appends** (so a 6-checkpoint sweep accumulates in one file),
+PROGRESS lines, machine-readable CSV row per run, traceback logged into the report.
+Added `run_eval_success.sh`: all 6 checkpoints, 512 episodes (`03c` protocol), **fixed eval seed
+42 for all six** so every policy is scored on identical cube spawns rather than its own training
+seed. `py_compile` + `bash -n` pass; all 6 checkpoints resolve.
+
+### NEXT
+`./run_eval_success.sh`, then read `ur5_grasp/tools/eval_success_report.txt`. The cost_limit
+decision waits on those numbers.
