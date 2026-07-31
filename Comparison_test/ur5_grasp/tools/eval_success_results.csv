@@ -1,0 +1,7 @@
+label,experiment,task,seed,episodes,lift_pct,goal_pct,checkpoint
+ppo_s1,ur5e_lift,Isaac-Lift-Cube-UR5e-v0,42,512,100.00,58.59,/home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift/2026-07-30_02-12-31_ppo_s1/model_1499.pt
+ppo_s2,ur5e_lift,Isaac-Lift-Cube-UR5e-v0,42,512,100.00,0.00,/home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift/2026-07-30_02-23-14_ppo_s2/model_1499.pt
+ppo_s3,ur5e_lift,Isaac-Lift-Cube-UR5e-v0,42,512,100.00,100.00,/home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift/2026-07-30_02-34-03_ppo_s3/model_1499.pt
+cppo_s1,ur5e_lift_cppo,Isaac-Lift-Cube-UR5e-v0,42,512,100.00,100.00,/home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1/model_1499.pt
+cppo_s2,ur5e_lift_cppo,Isaac-Lift-Cube-UR5e-v0,42,512,100.00,100.00,/home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2/model_1499.pt
+cppo_s3,ur5e_lift_cppo,Isaac-Lift-Cube-UR5e-v0,42,512,100.00,100.00,/home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3/model_1499.pt

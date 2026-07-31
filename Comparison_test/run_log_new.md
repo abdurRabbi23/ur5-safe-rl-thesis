@@ -1006,3 +1006,535 @@ seed. `py_compile` + `bash -n` pass; all 6 checkpoints resolve.
 ### NEXT
 `./run_eval_success.sh`, then read `ur5_grasp/tools/eval_success_report.txt`. The cost_limit
 decision waits on those numbers.
+
+## 2026-07-30 (Day 22, close) — SUCCESS EVAL done. cPPO 100% goal-reach on all 3 seeds; PPO is a lottery (0 / 58.6 / 100).
+
+`run_eval_success.sh`: 6/6 OK, 512 episodes each, fixed eval seed 42 (identical cube spawns for
+every policy). Read from `ur5_grasp/tools/eval_success_report.txt` + `eval_success_results.csv`.
+
+| Metric (mean ± sd, 3 seeds) | PPO | cPPO |
+|---|---|---|
+| Lift success | 100.00% ± 0.00 | 100.00% ± 0.00 |
+| **Goal-reach success** | **52.86% ± 50.25** | **100.00% ± 0.00** |
+| Train reward | 132.00 ± 37.25 | 162.78 ± 4.04 |
+| Singularity viol | 83.72% ± 9.12 | 42.27% ± 24.74 |
+| Joint-limit viol | 30.27% ± 28.06 | 0.85% ± 0.82 |
+
+Per-seed goal-reach — PPO: 58.59 / **0.00** / 100.00. cPPO: 100 / 100 / 100.
+
+### The result is SECURED, and the framing changes
+- **cPPO wins on every axis**, all three seeds. Hypothesis was "safety at no task cost"; the
+  measurement is safety at a task *gain*.
+- **The strongest finding is consistency, not the means.** PPO produced a completely failed
+  policy (0/512 goal-reach) on 1 of 3 seeds. Reward sd 37.25 vs 4.04; goal-reach sd 50.25 vs 0.
+  An unconstrained baseline that fails outright on a third of seeds is not reliable — that is
+  itself a result.
+- **Lift success is 100% everywhere and is nearly uninformative** — the weld latches on close
+  within 6 cm, so lifting is close to free. **Goal-reach is the discriminating metric and must be
+  the headline.** Reporting "100% lift" alone (as Day 10 did) overstates what was measured.
+- **λ → 0 is correct behaviour**: episodic cost 9.78-24.26 against a budget of 25. Constraint
+  met, multiplier decayed. The 42% violation fraction coexists with a satisfied budget because
+  the cost is a margin (`1 - w/0.045`) while the violation counter is binary — 25 over 250 steps
+  allows w ≈ 0.0405, i.e. sitting 10% under the floor continuously. **Constraint behaved as
+  specified; the specification is the weak point.** Stated as a limitation, not patched.
+
+### Decision needed on cost_limit — recommendation: LOCK AND MOVE ON
+λ decayed to ~0, so the constraint is slack; tightening `cost_limit` to ~8-10 would bind it and
+likely cut the violation fraction at no task cost (cPPO is already saturated at 100% goal-reach).
+~1 hour for six runs. **But** SAC and TD3 are still unstarted and are the entire schedule risk
+(TD3 hard cut Aug 6, writing Aug 11, today Jul 30). Recorded as an open cheap experiment;
+recommend deferring it and reporting limitation 2 honestly instead.
+
+### Written up
+`results/LAYER1_RESULTS_3seed.md` — headline table, per-seed detail, four findings, four
+limitations (incl. the retired Day-10 result and the weld caveat), reproduce commands.
+
+### NEXT
+Author the skrl configs (`configs/skrl_ppo_cfg.yaml`, `skrl_sac_cfg.yaml`, `skrl_td3_cfg.yaml`),
+register entry points, 50-iter smoke each, then SAC ×3 / TD3 ×3 in cut order.
+
+---
+
+## 2026-07-30 (Day 22, evening) — skrl bridge wired. Two blockers found before any run.
+
+Handoff step 1-2. **No training run happened; this is code only.** skrl install is UNVERIFIED —
+the sandbox has no Isaac python env, so the version check is Touhid's first command.
+
+**Blocker 1 — the stock skrl train.py cannot see our task.** `IsaacLab/scripts/reinforcement_
+learning/skrl/train.py` imports `isaaclab_tasks` and nothing else, so `Isaac-Lift-Cube-UR5e-v0`
+is never registered and `gym.make` would die with `NameNotFound`. Fixed the same way rsl_rl was:
+new `ur5_grasp/scripts/train_skrl.py` = the stock file plus four marked TOUHID edits
+(sys.path shim, `import ur5_grasp.tasks`, SAC/TD3 added to `--algorithm` choices, docstring).
+Verified by `diff` against the stock file: the four edits are the only changes.
+
+**Blocker 2 — `configs/` is the wrong home for the yaml.** `load_cfg_from_registry` resolves a
+yaml entry point as `"<module>:<file>.yaml"`, i.e. package-relative. The config therefore lives
+at `ur5_grasp/tasks/lift/agents/skrl_ppo_cfg.yaml`, next to the rsl_rl cfgs, **not** in
+`Comparison_test/configs/` as the handoff said. `configs/` stays empty; delete it or ignore it.
+Registered `skrl_cfg_entry_point` (+ sac/td3, files not yet authored) on `-v0` and `-Play-v0`.
+
+**Bridge config is matched to rsl_rl, not to the franka template.** Nine hyperparameters differ
+from the IsaacLab franka skrl cfg so the run is a real framework-equivalence check: epochs 8→5,
+gamma 0.99→0.98, entropy 0.001→0.006, value_loss 2.0→1.0, separate models False→True,
+state/value preprocessors scaler→null, rewards_shaper 0.01→1.0, time_limit_bootstrap False→True.
+timesteps 36000 = 1500 × 24 rollouts. Log dir `logs/skrl/ur5e_lift_skrl/`, distinct from the
+rsl_rl `ur5e_lift` tree so the two can never collide.
+
+**Recorded risk:** the last four of those (preprocessors null, rewards_shaper 1.0,
+time_limit_bootstrap True) are faithful to rsl_rl but *every* shipped IsaacLab skrl config uses
+the scaler + 0.01 shaper, and skrl's PPO is not tuned to run without them. If the 50-iter smoke
+or the bridge run diverges, flip those four to the franka values FIRST and rerun — that isolates
+"skrl needs normalisation" from "the two PPO implementations disagree". The reasoning and the
+exact lines are in the config header. Do not switch silently.
+
+**Verified here:** both python files compile; the yaml parses and its rollouts/timesteps are
+self-consistent; the diff against stock skrl train.py is exactly the four intended edits.
+**Not verified:** skrl is installed, the config keys match the installed skrl version's schema,
+and that any of it runs. All three need the lab PC.
+
+### NEXT
+1. `../IsaacLab/isaaclab.sh -p -c "import skrl; print(skrl.__version__)"` — needs ≥ 1.4.3.
+2. 50-iter smoke, 128 envs, then read `logs/skrl/ur5e_lift_skrl/<stamp>_ppo_torch/`.
+3. If the smoke is clean: bridge ×3 at 4096 envs, seeds 1/2/3.
+
+## 2026-07-30 (Day 22, late) — skrl bridge SMOKE PASSED. New blocker: eval_success cannot read skrl checkpoints.
+
+Run read directly from disk: `logs/skrl/ur5e_lift_skrl/2026-07-30_15-44-46_ppo_torch/`
+(50 iters = 1200 timesteps, **128 envs**, seed 1). `agent_1200.pt` on disk, 32 TB tags.
+skrl install confirmed **indirectly but soundly**: train.py hard-`exit()`s below 1.4.3, so a
+completed run proves >= 1.4.3.
+
+**Env verified identical to the Layer-1 rsl_rl runs.** Diffed this run's `params/env.yaml`
+against `ur5e_lift/2026-07-30_02-12-31_ppo_s1/params/env.yaml`. Only differences are
+`{ENV_REGEX_NS}` vs the resolved `/World/envs/env_.*` and a null `io_descriptors_output_dir` —
+both artefacts of *dump timing*: skrl's train.py dumps env.yaml BEFORE `gym.make`, rsl_rl's
+dumps AFTER, and `gym.make` is what resolves the namespace. Same env, no config drift.
+Robot USD confirmed `ur5e_robotiq_2f85.usd`, velocity_limit_sim 3.14, episode_length_s 5.0.
+
+**The recorded preprocessor risk is largely retired.** Null state/value preprocessors and
+`rewards_shaper_scale: 1.0` did not destabilise anything. Against the existing rsl_rl 50-iter
+smoke (`ur5e_lift/2026-07-30_01-49-46_smoke_ppo`):
+
+  | quantity            | rsl_rl smoke (4096 env) | skrl smoke (128 env) |
+  |---------------------|-------------------------|----------------------|
+  | value loss 0 -> 50  | 0.023 -> ~3.0           | 0.027 -> 3.58        |
+  | learning rate final | 0.001139                | 0.001139             |
+  | policy std          | 1.007 -> 1.006          | 1.000 -> 0.976       |
+  | mean return final   | **64.85**               | **4.48**             |
+
+Value-loss and KLAdaptiveLR trajectories track rsl_rl closely — the LR lands on the *identical*
+0.001139 rung. Safety metrics flow through the skrl wrapper (`safety/*` all present).
+
+**The return gap is NOT yet evidence of anything**: 128 vs 4096 envs is 32x less data per
+iteration, which alone explains it. The smoke was run at 128 envs on my instruction; that was
+the wrong call, because it makes the one comparison that matters unavailable. Cheap fix below.
+
+### BLOCKER — `eval_success.py` cannot score a skrl policy
+It is hard-wired to rsl_rl: constructs `OnPolicyRunner`/`LagrangianRunner`, calls
+`runner.load(path)` then `get_inference_policy()`. skrl checkpoints are a different object
+(`agent_NNNN.pt`, a torch save of skrl module state dicts; rsl_rl writes `model_NNNN.pt`).
+**Goal-reach success — the headline discriminating metric of the whole thesis — cannot
+currently be computed for ANY skrl run**, so this blocks the bridge, SAC and TD3 equally.
+Must be built before any skrl number can enter the Layer-1 table. Training runs are unaffected
+and can proceed in parallel; this is CPU-side code.
+
+### NEXT
+1. Re-smoke at **4096 envs, 50 iters** (~30 s). Success criterion, stated in advance:
+   mean return within roughly +-30% of the rsl_rl smoke's 64.85. If it lands near 4, the
+   framework is not equivalent and the four flagged config lines are the first suspects.
+2. If it passes: bridge x3 at 4096 envs, seeds 1/2/3, 1500 iters.
+3. In parallel: add a skrl loader path to `eval_success.py`.
+
+## 2026-07-31 (Day 23) — 4096-env bridge smoke: MISSES the stated criterion, but is not broken.
+
+Two run dirs exist, `2026-07-30_22-59-41_ppo_torch` and `23-31-51_ppo_torch`: the same command
+was launched twice. Their TB series are **bit-identical**, which is a free determinism
+confirmation at fixed seed — and a warning, because a later glob would average them as two
+independent seeds and report sd = 0. Park one before summarising.
+
+  | 50 iters, 4096 envs, seed 1  | rsl_rl smoke | skrl bridge |
+  |------------------------------|--------------|-------------|
+  | mean return, final           | **64.85**    | **33.82**   |
+  | mean return, max             | 67.54        | 39.46       |
+  | value loss, final (max)      | ~3.0 (6.26)  | 6.15 (31.77)|
+  | learning rate, final (max)   | 0.00114 (0.00865) | 0.00667 (0.0100) |
+  | policy std                   | 1.007 -> 1.006 | 1.001 -> 0.984 |
+  | mean episode length          | -> 247       | -> 224      |
+  | safety/viol_singularity max  | 0.731        | 0.011       |
+
+**Verdict against the pre-stated criterion (within +-30% of 64.85, i.e. 45.4-84.3): FAILED.**
+Recording that plainly rather than moving the goalposts. But the criterion was badly chosen —
+it anchored a 1500-iter question on a 50-iter proxy, at 3% of training, where rsl_rl itself
+was only at 64.85 of the 132 it eventually reached. It was the wrong test, not just a failed one.
+
+**Nothing indicates breakage.** Env identical, no NaN, entropy flat, std ~1, returns and episode
+length both climbing, value loss on the same shape as rsl_rl. skrl-PPO is behaving like a
+*slower, gentler* PPO: its LR ratchets up and stays near the 0.01 cap where rsl_rl's oscillates
+back down, and it drives into singularity far less (viol max 0.011 vs 0.731) — consistent with
+less aggressive early exploitation, which is exactly what a lower 50-iter return looks like.
+The earlier "preprocessors are the first suspect" note is now DOWNGRADED: rsl_rl's own LR also
+peaked at 0.00865, so both schedulers run hot and the difference is that skrl's does not decay.
+
+**Decision: skip further smokes, run the bridge x3 at 1500 iters.** ~30 min of GPU answers the
+question with the number that actually goes in the thesis, versus more 2-min proxies that do
+not. SAC cut is Aug 4; proxy-chasing is the expensive option here.
+
+**New tool:** `run_skrl_seeds.sh <ALGO> [NUM_ENVS] [MAX_ITERS]` — same shape as
+run_ppo_cppo_seeds.sh (per-run exit codes, wall clock, verifies by checkpoint on disk, never
+pipes a run, continues past failures, exit code = failure count). Two forced differences: skrl
+has no --run_name so the per-seed label is injected via
+`agent.agent.experiment.experiment_name=`, and checkpoints are `agent_*.pt`. It also warns when
+two run dirs share a label, i.e. the duplicate trap above. Serves SAC and TD3 unchanged.
+
+### NEXT
+1. Park one duplicate smoke dir.
+2. `./run_skrl_seeds.sh PPO 4096 1500`  (~30 min)
+3. In parallel: skrl loader path in `eval_success.py` — still the hard blocker on any skrl number.
+
+## 2026-07-31 (Day 23, later) — TD3 CUT. Evaluation rebuilt so safety is measured, not inherited from training logs.
+
+### 1. TD3 cut (Touhid's call, Day 23 — six days early)
+Benchmark is now **PPO / cPPO / SAC**, three algorithms. Changed:
+- `ur5_grasp/tasks/lift/__init__.py` — `skrl_td3_cfg_entry_point` removed from `-v0` and
+  `-Play-v0`, with a note saying it must not come back without a `03c` decision-record entry.
+- `ur5_grasp/scripts/train_skrl.py` — `TD3` removed from `--algorithm choices`. Deliberate:
+  a typo should fail at argparse in 0.1 s, not 40 s later inside Isaac on a missing yaml.
+- `run_skrl_seeds.sh`, `README.md`, `skrl_ppo_cfg.yaml` header — wording.
+`py_compile` and `bash -n` pass on all four touched files. Nothing was run.
+
+### 2. Why PPO scored 0.00% and cPPO 100.00% — the training failure is REAL
+Checked first, because a 0-vs-100 split on the same nominal seed is exactly what the LOG-DIR
+TRAP would look like. It is not that: the CSV records
+`.../ur5e_lift/2026-07-30_02-23-14_ppo_s2/model_1499.pt`, the right run, and the smoke dirs
+were not picked up. From `results/tb_csv/`, final iteration:
+
+  | quantity                          | ppo_s1 | **ppo_s2** | ppo_s3 | cppo_s1 | cppo_s2 | cppo_s3 |
+  |-----------------------------------|--------|--------|--------|---------|---------|---------|
+  | Train/mean_reward                 | 142.9  | **90.7**  | 164.1  | 165.5   | 166.4   | 160.0   |
+  | Episode_Reward/object_goal_tracking | 12.68  | **4.42**  | 14.80  | 14.78   | 14.89   | 14.57   |
+  | Episode_Reward/lifting_object     | 14.67  | 14.67  | 14.66  | 14.61   | 14.62   | 14.66   |
+  | Metrics/object_pose/position_error| 0.188  | **0.566** | 0.159  | 0.162   | 0.161   | 0.158   |
+
+ppo_s2 genuinely converged to a bad policy — it lifts the cube (lifting reward matches everyone
+else) and then does not carry it to the goal. The eval did not invent the failure.
+
+### 3. What the eval DID get wrong — three things
+**(a) A single hard 5 cm threshold on a near-deterministic quantity.** The weld snaps the cube
+onto the TCP, and the pose command is resampled once per episode (`resampling_time_range =
+(5.0, 5.0)` = the whole episode), so a trained policy's final cube-to-goal distance barely
+varies across episodes. The threshold therefore does not measure a success *rate*; it asks
+"is this policy's systematic offset under 5 cm", and answers 0 or 100. ppo_s1's 58.59% is the
+single knife-edge case, and it is the tell. Fix: report the distance DISTRIBUTION
+(mean/median/p90/max) and success at 2 / 5 / 10 cm.
+
+**(b) `Metrics/object_pose/position_error` is not task error.** `body_name = "wrist_3_link"`,
+so the command manager scores the WRIST against the goal, while the reward scores the CUBE. The
+gap is the 0.16 m `ee_frame` offset — which is exactly why a perfect cPPO run reads 0.161. Do
+not quote this scalar as task error anywhere in the thesis.
+
+**(c) THE IMPORTANT ONE: safety was never evaluated at all.** The 83.72% / 42.27% singularity
+and 30.27% / 0.85% joint-limit figures in `results/LAYER1_RESULTS_3seed.md` are tail-means over
+the final 10% of TRAINING iterations — a stochastic, still-improving policy with exploration
+noise on, averaged over 4096 envs. They are a property of the learning process, not of the
+policy the thesis ships. Every safety number must be re-measured on the frozen policy.
+
+### 4. RETRACTED: the "lift threshold is trivially satisfied" hypothesis
+I suspected `object_is_lifted` (`z > 0.04`) was always true because the cube spawns at z=0.055.
+It is not. `Episode_Reward/lifting_object = (15 × dt × n_steps_lifted) / 5.0`, so the logged
+0.1175 at iteration 0 means ~2 steps of 250 above the line (the cube settling after spawn) and
+14.61 at iteration 1499 means ~243 of 250. The resting height is below 0.04 and the metric is
+real. **The reward function was NOT changed** — Touhid had approved changing it, on my wrong
+diagnosis; the approval is void because the bug does not exist. Lift success is still weak
+evidence (the weld makes lifting nearly free) but it is not broken.
+*Open question worth 5 minutes on the GUI:* 243/250 steps lifted implies the cube leaves the
+table around step 7 (0.14 s). Confirm with `play.py` that this is a genuine fast dive and not
+the weld snapping the cube up to a TCP that is already high.
+
+### 5. New tooling (written, compiles, NOT run — needs the lab PC)
+`ur5_grasp/scripts/eval_policy.py` — supersedes `eval_success.py`, which stays on disk as the
+record of what produced the Day-22 table.
+- Per EPISODE: final cube-goal distance, final and max cube height, per-step violation fraction
+  for singularity / joint-limit / collision, "did it violate at all" flags, minimum
+  manipulability, undiscounted episodic cost (directly comparable to `cost_limit = 25`), length.
+- Thresholds are read off `UR5eCubeLiftEnv` (`MANIP_FLOOR`, `JOINT_LIMIT_MARGIN`,
+  `COLLISION_Z_FLOOR`), so the eval can never silently disagree with what training constrained.
+- `enable_corruption = False`: observation noise is a training augmentation; leaving it on
+  would make the number "success under sensor noise", a different claim.
+- Loads **both** rsl_rl (`model_*.pt`, via OnPolicyRunner / LagrangianRunner) and skrl
+  (`agent_*.pt`, via `skrl.utils.runner.torch.Runner` + `set_running_mode("eval")`). This
+  clears the Day-22 blocker that no skrl policy could be scored.
+- Writes a flushed report, a summary CSV row, and a per-episode CSV (the distribution).
+- Documented limitation: metrics are read PRE-step because `ManagerBasedRLEnv` resets done envs
+  inside `step()`, so the last observable state is one control step (20 ms) before terminal.
+
+`run_eval_policy.sh` — 6 checkpoints × **4 eval seeds (42/43/44/45) × 1000 episodes**, 128 envs.
+Two variance sources now separated: spread over EVAL seeds (was invisible — Day 22 used one
+eval seed, so "0.00%" had no error bar) and spread over TRAINING seeds. ~24 launches, dominated
+by Isaac startup, not rollouts.
+
+### NEXT
+1. `./run_eval_policy.sh` on the lab PC, then read `ur5_grasp/tools/eval_policy_report.txt`.
+2. Rewrite `results/LAYER1_RESULTS_3seed.md` from the new numbers; mark the old safety
+   percentages as training-time measurements and say so in Methods.
+3. `./run_skrl_seeds.sh PPO 4096 1500` is still queued and unaffected by any of this.
+
+## 2026-07-31 (Day 23) — bridge x3 DONE. The result is a problem, not a formality.
+
+All 3 runs OK, ~10-11 min each, 30 checkpoints apiece (`logs/batch_report_skrl_ppo.txt`).
+Training metrics, last-50-iteration mean, read straight from the TB event files:
+
+  | 1500 iters, 4096 envs   | train reward (per seed)      | mean +- sd      | viol_sing | viol_jlim | manip  |
+  |-------------------------|------------------------------|-----------------|-----------|-----------|--------|
+  | rsl_rl-PPO   (baseline) | 142.49 /  91.21 / 163.65     | 132.45 +- 37.25 | 81.85%    | 35.50%    | 0.0256 |
+  | rsl_rl-cPPO  (the claim)| 164.45 / 166.39 / 159.22     | 163.35 +-  3.71 | 44.30%    |  0.61%    | 0.0541 |
+  | **skrl-PPO   (bridge)** | **159.16 / 155.70 / 159.25** | **158.04 +- 2.02** | **34.52%** | **0.00%** | **0.0528** |
+
+### Read this before doing anything else
+The bridge run was supposed to answer "is skrl-PPO the same as rsl_rl-PPO?". The answer is
+**no — and it lands on cPPO's row instead.** Unconstrained skrl-PPO is, on training metrics,
+as stable as cPPO (sd 2.02 vs 3.71), as safe (viol_sing 34.5% vs 44.3% — in fact LOWER), has
+essentially the same manipulability margin (0.0528 vs 0.0541), and takes zero joint-limit
+violations. It reproduces almost every property that Layer 1 attributes to the Lagrangian
+constraint, with no constraint at all.
+
+That directly threatens finding 2 of the Layer-1 writeup ("the strongest finding is
+CONSISTENCY — PPO produced a totally failed policy on 1 of 3 seeds"). If a different PPO
+*implementation* is consistently fine, then that instability is a property of rsl_rl's PPO,
+not of "PPO lacks a safety constraint". This must not be quietly dropped or explained away.
+
+### What is NOT yet established
+Every number above is a TRAINING metric. Layer 1's own conclusion was that training reward and
+lift success are near-uninformative here, and that **goal-reach success** is the discriminating
+metric. Goal-reach for these three checkpoints is still unmeasured, because until now nothing
+could score a skrl policy. So the honest position is: strongly suggestive, not yet demonstrated.
+
+The decisive experiment is now cheap and is the top priority — ahead of SAC.
+
+### Built this session (both UNVERIFIED — no GPU here, neither has ever executed)
+- `ur5_grasp/scripts/eval_success_skrl.py` — skrl twin of eval_success.py. Separate file, not
+  branches inside the validated original. Same lift/goal math, same 512-episode protocol, same
+  report + CSV files so rsl_rl and skrl rows share one table. Deterministic actions via
+  IsaacLab play.py's `outputs[-1].get("mean_actions", outputs[0])`, which matches rsl_rl's
+  `get_inference_policy()` mean and also covers SAC/TD3 actors. Sets write_interval and
+  checkpoint_interval to 0 so an eval cannot leave a junk run dir under logs/skrl/.
+- `run_eval_skrl.sh <ALGO>` — 3 checkpoints, 512 episodes, fixed eval seed 42. Scores the final
+  `agent_*.pt`, deliberately NOT `best_agent.pt` (the rsl_rl side was scored on its final
+  checkpoint; "best" is selected on training reward, a different and more flattering criterion).
+
+### NEXT
+1. `./run_eval_skrl.sh PPO` — ~10 min. This decides whether the finding above is real.
+2. Only then decide about SAC. If skrl-PPO reaches ~100% goal-reach, the Layer-1 claim needs
+   rewording and that matters more than a fourth algorithm.
+
+### Day 23, eval attempt 1 — one API name wrong. Fixed. Also: the IsaacLab that RUNS is not the one in this repo.
+
+`eval_success_skrl.py` reached the scene and died at `runner.agent.set_running_mode("eval")` —
+`AttributeError: 'PPO' object has no attribute 'set_running_mode'`. My error: I copied that line
+from `IsaacLab/scripts/reinforcement_learning/skrl/play.py` (line 210) without checking the
+method exists on the installed skrl build. Everything before it worked — report file, checkpoint
+resolution, gym.make, `Runner`, `agent.load()` — so the failure is one name, not the design.
+
+Fixed with an ordered fallback (`set_running_mode` -> `set_mode` -> `model.eval()`) rather than
+by guessing the version, so a second round trip cannot be lost to an API rename. Not load-bearing
+for determinism either way: actions are the distribution MEAN regardless of mode and these nets
+have no dropout/batch-norm. Also guarded the `outputs[-1].get("mean_actions", ...)` unpack.
+
+**Worth noticing in that traceback:** the frame above ours is
+`/home/mte/Abdur_Rabbi_Thesis_updated/IsaacLab/source/isaaclab_tasks/.../hydra.py`. So the
+isaaclab_tasks package that actually executes lives in **Abdur_Rabbi_Thesis_updated/**, not in
+this repo's `IsaacLab/` (which is a real directory, not a symlink). `../IsaacLab/isaaclab.sh`
+launches the python env, but the pip-installed isaaclab packages resolve elsewhere. Two
+consequences: (1) IsaacLab source I read in this repo may not match what runs — which is exactly
+how the play.py line misled me; (2) reproducibility risk for the thesis, since the repo does not
+contain the IsaacLab that produced the results. Recorded, not acted on — do not go moving
+installs before the deadline.
+
+### 6. Evaluation protocol LOCKED (Touhid, Day 23) — supersedes §5's placeholder numbers
+    num_envs   = 128
+    episodes   = 1000   (per eval seed)
+    eval seeds = 101 / 102 / 103  -> 6 checkpoints x 3 seeds = 18 launches, ~20 min
+    goal-reach = 1 cm             (was 5 cm)
+    lift       = cube reaches >= 50% of that episode's COMMANDED goal height (was flat 4 cm)
+
+The lift rule is the substantive change. The command's `pos_z` range is (0.25, 0.50) m, so the
+bar is ~12.5-25 cm and it SCALES with what the episode actually asked for; the old flat 0.04 m
+sits about 2 cm above the cube's resting height, which is why every policy read 100.00% on
+Day 22. Legacy `lift_abs` is still written to the CSV so the new table can be lined up against
+the old one — it is reported, not headlined.
+
+Honest note about the goal-reach gate: gating goal-reach on the lift rule is REDUNDANT at these
+tolerances. A cube within 1 cm of a goal at height h is itself at >= h - 0.01, which always
+clears 0.5h. The gate is kept as a guard against a future looser tolerance; it is not what
+does the discriminating. The lift number's real value is as a standalone metric. Do not write
+it up as though the gate were load-bearing.
+
+CORRECTION within the same day: the first draft set the eval seeds to 1/2/3, i.e. the same
+values as the TRAINING seeds. Touhid caught it. Changed to 101/102/103. Two reasons it was
+wrong, not just untidy: (a) "ppo_s1 @ eval seed 1" reads as a pairing that does not exist —
+every eval seed scores all six checkpoints; (b) it put the evaluation draw on the same RNG
+stream the policy was trained against, so a policy could be scored on spawns correlated with
+the ones it saw in training. Keep any future eval seed >= 100.
+
+Verified here: `py_compile` on eval_policy.py, `bash -n` on run_eval_policy.sh, and the summary
+math (goal-rate gating, lift_rel vs lift_abs, per-step vs per-episode violation fractions) unit-
+tested standalone against hand-computed expectations. NOT verified: anything requiring Isaac —
+the checkpoint loaders, the skrl path, and whether `des_pos_w[:, 2]` and the cube's world z share
+a reference frame in practice. **First thing to check in the report: `mean commanded goal height`
+should print ~0.375 m. If it prints something far off, the lift bar is being computed against the
+wrong frame and every lift number is wrong.**
+
+## 2026-07-31 (Day 23, later still) — first eval sweep: 18/18 failed. Cause found: a duplicate argparse flag.
+
+`./run_eval_policy.sh` reported `18 of 18 EVALS FAILED` and produced **no report file, no CSV,
+no episode CSVs, and no error text**. Every launch died identically.
+
+**Cause:** `eval_policy.py` declared `--checkpoint` itself, and `cli_args.add_rsl_rl_args(parser)`
+— called a few lines later — declares `--checkpoint` too. argparse raises `ArgumentError:
+conflicting option string` at **import time**, which is *before* `_FH = open(_REPORT_PATH, "a")`
+in `__main__`. So the flushed-report machinery never existed and the crash left no trace.
+`eval_success.py` never hit this because it used cli_args' `--checkpoint` rather than adding
+its own; I added one when writing the new script and did not check the two arg-adders.
+
+**Fixes, both in place:**
+1. Removed the duplicate declaration; `--checkpoint` now comes from cli_args, with an explicit
+   post-parse `parser.error()` since cli_args makes it optional and this script requires it.
+   A comment at that spot lists every flag `cli_args.add_rsl_rl_args` and
+   `AppLauncher.add_app_launcher_args` already own, so the next added flag gets checked.
+2. **PREFLIGHT in `run_eval_policy.sh`**: runs `eval_policy.py --help` once (argparse exits
+   before AppLauncher, so Isaac never boots — ~2 s) and ABORTS the whole sweep with the last 30
+   lines of output if the import fails.
+
+**This is a new failure mode and the standing rule does not cover it.** The rule says "a script
+that does not write a FLUSHED report cannot be run for a result". That rule assumes the script
+gets far enough to open the report. A crash at import time is *earlier than the report* and is
+therefore invisible in exactly the same way. Amended rule: **any batch runner must preflight the
+script it launches, so an import-time failure is distinguishable from a run-time failure.**
+Victim count for the underlying "output vanished" class: six.
+
+**Verified here:** py_compile, `bash -n`, and a programmatic collision check of every flag
+`eval_policy.py` declares against the full flag lists of `cli_args.add_rsl_rl_args` and
+`AppLauncher.add_app_launcher_args` — zero collisions now. **Not verified:** that the run
+actually completes; that still needs the lab PC.
+
+### NEXT
+`./run_eval_policy.sh` again. If the preflight prints `preflight OK` and a launch still fails,
+the failure is now genuinely inside Isaac and `ur5_grasp/tools/eval_policy_report.txt` will
+contain the traceback.
+
+## 2026-07-31 (Day 23, night) — eval crashed mid-run: InferenceMode accumulator rebinding. Fixed + preflighted.
+
+Preflight passed, Isaac booted, the policy loaded, the thresholds printed
+(`MANIP_FLOOR=0.045 JOINT_LIMIT_MARGIN=0.1 COLLISION_Z_FLOOR=0.0`), and roughly the first 128
+episodes completed — then:
+
+    RuntimeError: Inplace update to inference tensor outside InferenceMode is not allowed.
+    File ".../eval_policy.py", line 444, in main -> min_w[done_ids] = float("inf")
+
+**Cause.** Two accumulators were REBOUND inside `with torch.inference_mode():`
+(`min_w = torch.minimum(min_w, w)` and `max_z = torch.maximum(max_z, obj_pos_w[:, 2])`).
+Rebinding replaces the pre-allocated NORMAL tensor with the freshly-created INFERENCE tensor.
+The episode-reset lines run OUTSIDE the block, and an inference tensor cannot be mutated there.
+Note the shape of the failure: it does not fire on step 1, it fires on the first episode
+boundary — so it looks like a late/rare bug when it is actually a line-1 mistake.
+
+Why the `+=` accumulators (`ep_len`, `sing_ct`, `joint_ct`, `coll_ct`, `cost_sum`) were fine:
+writing INTO a normal tensor from inside inference mode is allowed; it is only rebinding that
+converts the tensor. `+=` mutates, `=` replaces.
+
+**Fix:** `min_w.copy_(torch.minimum(min_w, w))` / `max_z.copy_(torch.maximum(...))` — the same
+in-place category as the `+=` lines, which this very run proved safe over thousands of steps.
+A comment at that spot states the rule: never rebind an accumulator inside inference mode.
+
+**Second preflight added** to `run_eval_policy.sh`: ~2 s of pure torch, no Isaac, reproducing the
+exact pattern (accumulate in-place inside the block, reset outside) and asserting
+`not tensor.is_inference()` afterwards. Sweep aborts if it fails.
+
+**Verified here:** py_compile, `bash -n`, and a grep proving no accumulator is rebound anywhere
+in the loop. **NOT verified:** torch itself — this sandbox has no PyTorch and the download index
+is blocked, so the `.copy_()` idiom is reasoned from the fact that the run's own `+=` lines
+worked, not executed. That is precisely what the new torch preflight is for: it executes the
+claim on the lab PC in 2 seconds before spending 18 launches on it.
+
+**Environment note, not a blocker:** the traceback shows hydra resolving from
+`/home/mte/Abdur_Rabbi_Thesis_updated/IsaacLab/...` while the script runs out of
+`/home/mte/Abdur_Rabbi_THESIS/Comparison_test/`. So the *installed* isaaclab packages come from
+a different checkout than `~/Abdur_Rabbi_THESIS/IsaacLab`, which is what `../IsaacLab/isaaclab.sh`
+launches. It evidently works, but if a future env-code edit ever appears to have no effect, this
+is the first thing to check.
+
+### NEXT
+`./run_eval_policy.sh`. Both preflights must print OK. First number to read in the report:
+`mean commanded goal height` ~ 0.375 m.
+
+## 2026-07-31 (Day 23, close) — EVAL SWEEP COMPLETE. 18/18, 18 000 episodes. Safety now measured on the frozen policy.
+
+`./run_eval_policy.sh` finished clean. Read from `ur5_grasp/tools/eval_policy_results.csv`,
+`eval_policy_report.txt` and the 18 per-episode CSVs in `ur5_grasp/tools/eval_episodes/`.
+
+**Frame sanity check PASSED** — mean commanded goal height 0.3741 m against the expected ~0.375
+from `pos_z = (0.25, 0.50)`. The 50 %-of-goal-height lift bar is computed in the right frame, so
+the lift numbers are valid.
+
+| Metric (mean ± sd over 3 TRAINING seeds) | cPPO | PPO |
+|---|---|---|
+| Goal-reach < 1 cm | **96.52 % ± 3.45** | 34.72 % ± 56.54 |
+| Lift (≥ 50 % of goal height) | **99.99 % ± 0.02** | 69.89 % ± 52.01 |
+| Episodic cost (budget 25) | **17.75 ± 7.41** | 261.31 ± 163.49 |
+| Joint-limit, % of steps | **0.00 % ± 0.00** | 35.34 % ± 30.62 |
+| Singularity, % of steps | **45.07 % ± 26.72** | 80.48 % ± 14.92 |
+| Mean episode-min manipulability | **0.0459 ± 0.0172** | 0.0058 ± 0.0052 |
+| Episodes reaching w < 1e-4 | **0.0 / 0.1 / 0.0 %** | 7.9 / 11.6 / 100 % |
+
+Per-seed goal-reach @1 cm — PPO: 4.2 / **0.0** / 100.0. cPPO: 97.2 / 99.6 / 92.8.
+
+### Four things that change how this gets written up
+1. **The episodic cost is the strongest number, not the violation fraction.** PPO spends 261 per
+   episode against a budget of 25 — 10× over — while cPPO spends 17.75. It is also the *exact*
+   quantity the Lagrangian constrains, with a threshold fixed on Day 9, so no reporting choice
+   was made to flatter it.
+2. **Report singularity CROSSINGS, not the step fraction.** The three ways of asking the safety
+   question separate very differently: step-fraction 1.8×, episode-minimum w 8×, crossings
+   (w < 1e-4) ~100×. The step fraction is a binary test on a soft margin — the Day-22
+   "limitation 2" problem — and it undersells the result by a factor of 50.
+3. **`ppo_s3` must be reported and is the honest counterweight.** It matches cPPO on task
+   (100 % @1 cm, mean distance 0.0042 m vs cPPO's 0.0058 m) while being the WORST run on
+   singularity step-fraction (92.0 %) and 5× over budget. So the claim is "the constraint buys
+   reliability and safety", NOT "PPO cannot do the task".
+4. **`ppo_s2`'s failure mode is identified: it lifts, then puts the cube back down.** 100 % of
+   episodes get the cube above the bar (peak z ≈ 0.39–0.45 m) but only 9.8 % are still there at
+   the end (final z ≈ 0.136 m against goals of 0.27–0.50 m). All 3000 of its episodes reach an
+   actual singularity; cost 500. Mechanism (loses height control from singular configurations) is
+   PLAUSIBLE, NOT demonstrated.
+
+### The eval-seed question is settled
+Largest spread of one frozen checkpoint over the three eval seeds: **1.05 percentage points**.
+Spread over training seeds: **56.5**. ~50×. `ppo_s2`'s 0 % is a property of the policy, not of
+the cube spawns — which is exactly what the single-eval-seed Day-22 protocol could not establish.
+
+### Two housekeeping defects found while checking
+- **Two stale rows in the summary CSV** (`ppo_s1@103`, `ppo_s2@101`), left by the sweep that
+  crashed on the InferenceMode bug. Bit-identical to the good rows — a free determinism
+  confirmation — but a plain glob would have double-weighted two checkpoints.
+  `results/scripts/summarize_eval.py` now de-duplicates on `(label, eval_seed)`, last wins.
+- **`eval_policy.py`'s `except` block never fires**: Hydra's `hydra_main` catches first, so a
+  traceback goes to Hydra's output and not into the flushed report. A failed run leaves the
+  report ending mid-sentence; that truncation IS the signal. Not fixed, documented.
+
+### Written up
+- `results/LAYER1_RESULTS_eval.md` — GENERATED, do not hand-edit. Regenerate with
+  `python3 results/scripts/summarize_eval.py --write`.
+- `results/LAYER1_FINDINGS.md` — hand-written interpretation + limitations. Kept separate so a
+  regeneration can never silently rewrite a claim.
+- `results/LAYER1_RESULTS_3seed.md` — Day-22 table, now superseded; its two safety rows are
+  flagged as training-time measurements.
+
+**Verified here:** all 11 headline mean±sd values recomputed from the raw CSV and checked against
+the numbers quoted in `LAYER1_FINDINGS.md` — 0 mismatches. Episode-level claims recomputed from
+the 18 per-episode CSVs. **Not verified:** anything about *why* a policy behaves as it does; the
+mechanism paragraphs are labelled plausible.
+
+### NEXT
+1. `./run_skrl_seeds.sh PPO 4096 1500`, then `./run_eval_policy.sh skrl`.
+2. Author `skrl_sac_cfg.yaml`, 50-iter smoke, SAC ×3.
+3. Extend `results/scripts/make_layer1_figs.py` to plot from `eval_episodes/*.csv` — the
+   distributions are now the interesting figure, not the training curves.

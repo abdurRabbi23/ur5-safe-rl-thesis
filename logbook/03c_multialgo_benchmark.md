@@ -1,4 +1,30 @@
-# Module 03c — Layer 1 Expanded: 4-Algorithm Comparative Benchmark
+# Module 03c — Layer 1 Expanded: Multi-Algorithm Comparative Benchmark
+
+## DECISION RECORD — 2026-07-31 (Day 23): TD3 CUT
+Touhid dropped TD3, six days ahead of the agreed Aug 6 hard-cut date. **The benchmark is
+THREE algorithms: PPO, cPPO, SAC.** Run matrix goes 15 → 12 (SimpleGripper smoke unchanged).
+Rationale: SAC's config was still unwritten and was the remaining schedule risk; TD3 would
+have needed a second config authored from skrl's docs with no template in this IsaacLab
+checkout, against an Aug 11 writing deadline. PPO + cPPO + one off-policy baseline is a
+complete result, and Layer 1 was already secured on Day 22. Everywhere below that says
+"4-algorithm" or lists TD3 is HISTORICAL — the reasoning is still binding, the algorithm is
+not. State the omission in Limitations. Do not re-add TD3 without appending here first.
+
+## DECISION RECORD — 2026-07-31 (Day 23): the fairness protocol now covers EVALUATION
+The `03c` fairness protocol specified matched training budgets but said nothing about how the
+frozen policies get *scored*. That gap produced the Day-22 table, whose safety percentages were
+tail-means of TRAINING TensorBoard scalars — a still-learning policy with exploration noise on.
+Added to the protocol, binding from here:
+  - Safety violations are counted during EVALUATION, on the deterministic frozen policy, using
+    the same `SafetyCostComputer` thresholds the training constrained.
+  - Task success is reported as a DISTRIBUTION (goal-distance mean/median/p90/max) plus success
+    at 2 / 5 / 10 cm — never a single hard threshold, which saturates at 0 or 100.
+  - Every checkpoint is scored on 4 eval seeds × 1000 episodes, so eval-draw variance is
+    separated from training-seed variance.
+  - Observation corruption is OFF during evaluation.
+Implemented in `Comparison_test/ur5_grasp/scripts/eval_policy.py` + `run_eval_policy.sh`.
+
+---
 
 Status: ◻ decision record — still the source of truth for the WHY (hypothesis, fairness
 protocol, cut order, schedule). The WHERE moved 2026-07-29 to a dedicated folder,

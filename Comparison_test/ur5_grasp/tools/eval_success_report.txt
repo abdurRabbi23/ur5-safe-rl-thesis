@@ -1,0 +1,167 @@
+
+============================================================
+EVAL  label=ppo_s1   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] experiment dir : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift/2026-07-30_02-12-31_ppo_s1/model_1499.pt
+[progress] num_envs=64  seed=42  agent=rsl_rl_cfg_entry_point
+[progress] building scene (gym.make) ...
+[progress] policy loaded, scene up. Scoring 512 episodes (lift>0.04 m, goal<0.05 m) ...
+
+----------------------------------------------------
+  Label            : ppo_s1
+  Agent            : ur5e_lift
+  Checkpoint       : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift/2026-07-30_02-12-31_ppo_s1/model_1499.pt
+  Episodes scored  : 512
+  Lift success     : 100.0%   (512/512)
+  Goal-reach succ. : 58.6%   (300/512)
+----------------------------------------------------
+  [csv row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_report.txt]
+
+============================================================
+EVAL  label=ppo_s2   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] experiment dir : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift/2026-07-30_02-23-14_ppo_s2/model_1499.pt
+[progress] num_envs=64  seed=42  agent=rsl_rl_cfg_entry_point
+[progress] building scene (gym.make) ...
+[progress] policy loaded, scene up. Scoring 512 episodes (lift>0.04 m, goal<0.05 m) ...
+
+----------------------------------------------------
+  Label            : ppo_s2
+  Agent            : ur5e_lift
+  Checkpoint       : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift/2026-07-30_02-23-14_ppo_s2/model_1499.pt
+  Episodes scored  : 512
+  Lift success     : 100.0%   (512/512)
+  Goal-reach succ. : 0.0%   (0/512)
+----------------------------------------------------
+  [csv row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_report.txt]
+
+============================================================
+EVAL  label=ppo_s3   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] experiment dir : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift/2026-07-30_02-34-03_ppo_s3/model_1499.pt
+[progress] num_envs=64  seed=42  agent=rsl_rl_cfg_entry_point
+[progress] building scene (gym.make) ...
+[progress] policy loaded, scene up. Scoring 512 episodes (lift>0.04 m, goal<0.05 m) ...
+
+----------------------------------------------------
+  Label            : ppo_s3
+  Agent            : ur5e_lift
+  Checkpoint       : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift/2026-07-30_02-34-03_ppo_s3/model_1499.pt
+  Episodes scored  : 512
+  Lift success     : 100.0%   (512/512)
+  Goal-reach succ. : 100.0%   (512/512)
+----------------------------------------------------
+  [csv row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_report.txt]
+
+============================================================
+EVAL  label=cppo_s1   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] experiment dir : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1/model_1499.pt
+[progress] num_envs=64  seed=42  agent=rsl_rl_cppo_cfg_entry_point
+[progress] building scene (gym.make) ...
+[progress] policy loaded, scene up. Scoring 512 episodes (lift>0.04 m, goal<0.05 m) ...
+
+----------------------------------------------------
+  Label            : cppo_s1
+  Agent            : ur5e_lift_cppo
+  Checkpoint       : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1/model_1499.pt
+  Episodes scored  : 512
+  Lift success     : 100.0%   (512/512)
+  Goal-reach succ. : 100.0%   (512/512)
+----------------------------------------------------
+  [csv row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_report.txt]
+
+============================================================
+EVAL  label=cppo_s2   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] experiment dir : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2/model_1499.pt
+[progress] num_envs=64  seed=42  agent=rsl_rl_cppo_cfg_entry_point
+[progress] building scene (gym.make) ...
+[progress] policy loaded, scene up. Scoring 512 episodes (lift>0.04 m, goal<0.05 m) ...
+
+----------------------------------------------------
+  Label            : cppo_s2
+  Agent            : ur5e_lift_cppo
+  Checkpoint       : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2/model_1499.pt
+  Episodes scored  : 512
+  Lift success     : 100.0%   (512/512)
+  Goal-reach succ. : 100.0%   (512/512)
+----------------------------------------------------
+  [csv row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_report.txt]
+
+============================================================
+EVAL  label=cppo_s3   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] experiment dir : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3/model_1499.pt
+[progress] num_envs=64  seed=42  agent=rsl_rl_cppo_cfg_entry_point
+[progress] building scene (gym.make) ...
+[progress] policy loaded, scene up. Scoring 512 episodes (lift>0.04 m, goal<0.05 m) ...
+
+----------------------------------------------------
+  Label            : cppo_s3
+  Agent            : ur5e_lift_cppo
+  Checkpoint       : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3/model_1499.pt
+  Episodes scored  : 512
+  Lift success     : 100.0%   (512/512)
+  Goal-reach succ. : 100.0%   (512/512)
+----------------------------------------------------
+  [csv row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_report.txt]
+
+============================================================
+EVAL (skrl)  label=skrl_ppo_s1   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/skrl/ur5e_lift_skrl/2026-07-31_01-16-37_ppo_torch_skrl_ppo_s1/checkpoints/agent_36000.pt
+[progress] num_envs=64  eval_seed=42  algo=PPO
+[progress] building scene (gym.make) ...
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_report.txt]
+
+============================================================
+EVAL (skrl)  label=skrl_ppo_s2   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/skrl/ur5e_lift_skrl/2026-07-31_01-27-19_ppo_torch_skrl_ppo_s2/checkpoints/agent_36000.pt
+[progress] num_envs=64  eval_seed=42  algo=PPO
+[progress] building scene (gym.make) ...
+
+============================================================
+EVAL (skrl)  label=skrl_ppo_s3   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/skrl/ur5e_lift_skrl/2026-07-31_01-38-45_ppo_torch_skrl_ppo_s3/checkpoints/agent_36000.pt
+[progress] num_envs=64  eval_seed=42  algo=PPO
+[progress] building scene (gym.make) ...
+
+============================================================
+EVAL (skrl)  label=skrl_ppo_s1   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/skrl/ur5e_lift_skrl/2026-07-31_01-16-37_ppo_torch_skrl_ppo_s1/checkpoints/agent_36000.pt
+[progress] num_envs=64  eval_seed=42  algo=PPO
+[progress] building scene (gym.make) ...
+[progress] policy loaded, scene up. Scoring 512 episodes (lift>0.04 m, goal<0.05 m) ...
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_report.txt]
+
+============================================================
+EVAL (skrl)  label=skrl_ppo_s2   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/skrl/ur5e_lift_skrl/2026-07-31_01-27-19_ppo_torch_skrl_ppo_s2/checkpoints/agent_36000.pt
+[progress] num_envs=64  eval_seed=42  algo=PPO
+[progress] building scene (gym.make) ...
+[progress] policy loaded, scene up. Scoring 512 episodes (lift>0.04 m, goal<0.05 m) ...
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_success_report.txt]
+
+============================================================
+EVAL (skrl)  label=skrl_ppo_s3   task=Isaac-Lift-Cube-UR5e-v0
+============================================================
+[progress] checkpoint     : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/skrl/ur5e_lift_skrl/2026-07-31_01-38-45_ppo_torch_skrl_ppo_s3/checkpoints/agent_36000.pt
+[progress] num_envs=64  eval_seed=42  algo=PPO
+[progress] building scene (gym.make) ...

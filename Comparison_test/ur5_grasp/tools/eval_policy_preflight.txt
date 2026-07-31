@@ -1,0 +1,118 @@
+[3gH    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H [INFO] Using python from: /home/mte/miniconda3/envs/isaaclab/bin/python
+usage: eval_policy.py [-h] [--num_envs NUM_ENVS] [--task TASK]
+                      [--episodes EPISODES] [--seed SEED]
+                      [--backend {rsl_rl,skrl}] [--agent AGENT]
+                      [--label LABEL] [--lift_frac LIFT_FRAC]
+                      [--min_height MIN_HEIGHT] [--goal_tol GOAL_TOL]
+                      [--goal_tols_extra GOAL_TOLS_EXTRA] [--report REPORT]
+                      [--csv CSV] [--episode_csv EPISODE_CSV]
+                      [--experiment_name EXPERIMENT_NAME]
+                      [--run_name RUN_NAME] [--resume] [--load_run LOAD_RUN]
+                      [--checkpoint CHECKPOINT]
+                      [--logger {tensorboard,wandb,neptune}]
+                      [--log_project_name LOG_PROJECT_NAME] [--headless]
+                      [--livestream {0,1,2}] [--enable_cameras] [--xr]
+                      [--device DEVICE] [--verbose] [--info]
+                      [--experience EXPERIENCE]
+                      [--rendering_mode {performance,quality,balanced}]
+                      [--kit_args KIT_ARGS] [--anim_recording_enabled]
+                      [--anim_recording_start_time ANIM_RECORDING_START_TIME]
+                      [--anim_recording_stop_time ANIM_RECORDING_STOP_TIME]
+
+Evaluate task success AND safety violations for a frozen policy.
+
+options:
+  -h, --help            show this help message and exit
+  --num_envs NUM_ENVS   Parallel envs used to collect episodes.
+  --task TASK           Name of the task.
+  --episodes EPISODES   Completed episodes to score (per eval seed).
+  --seed SEED           EVAL seed: fixes the cube spawns. Deliberately
+                        disjoint from the training seeds (1/2/3) so a seed
+                        number can never be mistaken for a policy pairing.
+                        Keep it >= 100.
+  --backend {rsl_rl,skrl}
+                        Which library wrote the checkpoint. rsl_rl ->
+                        model_*.pt, skrl -> agent_*.pt.
+  --agent AGENT         Agent config entry point. rsl_rl_cfg_entry_point |
+                        rsl_rl_cppo_cfg_entry_point | skrl_cfg_entry_point |
+                        ...
+  --label LABEL         Short name for this run in the report (e.g. cppo_s1).
+  --lift_frac LIFT_FRAC
+                        HEADLINE lift rule: cube must reach this fraction of
+                        the episode's COMMANDED goal height.
+  --min_height MIN_HEIGHT
+                        Legacy absolute lift threshold (m, world z), Isaac
+                        Lab's own. Reported alongside, not the headline.
+  --goal_tol GOAL_TOL   HEADLINE goal-reach bound (m). Default 1 cm.
+  --goal_tols_extra GOAL_TOLS_EXTRA
+                        Extra goal-reach tolerances (m) reported as context,
+                        so a near-miss is distinguishable from a total
+                        failure. The headline stays --goal_tol.
+  --report REPORT       Report file to APPEND to.
+  --csv CSV             Summary CSV (one row per run) to APPEND to.
+  --episode_csv EPISODE_CSV
+                        Per-episode CSV. Default:
+                        ur5_grasp/tools/eval_episodes/<label>_seed<seed>.csv.
+                        This is what makes the DISTRIBUTION reconstructable —
+                        do not skip it.
+
+rsl_rl:
+  Arguments for RSL-RL agent.
+
+  --experiment_name EXPERIMENT_NAME
+                        Name of the experiment folder where logs will be
+                        stored.
+  --run_name RUN_NAME   Run name suffix to the log directory.
+  --resume              Whether to resume from a checkpoint.
+  --load_run LOAD_RUN   Name of the run folder to resume from.
+  --checkpoint CHECKPOINT
+                        Checkpoint file to resume from.
+  --logger {tensorboard,wandb,neptune}
+                        Logger module to use.
+  --log_project_name LOG_PROJECT_NAME
+                        Name of the logging project when using wandb or
+                        neptune.
+
+app_launcher arguments:
+  Arguments for the AppLauncher. For more details, please check the
+  documentation.
+
+  --headless            Force display off at all times.
+  --livestream {0,1,2}  Force enable livestreaming. Mapping corresponds to
+                        that for the `LIVESTREAM` environment variable.
+  --enable_cameras      Enable camera sensors and relevant extension
+                        dependencies.
+  --xr                  Enable XR mode for VR/AR applications.
+  --device DEVICE       The device to run the simulation on. Can be "cpu",
+                        "cuda", "cuda:N", where N is the device ID
+  --verbose             Enable verbose-level log output from the
+                        SimulationApp.
+  --info                Enable info-level log output from the SimulationApp.
+  --experience EXPERIENCE
+                        The experience file to load when launching the
+                        SimulationApp. If an empty string is provided, the
+                        experience file is determined based on the headless
+                        flag. If a relative path is provided, it is resolved
+                        relative to the `apps` folder in Isaac Sim and Isaac
+                        Lab (in that order).
+  --rendering_mode {performance,quality,balanced}
+                        Sets the rendering mode. Preset settings files can be
+                        found in apps/rendering_modes. Can be "performance",
+                        "balanced", or "quality". Individual settings can be
+                        overwritten by using the RenderCfg class.
+  --kit_args KIT_ARGS   Command line arguments for Omniverse Kit as a string
+                        separated by a space delimiter. Example usage:
+                        --kit_args "--ext-folder=/path/to/ext1 --ext-
+                        folder=/path/to/ext2"
+  --anim_recording_enabled
+                        Enable recording time-sampled USD animations from
+                        IsaacLab PhysX simulations.
+  --anim_recording_start_time ANIM_RECORDING_START_TIME
+                        Set time that animation recording begins playing. If
+                        not set, the recording will start from the beginning.
+  --anim_recording_stop_time ANIM_RECORDING_STOP_TIME
+                        Set time that animation recording stops playing. If
+                        the process is shutdown before the stop time is
+                        exceeded, then the animation is not recorded.
+[3gH    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H   [INFO] Using python from: /home/mte/miniconda3/envs/isaaclab/bin/python
+[preflight] InferenceMode accumulator contract OK
