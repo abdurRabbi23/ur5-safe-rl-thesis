@@ -1,0 +1,126 @@
+# Copyright (c) 2025, Touhid — UR5 Safe RL Grasping thesis.
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# skrl-PPO BRIDGE CONFIG for Isaac-Lift-Cube-UR5e-v0.
+#
+# PURPOSE: this run is NOT a new algorithm. It is the framework-equivalence check.
+# It answers "does skrl-PPO reproduce rsl_rl-PPO on this env?", which is what makes the
+# later skrl-SAC numbers comparable to the Layer-1 rsl_rl table at all.
+# If this run lands far from rsl_rl PPO (goal-reach 52.9% +- 50.3, train reward 132 +- 37),
+# the framework — not the algorithm — is the confound, and SAC cannot be read against
+# the Layer-1 table until that is explained.
+#
+# Structure copied from:
+#   IsaacLab/source/isaaclab_tasks/isaaclab_tasks/manager_based/manipulation/lift/
+#     config/franka/agents/skrl_ppo_cfg.yaml
+# Hyperparameters DELIBERATELY differ from that franka template. Every value below is
+# matched to ur5_grasp/tasks/lift/agents/rsl_rl_ppo_cfg.py (UR5eLiftPPORunnerCfg), because
+# a bridge run that uses franka's defaults measures nothing. Divergences from franka, and
+# the rsl_rl field each one mirrors:
+#
+#   franka -> ours   rsl_rl source field
+#   -------------------------------------------------------------------------------
+#   8      -> 5      num_learning_epochs = 5          (learning_epochs)
+#   0.99   -> 0.98   gamma = 0.98                     (discount_factor)
+#   0.001  -> 0.006  entropy_coef = 0.006             (entropy_loss_scale)
+#   2.0    -> 1.0    value_loss_coef = 1.0            (value_loss_scale)
+#   False  -> True   rsl_rl ActorCritic uses two separate MLPs   (models.separate)
+#   scaler -> null   actor_obs_normalization = False  (state_preprocessor)
+#   scaler -> null   rsl_rl has no value preprocessor (value_preprocessor)
+#   0.01   -> 1.0    rsl_rl does not scale rewards    (rewards_shaper_scale)
+#   False  -> True   rsl_rl bootstraps on time-outs   (time_limit_bootstrap)
+#
+# *** IF THE BRIDGE UNDERPERFORMS, READ THIS BEFORE TOUCHING ANYTHING ELSE ***
+# The last four rows are the risky ones: every shipped IsaacLab skrl config uses
+# RunningStandardScaler + rewards_shaper_scale 0.01, and skrl's PPO is not tuned to run
+# without them. They are null/1.0 here on purpose — for fidelity to rsl_rl, not because
+# they are known to work. If the bridge run diverges or collapses, the FIRST diagnostic is
+# to flip those four back to the franka values (scaler / scaler / 0.01 / False) and rerun;
+# that isolates "skrl needs normalisation" from "the two PPO implementations disagree".
+# Record which variant produced the reported number. Do not silently switch and move on.
+
+seed: 42  # overridden by --seed on the command line; batch script passes 1/2/3
+
+
+# Models — skrl model instantiator utility
+# https://skrl.readthedocs.io/en/latest/api/utils/model_instantiators.html
+# separate: True mirrors rsl_rl's ActorCritic, which builds independent actor and critic
+# MLPs rather than a shared trunk.
+models:
+  separate: True
+  policy:  # gaussian_model
+    class: GaussianMixin
+    clip_actions: False
+    clip_log_std: True
+    min_log_std: -20.0
+    max_log_std: 2.0
+    initial_log_std: 0.0   # = log(init_noise_std = 1.0) in rsl_rl
+    network:
+      - name: net
+        input: OBSERVATIONS
+        layers: [256, 128, 64]   # rsl_rl actor_hidden_dims
+        activations: elu
+    output: ACTIONS
+  value:  # deterministic_model
+    class: DeterministicMixin
+    clip_actions: False
+    network:
+      - name: net
+        input: OBSERVATIONS
+        layers: [256, 128, 64]   # rsl_rl critic_hidden_dims
+        activations: elu
+    output: ONE
+
+
+# Rollout memory
+# https://skrl.readthedocs.io/en/latest/api/memories/random.html
+memory:
+  class: RandomMemory
+  memory_size: -1  # automatically determined (same as agent:rollouts)
+
+
+# PPO agent configuration (field names from skrl's PPO_DEFAULT_CONFIG)
+# https://skrl.readthedocs.io/en/latest/api/agents/ppo.html
+agent:
+  class: PPO
+  rollouts: 24                 # rsl_rl num_steps_per_env = 24
+  learning_epochs: 5           # rsl_rl num_learning_epochs = 5
+  mini_batches: 4              # rsl_rl num_mini_batches = 4
+  discount_factor: 0.98        # rsl_rl gamma = 0.98
+  lambda: 0.95                 # rsl_rl lam = 0.95
+  learning_rate: 1.0e-04       # rsl_rl learning_rate = 1.0e-4
+  learning_rate_scheduler: KLAdaptiveLR      # rsl_rl schedule = "adaptive"
+  learning_rate_scheduler_kwargs:
+    kl_threshold: 0.01         # rsl_rl desired_kl = 0.01
+  state_preprocessor: null     # rsl_rl actor/critic_obs_normalization = False
+  state_preprocessor_kwargs: null
+  value_preprocessor: null     # rsl_rl has no value preprocessor
+  value_preprocessor_kwargs: null
+  random_timesteps: 0
+  learning_starts: 0
+  grad_norm_clip: 1.0          # rsl_rl max_grad_norm = 1.0
+  ratio_clip: 0.2              # rsl_rl clip_param = 0.2
+  value_clip: 0.2              # rsl_rl clip_param = 0.2 (shared)
+  clip_predicted_values: True  # rsl_rl use_clipped_value_loss = True
+  entropy_loss_scale: 0.006    # rsl_rl entropy_coef = 0.006
+  value_loss_scale: 1.0        # rsl_rl value_loss_coef = 1.0
+  kl_threshold: 0.0            # 0.0 disables skrl's early-stopping KL check
+  rewards_shaper_scale: 1.0    # rsl_rl does not scale rewards
+  time_limit_bootstrap: True   # rsl_rl bootstraps value on time-out terminations
+  # logging and checkpoint
+  experiment:
+    # NOTE: skrl's train.py builds logs/skrl/<directory>/ RELATIVE TO CWD, exactly like
+    # rsl_rl. Always launch from inside Comparison_test/ or the run lands somewhere else.
+    # Directory is distinct from the rsl_rl "ur5e_lift" tree so the two never collide.
+    directory: "ur5e_lift_skrl"
+    experiment_name: ""
+    write_interval: 24         # = 1 rollout, so TB rows align 1:1 with rsl_rl iterations
+    checkpoint_interval: 1200  # = every 50 rollouts, matching rsl_rl save_interval = 50
+
+
+# Sequential trainer
+# https://skrl.readthedocs.io/en/latest/api/trainers/sequential.html
+trainer:
+  class: SequentialTrainer
+  timesteps: 36000   # = 1500 iterations x 24 rollouts, matching rsl_rl max_iterations=1500
+  environment_info: log

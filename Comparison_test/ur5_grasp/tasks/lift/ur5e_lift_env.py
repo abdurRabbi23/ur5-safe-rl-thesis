@@ -47,10 +47,46 @@ class UR5eCubeLiftEnv(ManagerBasedRLEnv):
     ]
     EE_BODY: str = "wrist_3_link"
     MONITORED_BODIES = ["forearm_link", "wrist_1_link", "wrist_3_link"]
-    COLLISION_Z_FLOOR: float = 0.0    # table-plane height (m); VERIFY vs the table prim
-    JOINT_LIMIT_MARGIN: float = 0.10  # rad (~5.7 deg) before a soft joint limit
-    MANIP_FLOOR: float = 0.045        # calibrated Day 9 (baseline w: min .021/mean .055/max .114;
-                                      # floor ~p10-p25 -> ~20% baseline violation). THE active constraint.
+    COLLISION_Z_FLOOR: float = 0.05   # Day 23 (cont.): was 0.0 (the bare table-plane height,
+                                      # i.e. only actual table PENETRATION counted). Touhid's
+                                      # call: keep a 5 cm standoff above the table/floor instead
+                                      # -- costs.py's penetration = clamp(z_floor - link_z, 0)
+                                      # now goes positive once a monitored link drops below
+                                      # 5 cm, not 0 cm. RECALIBRATED Day 23 (cont.), Step 4:
+                                      # re-checked against calib_probe_v2 (1500-iter converged
+                                      # baseline, widened goal box + reweighted rewards) -- min
+                                      # link height 0.0896 m, still comfortably above the 0.05 m
+                                      # floor (0.0% violation). Still INACTIVE by construction,
+                                      # value UNCHANGED, but the margin thinned a lot: 125 mm
+                                      # clearance-above-floor on Day 9 -> ~44 mm now. Worth
+                                      # noting in the write-up as a real (if inactive) shift.
+    JOINT_LIMIT_MARGIN: float = 0.175 # Day 23 (cont.): was 0.10 rad (~5.7 deg). Touhid's call:
+                                      # wider buffer before a soft joint limit starts costing --
+                                      # ~10.0 deg. RECALIBRATED Day 23 (cont.), Step 4: re-checked
+                                      # against calib_probe_v2 (1500-iter converged baseline) --
+                                      # min joint clearance now -0.00001 rad (touching the soft
+                                      # limit), 33.7% of steps within margin. NO LONGER INACTIVE:
+                                      # the widened, closer-reaching goal box made this a genuinely
+                                      # ACTIVE constraint, not merely monitored. Value held at
+                                      # 0.175 (Touhid's call) -- reported as a second active
+                                      # constraint alongside MANIP_FLOOR, not retuned down to force
+                                      # it back to inactive. Changes the Methods framing: TWO active
+                                      # constraints now share cost_limit, not one. See run_log.md
+                                      # and ALGORITHM_AUDIT.md addendum (Day 23 cont.) for the
+                                      # cost-attribution consequence -- check cost_probe_v2's
+                                      # per-term breakdown before trusting cost_limit=25 as-is.
+    MANIP_FLOOR: float = 0.06         # RECALIBRATED Day 23 (cont.), Step 4: was 0.045 (calibrated
+                                      # Day 9 against the OLD goal-pose box; baseline w there was
+                                      # min .021/mean .055/max .114, floor ~p10-p25 -> ~20%
+                                      # violation). Re-checked against calib_probe_v2 (1500-iter
+                                      # converged baseline under the widened box + reweighted
+                                      # rewards): new distribution min .01711/mean .07503/
+                                      # max .11093, p10=.0517/p25=.0682. At 0.045 the baseline
+                                      # violation rate had drifted down to ~8% (below the p10-p25
+                                      # band) -- 0.06 restores it to ~p18 (~18-20% violation),
+                                      # matching the original Day-9 calibration intent under the
+                                      # new task geometry. THE active constraint (see
+                                      # JOINT_LIMIT_MARGIN above -- no longer the ONLY one).
     W_COLLISION: float = 1.0
     W_JOINT: float = 1.0
     W_MANIP: float = 1.0

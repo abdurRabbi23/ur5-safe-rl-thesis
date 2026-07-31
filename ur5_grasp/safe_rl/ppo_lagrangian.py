@@ -13,6 +13,43 @@ Concretely, on top of stock PPO:
 
 Baseline PPO == this with lambda pinned at 0 (achieved by simply using the stock PPO
 runner instead). RND/symmetry are intentionally unsupported here to keep the math auditable.
+
+--------------------------------------------------------------------------------------
+AUDIT 2026-07-31 (Day 23) -- READ BEFORE TRUSTING ANY PRE-AUDIT NUMBER
+--------------------------------------------------------------------------------------
+The 2026-07-30 matrix (results/LAYER1_RESULTS_3seed.md, LAYER1_FINDINGS.md) is CONFOUNDED
+and must not be quoted. Evidence: `Loss/cost_lambda` is 0.0 for essentially the whole of
+all three cPPO runs -- cppo_s2 never leaves 0.0 at any iteration. At lambda = 0 the
+combined advantage below reduces to (A_reward - 0)/(1+0) = A_reward, i.e. the policy update
+is stock PPO. So the constraint cannot be what separated cPPO from PPO in that table, yet
+cPPO won every seed on both reward and cost.
+
+Three implementation differences survived at lambda = 0 and are the real candidates:
+
+  A1  ONE GLOBAL GRADIENT CLIP over actor + reward critic + cost critic. Fixed below:
+      the two groups are now clipped independently, so the actor and reward critic get
+      byte-identical treatment to the PPO baseline. This was almost certainly the dominant
+      effect -- max_grad_norm = 1.0 is tight enough to bind often, so cPPO was effectively
+      running a smaller, cost-loss-dependent step size than PPO.
+
+  A2  The constraint never bound. cost_limit = 25 sits ABOVE cPPO's natural episodic cost
+      (7-27), so the dual update correctly held lambda at 0. A budget that is never
+      exceeded measures nothing. Hence the cost_limit = 10 arm added on Day 23.
+
+  A3  Jc was estimated from a 100-slot deque fed by 4096 simultaneously-terminating envs.
+      Fixed below (buffer sized to a full wave, sample size now logged).
+
+  A4  NOT FIXED, and not fixable by clipping: constructing the cost critic consumes draws
+      from the global RNG, so cPPO and PPO diverge in their random stream from step 1 even
+      at identical seeds. The actor and reward critic still INITIALISE identically (the
+      cost critic is built after super().__init__()), but the sampled trajectories are not
+      paired. This is ordinary seed noise, handled by seed count (5) and by the control
+      arm, not by code.
+
+The control arm (`rsl_rl_ctrl_cfg_entry_point`, lambda_max = 0.0) exists to settle this:
+it carries the cost critic and the same RNG offset as cPPO but can never raise lambda.
+    ctrl vs PPO   isolates the implementation artifact.
+    cPPO vs ctrl  isolates the constraint -- and that difference alone is the thesis claim.
 """
 
 from __future__ import annotations
@@ -41,6 +78,7 @@ class PPOLagrangian(PPO):
         lam_cost: float | None = None,
         normalize_cost_advantage: bool = True,
         penalty_advantage_normalize: bool = True,
+        cost_buffer_size: int = 4096,
         **kwargs,
     ):
         super().__init__(policy, **kwargs)  # PPO params (+ multi_gpu_cfg) flow through kwargs
@@ -57,9 +95,30 @@ class PPOLagrangian(PPO):
         self.normalize_cost_advantage = bool(normalize_cost_advantage)
         self.penalty_advantage_normalize = bool(penalty_advantage_normalize)
 
-        # episodic-cost accounting for the dual update
+        # episodic-cost accounting for the dual update.
+        # maxlen: the old value (100) was inherited from rsl_rl's reward buffer, which is
+        # fed a handful of episodes per iteration. Here ALL num_envs episodes end on the
+        # same step (fixed 250-step horizon, no early termination in practice), so a
+        # 100-slot deque kept the last 100 of 4096 episodes -- 2.4% of the batch -- and
+        # Jc, the quantity the dual update reacts to, was that noisy. Sized to hold a full
+        # 4096-env wave. AUDIT-2026-07-31, finding A3.
         self._cur_cost_sum = None
-        self._cost_buffer = deque(maxlen=100)
+        self._cost_buffer = deque(maxlen=cost_buffer_size)
+
+        # --- parameter partition for gradient clipping (AUDIT-2026-07-31, finding A1) ----
+        # Stock PPO calls clip_grad_norm_(policy.parameters(), max_grad_norm), which
+        # computes ONE global norm and rescales EVERY gradient by clip/total_norm. Because
+        # ActorCriticCost adds a whole extra MLP, the cost critic's gradients inflated that
+        # norm and silently shrank the actor's and reward critic's steps -- so cPPO was
+        # PPO with a smaller, cost-loss-dependent effective step size, on TOP of whatever
+        # the constraint did. That is an implementation artifact, not the algorithm, and it
+        # was active even when lambda sat at exactly 0 (which is where it sat for nearly all
+        # of the 2026-07-30 runs). Clip the two groups independently so the actor and reward
+        # critic see byte-identical treatment to the PPO baseline.
+        cost_params = list(getattr(self.policy, "cost_critic", nn.Identity()).parameters())
+        cost_ids = {id(p) for p in cost_params}
+        self._cost_critic_params = cost_params
+        self._base_params = [p for p in self.policy.parameters() if id(p) not in cost_ids]
 
     # -- storage with the cost stream --
     def init_storage(self, training_type, num_envs, num_transitions_per_env, obs, actions_shape):
@@ -229,7 +288,12 @@ class PPOLagrangian(PPO):
             loss.backward()
             if self.is_multi_gpu:
                 self.reduce_parameters()
-            nn.utils.clip_grad_norm_(self.policy.parameters(), self.max_grad_norm)
+            # Two INDEPENDENT clips, not one global clip over both groups -- see the
+            # parameter-partition note in __init__. The first line is exactly what stock
+            # PPO does to the same parameters; the second bounds the cost critic on its own.
+            nn.utils.clip_grad_norm_(self._base_params, self.max_grad_norm)
+            if self._cost_critic_params:
+                nn.utils.clip_grad_norm_(self._cost_critic_params, self.max_grad_norm)
             self.optimizer.step()
 
             mean_value_loss += value_loss.item()
@@ -251,4 +315,13 @@ class PPOLagrangian(PPO):
             "entropy": mean_entropy,
             "cost_lambda": self.cost_lambda,
             "mean_episode_cost": jc,
+            # How many completed episodes Jc was averaged over this iteration. If this is
+            # small the dual update is reacting to noise; it is logged so the thesis can
+            # state the estimator's sample size instead of assuming it. AUDIT finding A3.
+            "cost_episodes_in_estimate": float(len(self._cost_buffer)),
+            # Fraction of the constraint budget actually consumed. > 1.0 means the dual
+            # variable should be climbing; if this is < 1.0 for the whole run then the
+            # constraint never binds and cPPO is PPO plus an inert cost critic -- which is
+            # exactly what the 2026-07-30 matrix turned out to be. AUDIT finding A2.
+            "cost_budget_used": jc / self.cost_limit if self.cost_limit > 0 else 0.0,
         }

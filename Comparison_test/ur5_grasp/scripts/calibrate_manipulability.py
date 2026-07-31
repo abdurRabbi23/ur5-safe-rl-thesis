@@ -158,12 +158,19 @@ def main(env_cfg: ManagerBasedRLEnvCfg, agent_cfg: RslRlBaseRunnerCfg):
     print("     (higher floor = baseline violates more; verify it still lets a good grasp through)")
 
     jp = _report("Joint-limit clearance (rad to nearer soft limit; low = near limit)", jl)
-    print(f"  current JOINT_LIMIT_MARGIN=0.10 -> baseline within-margin rate: "
-          f"{(jl < 0.10).float().mean().item()*100:.1f}% of steps")
+    # CORRECTION (Day 23, cont. — Step 4). Used to hardcode 0.10 / 0.00 here (both label and
+    # threshold math), stale since Day 9 and silently wrong after today's widening
+    # (JOINT_LIMIT_MARGIN 0.10 -> 0.175, COLLISION_Z_FLOOR 0.0 -> 0.05 in ur5e_lift_env.py).
+    # `SafetyCostComputer` above already reads the live values correctly (lines 120-121); this
+    # reporting block just never matched it. Now reads the same live attributes.
+    _jlm = env.unwrapped.JOINT_LIMIT_MARGIN
+    print(f"  current JOINT_LIMIT_MARGIN={_jlm:.3f} -> baseline within-margin rate: "
+          f"{(jl < _jlm).float().mean().item()*100:.1f}% of steps")
 
     zp = _report("Min monitored-link height z (world; below floor = table hit)", z, low_is_dangerous=True)
-    print(f"  current COLLISION_Z_FLOOR=0.00 -> baseline below-floor rate: "
-          f"{(z < 0.0).float().mean().item()*100:.1f}% of steps")
+    _czf = env.unwrapped.COLLISION_Z_FLOOR
+    print(f"  current COLLISION_Z_FLOOR={_czf:.3f} -> baseline below-floor rate: "
+          f"{(z < _czf).float().mean().item()*100:.1f}% of steps")
 
     print("-" * 68)
     print("Set MANIP_FLOOR (and, if needed, JOINT_LIMIT_MARGIN / COLLISION_Z_FLOOR)")

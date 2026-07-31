@@ -1,6 +1,6 @@
 # Comparison Test
 
-This folder is a self-contained redo of the Layer 1 4-algorithm benchmark (PPO, SAC, TD3, cPPO).
+This folder is a self-contained redo of the Layer 1 4-algorithm benchmark. TD3 was CUT on 2026-07-31 (Day 23); the comparison is PPO, cPPO, SAC.
 Full context, current status, and exact commands: `../logbook/09_comparison_test.md`.
 
 Quick orientation:
@@ -8,7 +8,7 @@ Quick orientation:
   tag). Train against this copy, not the main folder's.
 - `logs/` — NOT created yet. Appears automatically the first time you train, as
   `logs/rsl_rl/<experiment_name>/<timestamp>_<run_name>/`. This is where real run data lives.
-- `configs/` — skrl YAML configs (SAC/TD3/PPO-bridge) go here once written.
+- `configs/` — (unused — skrl YAMLs live in ur5_grasp/tasks/lift/agents/, see Day 22 evening)
 - `results/` — results table + figures; `results/scripts/make_layer1_figs.py` is a starting point,
   still scoped for 2 series (needs extending to 4 + seed bands).
 - `runs/` — leftover placeholder, not used. Ignore.

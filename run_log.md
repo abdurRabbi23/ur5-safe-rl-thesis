@@ -1290,3 +1290,423 @@ run landed in the same log directory as the weld-env PPO runs and any glob would
 two different robots. Mitigated by moving the SimpleGripper runs to `ur5e_lift_simplegripper/`.
 
 **NEXT:** `./run_ppo_cppo_seeds.sh` → `summarize_runs.py`.
+
+
+---
+
+## Day 22 (2026-07-30), evening — skrl bridge wired (code only, no runs)
+
+Handoff steps 1-2 of the 4-algorithm comparison. Two blockers caught before any GPU time:
+(1) IsaacLab's stock skrl `train.py` never imports `ur5_grasp.tasks`, so our task is not
+registered — added `Comparison_test/ur5_grasp/scripts/train_skrl.py`, the stock file plus four
+marked edits, diff-verified. (2) skrl yaml entry points resolve package-relative
+(`"<module>:<file>.yaml"`), so the config lives in `tasks/lift/agents/`, not in `configs/` as
+the handoff assumed. Bridge config hyperparameters are matched to `UR5eLiftPPORunnerCfg`, not to
+the franka template — nine deliberate divergences, listed in the config header, so the run
+actually tests framework equivalence. skrl install still UNVERIFIED (no Isaac env in sandbox).
+
+Detail: `Comparison_test/run_log_new.md`, same date.
+
+## Day 22 (2026-07-30), late — skrl bridge smoke PASSED; eval_success blocker found
+
+50-iter smoke ran (128 envs, seed 1), checkpoint on disk, 32 TB tags. Env diff-verified
+identical to the Layer-1 rsl_rl PPO runs (only difference is env.yaml dump timing relative to
+`gym.make`). Value-loss and adaptive-LR trajectories track rsl_rl closely, so the null-
+preprocessor / unscaled-reward choice is largely vindicated. Return gap (4.48 vs rsl_rl's
+64.85) is confounded by 128 vs 4096 envs — re-smoke at 4096 before drawing any conclusion.
+
+**New blocker:** `eval_success.py` is hard-wired to rsl_rl runners and cannot load a skrl
+checkpoint, so goal-reach success is uncomputable for skrl-PPO, SAC and TD3 alike. Needs a
+skrl loader path before any skrl run can enter the results table.
+
+Detail: `Comparison_test/run_log_new.md`, same date.
+
+## Day 23 (2026-07-31) — bridge smoke at 4096 envs misses criterion; proceeding to the full x3
+
+skrl-PPO reached 33.82 mean return at 50 iters vs rsl_rl's 64.85 — outside the +-30% band I set
+in advance, recorded as a fail. But the criterion tested a 1500-iter question with a 50-iter
+proxy. No sign of breakage: identical env, stable entropy and std, returns and episode length
+both climbing, value loss the same shape. skrl-PPO looks like a slower, gentler PPO (drives into
+singularity 65x less at this point). Decision: stop smoking, run the bridge x3 at 1500 iters,
+which costs ~30 min and produces the number that actually goes in the thesis.
+
+Added `Comparison_test/run_skrl_seeds.sh`, the skrl analogue of run_ppo_cppo_seeds.sh; it also
+serves SAC and TD3. Duplicate-run trap found: the same smoke was launched twice and produced two
+bit-identical run dirs that a later glob would average as independent seeds.
+
+Detail: `Comparison_test/run_log_new.md`, same date.
+
+## Day 23 (2026-07-31, later) — TD3 CUT. Evaluation rebuilt: safety now measured on the frozen policy.
+
+**TD3 dropped**, Touhid's call, six days ahead of the agreed Aug 6 hard-cut date. The benchmark
+is now three algorithms: PPO / cPPO / SAC. Entry point and `--algorithm` choice removed so an
+accidental `--algorithm TD3` fails at argparse rather than 40 s later inside Isaac.
+
+**Diagnosed "how can PPO score 0 and cPPO 100 on the same seed".** Answer: the training failure
+is REAL, the eval merely rendered it as a step function. PPO seed 2 finished at reward 90.7 vs
+cPPO's 166.4, `object_goal_tracking` 4.42 vs 14.78, and wrist-to-goal error 0.566 m vs 0.161 m.
+The checkpoint paths in the CSV are correct, so this is not the log-dir trap. What the eval got
+wrong is that a single hard 5 cm threshold on a quantity with near-zero within-policy spread
+saturates at exactly 0 or exactly 100 — ppo_s1's 58.59% is the one policy sitting on the knife
+edge. Also found: `Metrics/object_pose/position_error` in TensorBoard tracks **wrist_3_link**,
+not the cube (`body_name = "wrist_3_link"`), so it reads ~0.16 m for a policy whose cube is
+exactly on target — that 0.16 is the wrist-to-TCP offset, not error. Do not quote it as task error.
+
+**The bigger flaw, and the reason the evaluation had to be rebuilt:** the singularity and
+joint-limit violation percentages in `LAYER1_RESULTS_3seed.md` came from TRAINING TensorBoard
+scalars, tail-averaged over the last 10% of iterations — a still-learning policy with exploration
+noise on. They cannot support a claim about the final policy. New `eval_policy.py` counts
+violations during evaluation, per episode, on the deterministic frozen policy, using the same
+`SafetyCostComputer` thresholds the training constrained.
+
+**Retracted:** I first suspected the 0.04 m lift threshold was trivially satisfied because the
+cube spawns at z = 0.055. It is not. `Episode_Reward/lifting_object` is 0.117 at iteration 0
+(≈2 of 250 steps above the line — the cube settling after spawn) and 14.61 at iteration 1499
+(≈243 of 250), so the resting height is below the threshold and the metric is real. Reward
+function left untouched.
+
+New: `ur5_grasp/scripts/eval_policy.py` + `run_eval_policy.sh` (4 eval seeds × 1000 episodes ×
+6 checkpoints, rsl_rl and skrl loaders, per-episode CSV). Not yet run — needs the lab PC.
+
+Detail: `Comparison_test/run_log_new.md`, same date.
+
+## Day 23 (2026-07-31) — bridge x3 done, and it undercuts a Layer-1 claim
+
+skrl-PPO x3 finished (10-11 min each, all OK). Training metrics: reward 158.04 +- 2.02,
+viol_sing 34.52%, viol_jlim 0.00%. That is cPPO's profile (163.35 +- 3.71 / 44.30% / 0.61%),
+not rsl_rl-PPO's (132.45 +- 37.25 / 81.85% / 35.50%). An UNCONSTRAINED PPO reproduced nearly
+every property Layer 1 credits to the Lagrangian constraint, which threatens the "PPO is
+inconsistent across seeds" finding — that may be an rsl_rl implementation property.
+
+Not yet conclusive: these are training metrics, and Layer 1's own discriminating metric is
+goal-reach success, still unmeasured for skrl. Built `eval_success_skrl.py` and
+`run_eval_skrl.sh` to measure it (both unverified, never executed). That eval is now the top
+priority, ahead of SAC. TD3 cut on schedule grounds.
+
+Detail: `Comparison_test/run_log_new.md`, same date.
+
+## Day 23 (2026-07-31, close) — evaluation sweep complete: 18 runs, 18 000 episodes, safety measured on the frozen policy
+
+Frame sanity check passed (mean commanded goal height 0.3741 m vs the expected 0.375), so the new
+50 %-of-goal-height lift rule is valid.
+
+cPPO vs PPO, mean ± sd over three training seeds: goal-reach @1 cm **96.52 ± 3.45** vs
+34.72 ± 56.54; episodic safety cost **17.75 ± 7.41** vs 261.31 ± 163.49 against a budget of 25;
+joint-limit violations **0.00 %** vs 35.34 %. PPO per-seed goal-reach is 4.2 / 0.0 / 100.0 — three
+qualitatively different policies, not one noisy one.
+
+Four framing changes: (1) the episodic cost is the strongest number, being the exact quantity the
+Lagrangian constrains; (2) report singularity CROSSINGS (w < 1e-4: PPO 7.9–100 % of episodes,
+cPPO 0.0–0.1 %) rather than the step fraction, which is a binary test on a soft margin and
+undersells the gap ~50×; (3) `ppo_s3` matches cPPO on task while being the least safe run in the
+matrix — the claim is "the constraint buys reliability", not "PPO cannot do the task";
+(4) `ppo_s2` lifts and then puts the cube back down (100 % lifted at some point, 9.8 % at the end).
+
+Eval-seed spread is 1.05 points against 56.5 across training seeds, so the Day-22 worry that
+"0.00 %" might have been a bad exam is settled — it was the policy.
+
+New: `results/LAYER1_RESULTS_eval.md` (generated), `results/LAYER1_FINDINGS.md` (interpretation +
+limitations), `results/scripts/summarize_eval.py`. Detail: `Comparison_test/run_log_new.md`.
+
+## Day 23 (2026-07-31, late) — ALGORITHM AUDIT: the cPPO-vs-PPO result is confounded and is withdrawn
+
+Touhid's challenge, verbatim in spirit: PPO used to beat cPPO, now it loses badly, and cPPO scores
+100 % goal-reach every time — "something fishy in the algorithms code". He was right to push.
+
+**The finding.** `Loss/cost_lambda` is 0.0 for essentially every iteration of all three cPPO runs
+in the 2026-07-30 matrix. `cppo_s2` never leaves 0.0 at any iteration. At lambda = 0 the Lagrangian
+surrogate `(A_r - lambda*A_c)/(1+lambda)` is algebraically `A_r`, i.e. the update **is stock PPO**.
+So the constraint cannot be what separated the arms — yet cppo_s2 scored reward 166.4 against
+ppo_s2's 90.8 from an identical seed, identical env cfg (verified by `diff` of the dumped
+`params/env.yaml`) and an identical iteration-0 reward of 0.7152.
+
+**The mechanism.** `ppo_lagrangian.py` inherited stock PPO's single
+`clip_grad_norm_(self.policy.parameters(), max_grad_norm)`. In cPPO that parameter list also holds
+the cost critic, and `clip_grad_norm_` rescales *every* gradient by one global factor — so the cost
+critic's gradients were shrinking the actor's step on every update, including all the updates where
+lambda was 0. cPPO was PPO with a smaller, cost-loss-dependent learning rate. A quieter optimiser
+converging on 3/3 seeds while the baseline converges on 1/3 is exactly the pattern Day 22 read as
+"the constraint buys reliability".
+
+**Second finding.** `cost_limit = 25` was calibrated on Day 9 from a 50-iter probe against a natural
+cost of ~70. Converged runs sit at 7–29, so the budget is slack and the dual update correctly holds
+lambda at 0. A constraint that never binds measures nothing. The Day-9 calibration is not wrong — it
+described a policy that had barely started learning.
+
+**Also found, before it cost anything:** SAC would have been evaluated with uniform random actions.
+skrl's off-policy `act()` returns `random_act` while `timestep < random_timesteps`, and
+`eval_policy.py` calls it with `timestep=0`. It would have looked like SAC failing the task, not like
+a bug. Guarded in `eval_policy.py`.
+
+**The 100 % goal-reach is a metric ceiling, not a cheat.** `_apply_weld` writes the cube's position
+to the reach frame every step, so "cube within 1 cm of goal" reduces to "TCP within 1 cm of goal" —
+a reaching problem a converged policy solves every episode and an unconverged one fails every
+episode. Report the distance distribution, never a single threshold as the headline.
+
+**Withdrawn:** `results/LAYER1_RESULTS_3seed.md` and `results/LAYER1_FINDINGS.md`. Not deleted — that
+a large apparent effect turned out to be an artifact belongs in the Methods narrative on diagnostic
+discipline, alongside the 2f-85 close and the five instrument failures.
+
+**Fixed / added** (Comparison_test/, ported to the main `ur5_grasp/` for `safe_rl/` and the agent cfg):
+`ppo_lagrangian.py` two-group gradient clip + Jc buffer sized to a full 4096-env wave + two new
+diagnostics (`cost_episodes_in_estimate`, `cost_budget_used`); `UR5eLiftCtrlRunnerCfg`
+(lambda_max = 0 — the missing CONTROL); `UR5eLiftCPPO10RunnerCfg` (cost_limit = 10, a budget that
+binds); `skrl_sac_cfg.yaml` authored from skrl 1.4.3 source; `run_matrix_v2.sh` (5 arms x 5 seeds);
+`run_eval_policy_v2.sh` (75 launches); `ur5_grasp/tools/test_grad_clip_fix.py` (2-second regression
+test, no Isaac); `results/ALGORITHM_AUDIT.md`; `RUN_CHECKLIST_v2.md`.
+
+**What the new matrix licenses.** ctrl vs ppo = the implementation artifact (must be null, else the
+audit is incomplete and nothing may be reported). cppo10 vs ctrl = the constraint alone, and that
+difference is the only safe-RL claim. Decomposition: (cppo - ppo) = (ctrl - ppo) + (cppo - ctrl).
+
+Detail: `Comparison_test/results/ALGORITHM_AUDIT.md`, `Comparison_test/RUN_CHECKLIST_v2.md`.
+
+## Day 23 (2026-07-31, cont.) — Goal-pose box widened; MANIP_FLOOR/cost_limit marked stale
+
+Touhid's call: the goal-pose sampling box felt too narrow. It was never actually set in this
+project's own files — `ur5e_lift_env_cfg.py` inherits `self.commands.object_pose.ranges`
+unchanged from Isaac Lab's Franka lift defaults (`pos_x=(0.4,0.6), pos_y=(-0.25,0.25),
+pos_z=(0.25,0.5)`) and had never overridden it.
+
+**Reach check before widening.** UR5e base sits at the env origin; rated reach ~0.85 m. The old
+box's far corner (0.6, 0.25, 0.5) is already 0.82 m out — near full extension, i.e. the current
+task already occasionally asks for a near-singular reach. A first wider draft
+(pos_x=(0.3,0.7), pos_y=(-0.4,0.4), pos_z=(0.13,0.62)) put the far corner at 1.02 m —
+unreachable, would have injected goals the arm physically cannot reach into the training
+distribution. Scaled back to keep the far corner at 0.83 m (same margin as today), widening
+mostly toward the base and downward instead: `pos_x=(0.30,0.60), pos_y=(-0.28,0.28),
+pos_z=(0.15,0.50)`.
+
+**Applied:** `Comparison_test/ur5_grasp/tasks/lift/ur5e_lift_env_cfg.py`,
+`UR5eCubeLiftEnvCfg.__post_init__` — new `ranges=` override next to the existing `body_name`
+override. Env-level, applies identically to all 5 arms; does not reopen the arm-isolation
+question in `ALGORITHM_AUDIT.md` §4. `py_compile` clean.
+
+**Consequence, flagged inline and in the tracking docs:** `MANIP_FLOOR` (`ur5e_lift_env.py`) and
+`cost_limit` (`agents/rsl_rl_cppo_cfg.py`, both 25 and 10) were calibrated Day 9 against the OLD
+box's task difficulty. A different goal region changes how often the arm nears joint limits or
+low manipulability while reaching, so both are now provisional until re-evidenced. Marked STALE
+inline in both files; new `RUN_CHECKLIST_v2.md` Step 4 (recalibration probe, ~15-20 min) added,
+positioned before the freeze (Step 5) and the 5-hour matrix (Step 6) — see the reordering note
+below; `ALGORITHM_AUDIT.md` §5 (addendum) records the before/after numbers and why.
+
+**NEXT:** run Step 4 on the lab PC (`calibrate_manipulability.py` + a 50-iter cost probe against
+the new box) before launching the v2 matrix. If either threshold has drifted off its Day-9
+percentile/range, treat it as a normal one-line-diff calibration update, recorded the same way.
+
+**Widened again, same session, still before any run.** Touhid asked for "a bit wider." Round 1
+above (0.83 m far corner) had ~20 mm of margin left to the 0.85 m reach spec, so the second pass
+took width mostly from the "free" direction — extending the MIN bounds toward the base, which
+doesn't touch the far-corner distance at all — rather than pushing the MAX bounds further out.
+`pos_x=(0.30,0.60)->(0.22,0.60)`, `pos_y=(-0.28,0.28)->(-0.30,0.30)`, `pos_z=(0.15,0.50)->(0.10,0.50)`.
+New far corner 0.84 m (~13 mm margin). `py_compile` clean. `ur5e_lift_env_cfg.py`,
+`RUN_CHECKLIST_v2.md`, `ALGORITHM_AUDIT.md` §5 all updated to the round-2 numbers in place
+(round 1 never ran, so nothing is being retroactively rewritten). The recalibration probe (now
+Step 4) still applies unchanged — it'll pick up round 2's numbers automatically since it reads
+whatever the env is currently configured with.
+
+## Day 23 (2026-07-31, cont.) — Reward terms re-weighted; "lifted" made goal-relative
+
+Two edits to `self.rewards` in `ur5e_lift_env_cfg.py`, Touhid's call, both asked with clarifying
+questions answered first (formula for "50% crossed", whether both tracking terms move, whether
+the lift gate stays consistent across all three terms):
+
+1. **`lifting_object` weight 15.0 -> 10.0.**
+2. **"Lifted" redefined, all three terms together.** Was a fixed `object.z > 0.04 m` (Isaac Lab's
+   Franka default, inherited unchanged, same number reused by `lifting_object`,
+   `object_goal_tracking`, `object_goal_tracking_fine_grained`). Now: `object.z >` `spawn_height
+   + 0.5*(goal_z - spawn_height)` — 50% of the vertical climb from the table (0.055 m, read from
+   the cube's own `init_state` rather than duplicated) to THIS EPISODE's commanded goal height.
+   Chosen over "50% of the goal's absolute height" because goal_z now spans 0.10-0.50 m (today's
+   other change) and the absolute-height version would demand climbing to 0.25 m for the highest
+   goals while barely requiring anything for the lowest — the relative version scales sensibly
+   either way. New functions `object_lifted_toward_goal` / `object_goal_distance_relative_lift`
+   in new `Comparison_test/ur5_grasp/tasks/lift/rewards.py` (Isaac Lab's stock
+   `object_is_lifted`/`object_goal_distance` only take a fixed scalar height — no way to make
+   them goal-relative without new code; vendored source untouched).
+3. **`object_goal_tracking` weight 16.0 -> 15.0.** `object_goal_tracking_fine_grained` weight
+   unchanged at 5.0 — only its lift gate changed, to stay consistent with the other two terms
+   (explicitly scoped this way, not "both tracking terms to 15").
+
+Env-level, applies to all 5 arms — doesn't reopen the arm-isolation question. Combined with the
+same-day goal-pose widening, this is a second task-defining change before the matrix has run once;
+`RUN_CHECKLIST_v2.md` Step 4 now covers recalibrating `MANIP_FLOOR`/`cost_limit` against both
+changes together. `ALGORITHM_AUDIT.md` §6 has the before/after table. `py_compile` clean on both
+new/edited files; no torch or isaaclab in this sandbox, so — same as every other change made from
+here — the ceiling of verification is static (signatures cross-checked against the actual Isaac
+Lab source, arithmetic hand-checked), not a real run. First real test happens on the lab PC.
+
+**Checklist reordering, same session.** Freeze (was Step 0, first) moved to Step 5, after the
+sanity checks and recalibration (Step 4). Caught while re-reading the checklist for this
+response: recalibration can edit tracked files (`MANIP_FLOOR`, `cost_limit`), and the freeze's
+whole purpose is to tag the exact commit run 1 trains against. Freezing before a step that might
+still change tracked files would tag the wrong commit. Full renumber: 1 arms-resolve, 2 smoke
+trains, 3 SAC smoke, 4 recalibrate (was 3.5), 5 freeze (was 0), 6 matrix (was 4), 7 decisive
+check (was 5), 8 eval (was 6), 9 report (was 7). All cross-references in `ALGORITHM_AUDIT.md`
+and `logbook/09_comparison_test.md` updated to match.
+
+## Day 23 (2026-07-31, cont.) — Collision and joint-limit margins widened
+
+Two more constants in `ur5e_lift_env.py` (`UR5eCubeLiftEnv`), Touhid's call, straightforward
+field edits (no new functions, no arm-isolation questions — same env-level pattern as today's
+other two changes):
+
+1. **`COLLISION_Z_FLOOR` 0.0 -> 0.05 m.** Was the bare table-plane height — `costs.py`'s
+   `penetration = clamp(z_floor - link_z, 0)` only went positive on literal table penetration.
+   Now a 5 cm standoff above the table/floor counts.
+2. **`JOINT_LIMIT_MARGIN` 0.10 -> 0.175 rad (~10.0°, was ~5.7°).** Wider buffer before a soft
+   joint limit starts costing.
+
+Both were "monitored but satisfied" at Day 9 (min link height 0.125 m, min joint clearance
+1.39 rad — both comfortably outside even the new, wider margins) — so on their own these edits
+might still land as inactive. But today's goal-pose widening (pos_z down to 0.10 m, near corner
+0.24 m from the base) changes the arm's operating range in a direction that could make either
+term active for the first time. Flagged, not assumed — `calibrate_manipulability.py` already
+reports joint-limit-clearance and min-link-height distributions (built Day 9 for exactly this),
+so `RUN_CHECKLIST_v2.md` Step 4 now explicitly checks both, not just `MANIP_FLOOR`.
+
+**Also fixed while writing this up:** `ALGORITHM_AUDIT.md` had a structural bug from the earlier
+two edits today — the second addendum (§6, reward re-weighting) got inserted in the middle of
+the first (§5, goal-pose box), splitting §5's closing paragraph off after §6 instead of before
+it. Content was all present, just misordered under the wrong headers. Reconstructed correctly:
+§5 complete, §6 complete, new §7 (this change) appended after.
+
+`py_compile` clean. Third task-defining/threshold change stacked before the matrix has run once
+— `RUN_CHECKLIST_v2.md` Step 4, `ALGORITHM_AUDIT.md` §7, and the module logbook all updated.
+
+## Day 23 (2026-07-31, cont.) — Step 1 blocked: stale IsaacLab editable install
+
+First lab-PC run of the v2 checklist. Step 1 crashed: `import ur5_grasp.tasks` and the gym
+entry-point printout worked, but `from ...rsl_rl_cppo_cfg import (...)` traced into
+`/home/mte/Abdur_Rabbi_Thesis_updated/IsaacLab/source/...` (a second, abandoned IsaacLab
+checkout — confirmed by Touhid, not used anymore) instead of `~/Abdur_Rabbi_THESIS/IsaacLab`,
+and died on `ModuleNotFoundError: No module named 'omni.log'` inside `isaaclab.utils.math`.
+
+Diagnosis: `import ur5_grasp.tasks` only registers gym entry-point strings (no real import), so
+it doesn't touch the RL library; the direct `rsl_rl_cppo_cfg` import does, pulling in
+`isaaclab_rl` -> `isaaclab.envs` -> ... Confirmed no `_isaac_sim` symlink in
+`Abdur_Rabbi_THESIS/IsaacLab` (checked directly) and the earlier `[INFO] Using python from:
+.../envs/isaaclab/bin/python` line, both consistent with Isaac Sim installed via pip packages
+into the `isaaclab` conda env rather than a binary+symlink install — so `omni` itself isn't
+missing, the stale `_updated` checkout's Isaac Lab version is just mismatched against whatever
+Isaac Sim pip packages are currently installed. Root cause: `isaaclab`/`isaaclab_rl`/
+`isaaclab_tasks` are still editable-installed (pip) against the abandoned `_updated` folder.
+
+**Fix given, not yet confirmed:** `cd ~/Abdur_Rabbi_THESIS/IsaacLab && ./isaaclab.sh -i` — the
+official Isaac Lab command (verified against the actual script, not memory) that editable-
+installs every `source/*` extension plus `isaaclab_rl[all]`/`isaaclab_mimic[all]` from whichever
+IsaacLab folder it's run in, superseding the stale pointer. Idempotent (skips cmake/torch if
+already satisfied). Next: confirm via `pip show isaaclab isaaclab_rl isaaclab_tasks | grep
+Location`, then rerun Step 1.
+
+## Day 23 (2026-07-31, cont.) — `./isaaclab.sh -i` fixed the folder bug; second, separate bug found
+
+Touhid confirmed `Abdur_Rabbi_Thesis_updated` was an abandoned second folder, not in use. Ran
+`./isaaclab.sh -i`, reran Step 1 — traceback now traces entirely through
+`/home/mte/Abdur_Rabbi_THESIS/IsaacLab/source/...` (folder bug fixed) but still dies on
+`ModuleNotFoundError: No module named 'omni.log'`, same as before.
+
+**Root cause #2, different from #1:** `omni.*` modules (Kit-provided, not a normal pip package)
+are only importable AFTER Isaac Sim's Kit runtime has been launched via `AppLauncher`/
+`SimulationApp` — they don't exist as static importable files regardless of which folder or
+site-packages entry is used. Step 1's one-liner imported `rsl_rl_cppo_cfg` directly (which
+cascades into `isaaclab.controllers.differential_ik` -> `import omni.log` at module level)
+without ever launching Kit first. `import ur5_grasp.tasks` alone worked earlier because gym
+registration is just strings — no real import of the deep chain happens there. `train.py`
+avoids this because it calls `AppLauncher(args_cli)` and gets `simulation_app` BEFORE any of
+the deeper imports (confirmed by reading `train.py` lines 24-118 directly).
+
+**Fix:** added `from isaaclab.app import AppLauncher; simulation_app = AppLauncher(headless=True).app`
+to the top of Step 1's snippet, `simulation_app.close()` at the end. Pattern lifted directly from
+Isaac Lab's own test suite (`isaaclab/test/controllers/test_differential_ik.py` and ~9 others all
+open with the identical one-liner), not guessed. `RUN_CHECKLIST_v2.md` Step 1 updated with the
+corrected script + explanation; time estimate bumped (~3-5 min, Kit headless boot adds ~20-60 s).
+
+**Confirmed on the lab PC:** Step 1 now prints exactly the expected output — all 5 entry points
+resolve, and `cost_limit`/`lambda_max` match spec (`cppo` 25.0/100.0, `cppo10` 10.0/100.0, `ctrl`
+25.0/0.0). Both the stale-editable-install bug and the missing-AppLauncher bug are closed.
+**Step 1 done.** Next: Step 2 (smoke trains, 50 iters each).
+
+## Day 23 (2026-07-31, cont.) — Step 2 done: all 4 smoke trains clean; two findings from summarize_runs.py
+
+Read `ur5_grasp/tools/summarize_runs_report.txt` directly (shared filesystem with the lab PC —
+this session's connected folder IS `~/Abdur_Rabbi_THESIS`) rather than waiting for pasted
+terminal output. All four Step-2 smoke runs (`ur5e_lift`, `ur5e_lift_ctrl`, `ur5e_lift_cppo`,
+`ur5e_lift_cppo10`, all `2026-07-31_20-2x`, seed 1, 512 envs, 49 iters logged, `model_49.pt`
+present) finished with no traceback — the gradient-clip fix and the new `rewards.py` code both
+hold under real execution.
+
+**Finding 1 (expected, still worth flagging):** `Train/mean_reward` and every `safety/*` metric
+are numerically IDENTICAL across all four arms at 50 iters (7.0269 tail / 8.3210 final, every
+run). This is consistent with the audit's own math — `Loss/cost_lambda` is 0.0 for cppo/ctrl/
+cppo10 this early, so the Lagrangian surrogate is algebraically `A_reward` for all three, same as
+stock PPO. `ctrl` matching `ppo` exactly (not just closely) is a genuinely positive early signal
+for the A1 gradient-clip fix, but it is NOT the decisive check — that's Step 7, on the full
+1500-iter/5-seed data, where lambda will actually move for `cppo10` and the arms can diverge.
+
+**Finding 2 (a real effect of today's changes, not a bug):** `safety/cost_collision` is nonzero
+today (~1.99e-05 tail / ~3.1e-05 final, `viol_collision` ~0.14%-0.19%) across all four arms —
+every single historical run before today (Day 9 through Day 22) shows exactly `0.0000` for this
+term. This is the `COLLISION_Z_FLOOR: 0.0 -> 0.05` change (§7 addendum) doing exactly what was
+flagged as the most likely of the four Day-23 threshold changes to actually move a number.
+Still tiny at 50 iterations — Step 4 needs to characterize it properly, not this smoke test.
+`safety/cost_joint_limit` stayed exactly `0.0` for all four — that constraint (margin 0.175 rad)
+is still inactive, consistent with the Day-9 baseline's 1.39 rad clearance.
+
+**Also worth noting for future comparisons:** today's smoke reward (~7-8 at 49 iters) is far
+below the pre-Day-23 smoke baseline (`2026-07-30_01-49-46_smoke_ppo`: 65.47 at 49 iters, same
+seed/envs). Expected — the widened goal box and the goal-relative lift gate both make early
+reward harder to earn than the old fixed narrow-box/low-bar setup — but a real difference, not
+noise, and worth remembering so nobody mistakes it for a regression later.
+
+**Step 2 done, clean.** Next: Step 3 (SAC smoke).
+
+## Day 23 (2026-07-31, cont.) — Step 3 done: SAC smoke passed after three real skrl-2.1.0 bugs, all fixed
+
+`skrl_sac_cfg.yaml` had genuinely never been executed. It failed three times in a row on the lab
+PC, each a different symptom, all traceable to the same root cause: the config was authored
+against skrl 1.4.3's API and the installed lab-PC skrl is **2.1.0**. Confirmed the version
+directly (`python -c "import skrl; print(skrl.__version__)"` -> `2.1.0`), not assumed.
+
+**Bug 1 — wrong Hydra override path.** `RUN_CHECKLIST_v2.md`'s smoke command used
+`trainer.timesteps=200`, which failed (`Key 'trainer' is not in struct`). Root cause, checked
+against `isaaclab_tasks/utils/hydra.py::register_task_to_hydra`: the composed Hydra config is
+`{"env": ..., "agent": ...}`, so everything inside the SAC yaml — including its own top-level
+`trainer:` block — lives under `agent.` for override purposes. Fixed to
+`agent.trainer.timesteps=200`. Also recorded: `--max_iterations` is not usable for SAC at all —
+`train_skrl.py` computes `agent_cfg["agent"]["rollouts"]`, a PPO-only key SAC's yaml doesn't
+define, so that flag would raise `KeyError('rollouts')` for this arm specifically.
+
+**Bug 2 — `OBSERVATIONS_ACTIONS` token removed in skrl 2.x.** Next failure:
+`NameError: name 'observations_taken_actions' is not defined` inside a dynamically-compiled
+`compute()`. The 1.4.3 compound token `OBSERVATIONS_ACTIONS` (meant
+`torch.cat([states, taken_actions], dim=1)`) doesn't exist in 2.1.0's model instantiator at all —
+confirmed against `common.py` on GitHub tag `2.1.0`. `_parse_input` does two blind, unguarded
+substring replaces (`OBSERVATIONS`->`observations`, then `ACTIONS`->`taken_actions`), so the old
+token silently became the undefined name `observations_taken_actions` instead of failing at
+parse time. Fixed all four critic/target blocks to skrl 2.x's documented replacement,
+`concatenate([OBSERVATIONS, ACTIONS])`.
+
+**Bug 3 — SAC config schema itself changed.** Third failure, past model instantiation into agent
+construction: `TypeError: SAC_CFG.__init__() got an unexpected keyword argument
+'actor_learning_rate'`. skrl 2.x replaced the old dict-based `SAC_DEFAULT_CONFIG` (any key
+allowed) with a typed `@dataclass(kw_only=True) SAC_CFG` — unknown keys now raise `TypeError`
+instead of being silently ignored. Confirmed field-by-field against
+`skrl/agents/torch/sac/sac_cfg.py` on GitHub tag `2.1.0` and rewrote the `agent:` block:
+`actor_learning_rate`/`critic_learning_rate`/`entropy_learning_rate` collapsed into one
+`learning_rate: [policy, critic, entropy]` triple; `learning_rate_scheduler(_kwargs)` removed
+(let the dataclass default apply rather than pass `null` against a typed field); `state_preprocessor
+(_kwargs)` renamed to `observation_preprocessor(_kwargs)` (2.1.0 keeps `state_preprocessor` as a
+separate, unrelated field for Isaac Lab's asymmetric-obs case — left unset, not applicable here).
+Everything else (`rewards_shaper_scale`, `gradient_steps`, `batch_size`, `discount_factor`,
+`polyak`, `random_timesteps`, `learning_starts`, `grad_norm_clip`, `learn_entropy`,
+`initial_entropy_value`, `target_entropy`, `mixed_precision`, `experiment.*`) unchanged.
+
+All three corrections recorded inline in `skrl_sac_cfg.yaml`'s header and `RUN_CHECKLIST_v2.md`
+Step 3, not just here. **Confirmed on the lab PC:** rerun completed 200/200 timesteps at
+~64 it/s, no traceback. **Step 3 done.** Open item for the eventual write-up, not blocking:
+`skrl_ppo_cfg.yaml` (the PPO bridge arm) was authored against the same 1.4.3 API and has not yet
+been run under 2.1.0 — assume it needs the same class of check before Step 6, don't assume it's
+fine just because SAC's issues are now fixed. Next: Step 4 (recalibrate `MANIP_FLOOR` /
+`cost_limit` / `COLLISION_Z_FLOOR` / `JOINT_LIMIT_MARGIN` against today's four task-defining
+changes).

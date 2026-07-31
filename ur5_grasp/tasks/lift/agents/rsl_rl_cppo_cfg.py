@@ -35,6 +35,9 @@ class RslRlCppoAlgorithmCfg(RslRlPpoAlgorithmCfg):
     lam_cost: float = 0.95
     normalize_cost_advantage: bool = True
     penalty_advantage_normalize: bool = True
+    cost_buffer_size: int = 4096        # Jc estimator window; = num_envs, so one full wave
+                                        # of simultaneously-terminating episodes. Was an
+                                        # implicit 100 before the Day-23 audit (finding A3).
 
 
 @configclass
@@ -66,4 +69,89 @@ class UR5eLiftCPPORunnerCfg(RslRlOnPolicyRunnerCfg):
         lam=0.95,
         desired_kl=0.01,
         max_grad_norm=1.0,
+    )
+
+
+# =====================================================================================
+# Day-23 audit arms. Both are IDENTICAL to UR5eLiftCPPORunnerCfg above except for the one
+# field named in each class. Do not add a second difference to either of them -- the whole
+# point is that each isolates exactly one variable.
+# =====================================================================================
+
+
+@configclass
+class UR5eLiftCPPO10RunnerCfg(UR5eLiftCPPORunnerCfg):
+    """cPPO with a TIGHT cost budget (10 instead of 25).
+
+    Why this arm exists. On the 2026-07-30 matrix `Loss/cost_lambda` sat at 0.0 for
+    essentially the whole run on all three seeds: cPPO's natural episodic cost is 7-27,
+    so a budget of 25 is above the unconstrained operating point and the dual update
+    correctly never activated. A constraint that never binds cannot produce a
+    constrained-RL result. 10 sits below the natural cost on every observed seed, so
+    lambda must climb and the Lagrangian must actually trade reward for safety.
+
+    Day-9's calibration of cost_limit = 25 is NOT wrong -- it was calibrated from a 50-iter
+    probe against the then-unconstrained cost of ~70. The full 1500-iter runs simply land
+    much lower than that probe suggested. Report both budgets as a sensitivity analysis;
+    do not silently replace 25 with 10.
+
+    Still valid only at episode_length_s = 5.0 -- the budget is episodic over a per-step
+    cost, so episode length rescales it. Same caveat as the parent.
+    """
+
+    experiment_name = "ur5e_lift_cppo10"
+    algorithm = RslRlCppoAlgorithmCfg(
+        value_loss_coef=1.0,
+        use_clipped_value_loss=True,
+        clip_param=0.2,
+        entropy_coef=0.006,
+        num_learning_epochs=5,
+        num_mini_batches=4,
+        learning_rate=1.0e-4,
+        schedule="adaptive",
+        gamma=0.98,
+        lam=0.95,
+        desired_kl=0.01,
+        max_grad_norm=1.0,
+        cost_limit=10.0,          # <-- THE ONLY DIFFERENCE FROM THE PARENT
+    )
+
+
+@configclass
+class UR5eLiftCtrlRunnerCfg(UR5eLiftCPPORunnerCfg):
+    """CONTROL ARM: the cost critic, with the constraint switched off (lambda_max = 0).
+
+    `lambda` is updated as clip(lambda + lr*(Jc - d), 0, lambda_max); with lambda_max = 0
+    that expression is identically 0 forever, so the combined advantage stays
+    (A_reward - 0*A_cost)/(1+0) = A_reward. The policy update is therefore stock PPO --
+    but this arm still carries everything ELSE cPPO carries: the second critic in the
+    optimiser, its own gradient clip, and the RNG offset its construction causes.
+
+    That makes it the missing control in the 2026-07-30 comparison:
+
+        ctrl  vs  PPO    -> the cost of merely ATTACHING a cost critic (should now be ~0
+                            after the Day-23 gradient-clipping fix; if it is not, something
+                            else is still coupling the two heads and the audit is incomplete)
+        cPPO  vs  ctrl   -> the effect of the CONSTRAINT alone. This difference, and only
+                            this difference, is what the thesis may attribute to safe RL.
+
+    If cPPO-vs-ctrl is null while cPPO-vs-PPO is large, the Day-22 headline was an
+    artifact. That is a publishable finding and must be reported as one, not buried.
+    """
+
+    experiment_name = "ur5e_lift_ctrl"
+    algorithm = RslRlCppoAlgorithmCfg(
+        value_loss_coef=1.0,
+        use_clipped_value_loss=True,
+        clip_param=0.2,
+        entropy_coef=0.006,
+        num_learning_epochs=5,
+        num_mini_batches=4,
+        learning_rate=1.0e-4,
+        schedule="adaptive",
+        gamma=0.98,
+        lam=0.95,
+        desired_kl=0.01,
+        max_grad_norm=1.0,
+        lambda_max=0.0,           # <-- THE ONLY DIFFERENCE FROM THE PARENT
     )

@@ -8,6 +8,7 @@ and command body change; the base LiftEnvCfg supplies the rest of the MDP.
 """
 
 from isaaclab.assets import RigidObjectCfg
+from isaaclab.managers import RewardTermCfg as RewTerm
 from isaaclab.sensors import FrameTransformerCfg
 from isaaclab.sensors.frame_transformer.frame_transformer_cfg import OffsetCfg
 from isaaclab.sim.schemas.schemas_cfg import RigidBodyPropertiesCfg
@@ -20,6 +21,7 @@ from isaaclab_tasks.manager_based.manipulation.lift.lift_env_cfg import LiftEnvC
 
 from isaaclab.markers.config import FRAME_MARKER_CFG  # isort: skip
 from ur5_grasp.robots.ur5e_robotiq import UR5E_ROBOTIQ_CFG, GRIPPER_CLOSE, GRIPPER_OPEN  # isort: skip
+from ur5_grasp.tasks.lift import rewards as lift_rewards  # isort: skip
 
 
 @configclass
@@ -62,6 +64,41 @@ class UR5eCubeLiftEnvCfg(LiftEnvCfg):
         # End-effector body used by the pose command.
         self.commands.object_pose.body_name = "wrist_3_link"
 
+        # Goal-pose sampling box, widened Day 23 (cont.) from Isaac Lab's inherited Franka
+        # defaults (pos_x=(0.4,0.6), pos_y=(-0.25,0.25), pos_z=(0.25,0.5) -- never previously
+        # overridden here). Touhid's call: the old box felt too narrow; widened once, then
+        # widened again the same session (still before any run against either version).
+        #
+        # Kept reach-limited on purpose. The UR5e base sits at the env origin
+        # (ur5e_robotiq.py init_state) and its rated reach is ~0.85 m. The box's far corner
+        # (max x, max |y|, max z) is what determines whether a sampled goal is physically
+        # reachable -- distance history:
+        #   Isaac Lab default   (0.60, 0.25, 0.50) -> 0.82 m  (already near full extension)
+        #   first draft, REJECTED (0.70, 0.40, 0.62) -> 1.02 m  (unreachable)
+        #   round 1              (0.60, 0.28, 0.50) -> 0.83 m
+        #   round 2 (current)    (0.60, 0.30, 0.50) -> 0.84 m  (~13 mm under the 0.85 m spec)
+        # x and z have a "cheap" direction -- extending the MIN bound toward the base doesn't
+        # touch the far-corner distance at all, so most of round 2's extra width comes from
+        # there (x_min 0.30->0.22, z_min 0.15->0.10); y has no cheap side (both bounds are
+        # squared symmetrically in the distance), so it only got a small +/-0.28->+/-0.30 bump,
+        # and x_max/z_max stayed put to protect the shrinking reach margin.
+        # Near corner sanity check: (0.22, 0, 0.10) is 0.24 m from the base -- a normal working
+        # distance, not a folded-arm degenerate pose, but still worth watching in the Step 4
+        # recalibration probe (RUN_CHECKLIST_v2.md) since a 6-DOF arm can also go singular
+        # reaching in close.
+        #
+        # CALIBRATION WARNING: MANIP_FLOOR (ur5e_lift_env.py) and cost_limit (agents/
+        # rsl_rl_cppo_cfg.py) were both calibrated Day 9 against the OLD, narrower box. A
+        # different goal region changes how often the arm nears joint limits / low
+        # manipulability while reaching, which changes the natural cost distribution those
+        # thresholds assume. Recalibrate (rerun calibrate_manipulability.py + a short cost probe)
+        # BEFORE trusting RUN_CHECKLIST_v2.md Step 7's "did cost_limit=10 bind?" check. See
+        # run_log.md, Day 23 (cont.).
+        self.commands.object_pose.ranges = mdp.UniformPoseCommandCfg.Ranges(
+            pos_x=(0.22, 0.60), pos_y=(-0.30, 0.30), pos_z=(0.10, 0.50),
+            roll=(0.0, 0.0), pitch=(0.0, 0.0), yaw=(0.0, 0.0),
+        )
+
         # Cube to grasp.
         self.scene.object = RigidObjectCfg(
             prim_path="{ENV_REGEX_NS}/Object",
@@ -78,6 +115,49 @@ class UR5eCubeLiftEnvCfg(LiftEnvCfg):
                     disable_gravity=False,
                 ),
             ),
+        )
+
+        # Reward re-weighting + goal-relative lift condition, Day 23 (cont.). Isaac Lab's
+        # inherited Franka defaults gate "lifted" on a FIXED height (minimal_height=0.04 m,
+        # same number reused by all three of lifting_object / object_goal_tracking /
+        # object_goal_tracking_fine_grained). Touhid's call: "lifted" should instead mean
+        # 50% of the way from the table to THIS EPISODE's goal height, since pos_z now spans
+        # 0.10-0.50 m rather than a narrow band. All three terms switch together so they keep
+        # agreeing on what "lifted" means (see rewards.py for the two new functions; neither
+        # touches vendored Isaac Lab source). spawn_height is read from the cube's own
+        # init_state above rather than hardcoded a second time.
+        spawn_height = self.scene.object.init_state.pos[2]  # 0.055 m, table rest height
+        lift_fraction = 0.5
+
+        self.rewards.lifting_object = RewTerm(
+            func=lift_rewards.object_lifted_toward_goal,
+            params={
+                "fraction": lift_fraction,
+                "spawn_height": spawn_height,
+                "command_name": "object_pose",
+            },
+            weight=10.0,  # was 15.0
+        )
+        self.rewards.object_goal_tracking = RewTerm(
+            func=lift_rewards.object_goal_distance_relative_lift,
+            params={
+                "std": 0.3,
+                "fraction": lift_fraction,
+                "spawn_height": spawn_height,
+                "command_name": "object_pose",
+            },
+            weight=15.0,  # was 16.0
+        )
+        self.rewards.object_goal_tracking_fine_grained = RewTerm(
+            func=lift_rewards.object_goal_distance_relative_lift,
+            params={
+                "std": 0.05,
+                "fraction": lift_fraction,
+                "spawn_height": spawn_height,
+                "command_name": "object_pose",
+            },
+            weight=5.0,  # unchanged -- only the lift gate changed, to stay consistent with the
+                        # other two terms above
         )
 
         # EE frame for the reach/lift rewards: root at arm base, target at the wrist

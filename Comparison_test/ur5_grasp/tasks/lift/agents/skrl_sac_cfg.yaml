@@ -1,0 +1,219 @@
+# Copyright (c) 2025, Touhid — UR5 Safe RL Grasping thesis.
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# skrl SAC config for Isaac-Lift-Cube-UR5e-v0.   Authored 2026-07-31 (Day 23).
+#
+# Written from skrl 1.4.3's own source (SAC_DEFAULT_CONFIG in skrl/agents/torch/sac/sac.py
+# and Runner._generate_models / _generate_agent in skrl/utils/runner/torch/runner.py), NOT
+# copied from an IsaacLab template — this IsaacLab checkout ships no skrl SAC config for any
+# task, so there was nothing to copy. Every field below is either a SAC_DEFAULT_CONFIG key or
+# a Runner-required structural key. If skrl is upgraded past 1.4.x this file must be
+# re-checked: skrl 2.x renames `state_preprocessor` to `observation_preprocessor` and makes
+# the agent constructor keyword-only.
+#
+# CORRECTION (Day 23, cont. — Step 3 smoke attempt). The installed skrl on the lab PC is
+# 2.1.0, not 1.4.3. Two consequences hit on first run:
+#   - `state_preprocessor` deprecation: skrl 2.x auto-forwards it to
+#     `observation_preprocessor` with a warning only — harmless, left as-is below.
+#   - `input: OBSERVATIONS_ACTIONS` (the 1.4.3 compound token for
+#     `torch.cat([states, taken_actions], dim=1)`) no longer exists in 2.1.0's model
+#     instantiator. `_parse_input` (skrl/utils/model_instantiators/torch/common.py) does two
+#     blind substring replaces in sequence — `OBSERVATIONS`->`observations`, then
+#     `ACTIONS`->`taken_actions` — with no word boundary, so the old compound token silently
+#     became the undefined name `observations_taken_actions` instead of erroring at parse
+#     time. Crash was `NameError: name 'observations_taken_actions' is not defined` inside
+#     the dynamically-compiled `compute()`, not an import or version-gate error, so it only
+#     surfaced at model instantiation. Fixed below to the 2.x-documented replacement,
+#     `concatenate([OBSERVATIONS, ACTIONS])` (skrl docs, "Inputs" / concatenation operation;
+#     confirmed against `common.py` on GitHub tag `2.1.0`), in all four critic/target blocks.
+#
+# =====================================================================================
+# THREE THINGS THAT WILL BITE, IN THE ORDER THEY WILL BITE
+# =====================================================================================
+#
+# 1. `memory: memory_size` MUST BE A POSITIVE NUMBER HERE.
+#    Runner._generate_agent does:
+#        if cfg["memory"]["memory_size"] < 0:
+#            cfg["memory"]["memory_size"] = cfg["agent"]["rollouts"]
+#    SAC has no `rollouts` key, so the -1 shortcut used by skrl_ppo_cfg.yaml raises a bare
+#    KeyError('rollouts') here. The value below is an explicit replay-buffer depth PER ENV:
+#    total capacity = memory_size x num_envs = 8000 x 128 = 1.02M transitions.
+#
+# 2. ALL FIVE MODEL ROLES MUST BE LISTED.
+#    Runner instantiates exactly the roles it finds under `models:`; it does not create the
+#    target critics for you. SAC looks up policy / critic_1 / critic_2 / target_critic_1 /
+#    target_critic_2 and will fail with a None model if any is missing. The two targets are
+#    structurally identical to their critics — SAC hard-copies weights into them at startup
+#    (`update_parameters(..., polyak=1)`), so their initial values do not matter.
+#
+# 3. RUN THIS AT num_envs=128, NOT 4096.
+#    SAC is off-policy: every environment step also costs a gradient step and a replay
+#    insert. 4096 envs would fill a 1M buffer in 8 steps and make the sampling correlated.
+#    128 is the standard IsaacLab off-policy setting and is what the buffer above is sized
+#    against. The batch script passes --num_envs 128 for this arm only.
+#
+# =====================================================================================
+# WHAT MAKES THIS COMPARABLE TO THE PPO / cPPO ARMS
+# =====================================================================================
+# It is NOT comparable on environment samples, and the thesis must say so:
+#
+#     PPO / cPPO : 1500 iters x 24 steps x 4096 envs = 147.5M environment steps
+#     SAC        :        36000 timesteps x 128 envs =   4.6M environment steps
+#
+# It IS approximately matched on GRADIENT STEPS, which is the fairer axis for an
+# on-policy/off-policy comparison and the one to report:
+#
+#     PPO / cPPO : 1500 iters x 5 epochs x 4 mini-batches = 30 000 gradient steps
+#     SAC        : (36000 - 1000 learning_starts) x 1 gradient_step = 35 000 gradient steps
+#
+# Say which axis you matched. A reviewer's first question about any on-policy vs off-policy
+# table is "matched on what?", and "we ran both for 1500 iterations" is not an answer.
+#
+# Shared with the PPO arms on purpose (so the comparison isolates the algorithm):
+#   discount_factor 0.98 (rsl_rl gamma), hidden layers [256, 128, 64], elu, grad_norm_clip 1.0.
+# Deliberately NOT shared (SAC has no meaningful counterpart, or the PPO value is wrong for it):
+#   learning rates (SAC's actor/critic/entropy are separate and 1e-3 is its own default),
+#   polyak, batch_size, entropy learning.
+
+seed: 42  # overridden by --seed on the command line; the batch script passes 1..5
+
+
+# =====================================================================================
+# Models
+# =====================================================================================
+# separate: True — SAC has no shared trunk; the Runner's `shared` path additionally only
+# supports exactly two roles, and there are five here.
+models:
+  separate: True
+
+  # Actor. GaussianMixin with a tanh squash, which is what SAC's derivation assumes (the
+  # entropy term is defined on the squashed distribution). `output: tanh(ACTIONS)` is the
+  # model_instantiator's supported form — see _parse_output in
+  # skrl/utils/model_instantiators/torch/common.py, which recognises the ACTIONS token and
+  # applies the named activation around it.
+  policy:
+    class: GaussianMixin
+    clip_actions: False        # the tanh already bounds the output to [-1, 1]
+    clip_log_std: True
+    min_log_std: -20.0
+    max_log_std: 2.0
+    initial_log_std: 0.0
+    network:
+      - name: net
+        input: OBSERVATIONS
+        layers: [256, 128, 64]
+        activations: elu
+    output: tanh(ACTIONS)
+
+  # Twin Q-functions. Both take (observation, action) — `concatenate([OBSERVATIONS, ACTIONS])`
+  # is skrl 2.x's model-instantiator op for torch.cat([observations, taken_actions], dim=1).
+  # (See the header CORRECTION note: this used to be the 1.4.3-only `OBSERVATIONS_ACTIONS`
+  # compound token, which no longer exists in 2.1.0.)
+  critic_1:
+    class: DeterministicMixin
+    clip_actions: False
+    network:
+      - name: net
+        input: concatenate([OBSERVATIONS, ACTIONS])
+        layers: [256, 128, 64]
+        activations: elu
+    output: ONE
+  critic_2:
+    class: DeterministicMixin
+    clip_actions: False
+    network:
+      - name: net
+        input: concatenate([OBSERVATIONS, ACTIONS])
+        layers: [256, 128, 64]
+        activations: elu
+    output: ONE
+
+  # Targets — same architecture, weights hard-copied from the critics at init.
+  target_critic_1:
+    class: DeterministicMixin
+    clip_actions: False
+    network:
+      - name: net
+        input: concatenate([OBSERVATIONS, ACTIONS])
+        layers: [256, 128, 64]
+        activations: elu
+    output: ONE
+  target_critic_2:
+    class: DeterministicMixin
+    clip_actions: False
+    network:
+      - name: net
+        input: concatenate([OBSERVATIONS, ACTIONS])
+        layers: [256, 128, 64]
+        activations: elu
+    output: ONE
+
+
+# =====================================================================================
+# Replay memory  (see gotcha 1 above — this number may not be -1)
+# =====================================================================================
+memory:
+  class: RandomMemory
+  memory_size: 8000            # per env; x128 envs = 1.02M transitions
+
+
+# =====================================================================================
+# SAC agent
+# =====================================================================================
+# CORRECTION (Day 23, cont. — Step 3 smoke attempt). Originally written against skrl 1.4.3's
+# dict-based `SAC_DEFAULT_CONFIG` (any key allowed). The installed skrl is 2.1.0, where the
+# Runner builds a typed `@dataclass(kw_only=True) SAC_CFG` via `SAC_CFG(**cfg["agent"])` —
+# unknown keys now raise `TypeError`, not a silent ignore. Confirmed against
+# `skrl/agents/torch/sac/sac_cfg.py` on GitHub tag `2.1.0`. Changes made:
+#   - actor_learning_rate / critic_learning_rate / entropy_learning_rate -> collapsed into one
+#     `learning_rate: [policy, critic, entropy]` 3-tuple (2.1.0's SAC_CFG takes a single
+#     `learning_rate` field, tuple-valued when the three roles need different rates).
+#   - learning_rate_scheduler / learning_rate_scheduler_kwargs -> removed rather than left
+#     `null`, so the dataclass default (None / {}) applies instead of risking a type mismatch
+#     passing `null` where a dict default is expected.
+#   - state_preprocessor / state_preprocessor_kwargs -> renamed to observation_preprocessor /
+#     observation_preprocessor_kwargs (this is what actually normalizes what 1.4.3 called
+#     "states"). 2.1.0 also has a separate, unrelated `state_preprocessor` field for Isaac
+#     Lab's asymmetric-observation case — deliberately left unset here, not applicable.
+#   - rewards_shaper_scale, class, gradient_steps, batch_size, discount_factor, polyak,
+#     random_timesteps, learning_starts, grad_norm_clip, learn_entropy, initial_entropy_value,
+#     target_entropy, mixed_precision, experiment.* — all unchanged, same field names in 2.1.0.
+agent:
+  class: SAC
+  gradient_steps: 1
+  batch_size: 4096
+  discount_factor: 0.98        # matched to rsl_rl gamma = 0.98
+  polyak: 0.005                # skrl default (tau)
+  learning_rate: [1.0e-04, 1.0e-03, 1.0e-03]   # [policy, critic, entropy] — see CORRECTION above
+  observation_preprocessor: null   # matched to actor/critic_obs_normalization = False in rsl_rl.
+                               # NOTE: this is the same fidelity-vs-stability gamble flagged
+                               # in skrl_ppo_cfg.yaml. If SAC's critic loss diverges, the FIRST
+                               # diagnostic is RunningStandardScaler here, rerun, and record
+                               # which variant produced the reported number.
+  observation_preprocessor_kwargs: {}
+  random_timesteps: 1000       # uniform-random actions to seed the buffer before the policy
+                               # is trusted. Off-policy needs this; on-policy does not.
+  learning_starts: 1000        # no gradient step until the buffer holds 1000 x 128 = 128k
+  grad_norm_clip: 1.0          # matched to rsl_rl max_grad_norm = 1.0
+  learn_entropy: True          # automatic temperature tuning (SAC-v2). Target entropy is
+                               # left null so skrl uses -dim(A), the standard heuristic.
+  initial_entropy_value: 0.2
+  target_entropy: null
+  rewards_shaper_scale: 1.0    # rsl_rl does not scale rewards
+  mixed_precision: False       # keep off: the comparison must not differ in numerics
+  experiment:
+    # Same cwd-relative gotcha as everywhere else: launch from inside Comparison_test/.
+    # Directory is distinct from ur5e_lift_skrl (the PPO bridge) so the two never collide.
+    directory: "ur5e_lift_sac"
+    experiment_name: ""
+    write_interval: 24         # same TB x-axis granularity as the PPO arms
+    checkpoint_interval: 1200
+
+
+# =====================================================================================
+# Trainer
+# =====================================================================================
+trainer:
+  class: SequentialTrainer
+  timesteps: 36000   # = the PPO arms' 1500 x 24. See the gradient-step note in the header.
+  environment_info: log
