@@ -1,11 +1,21 @@
 \chapter{Research Methodology}\label{ch:methods}
 
 \begin{draftnote}
-Ported from \texttt{Thesis\_Documentation/Methods\_Chapter\_Layer1.md} (draft 2026-07-19), which is
-now frozen as a dated record --- this \texttt{.tex} is the source of truth. Numbers verified
-against \texttt{ur5\_grasp/} source on 2026-07-19. \textbf{Open:} this draft predates the Day-23
-audit; check whether it narrates the withdrawal, since Section~\ref{sec:r-validity} of the
-Results chapter assumes it does.
+MODULE 4 --- needs restructuring, not just revising.
+
+Ported from \texttt{Thesis\_Documentation/Methods\_Chapter\_Layer1.md} (draft 2026-07-19), which
+is now a frozen dated record; this \texttt{.tex} is the source of truth. Numbers verified against
+\texttt{ur5\_grasp/} source on 2026-07-19.
+
+\textbf{This chapter is currently too big for its slot.} Under the KUET seven-chapter structure
+it should hold only the method: the CMDP formulation, the design of the safety cost, and the
+constrained optimisation algorithm. The environment, robot model, observation/action/reward,
+threshold calibration and the training and evaluation protocol all belong in
+Chapter~\ref{ch:setup}, and the software realisation belongs in Chapter~\ref{ch:implementation}.
+Split before writing anything new.
+
+\textbf{Also open:} this draft predates the Day-23 audit. Check whether it narrates the
+withdrawal, since Section~\ref{sec:r-validity} of the results chapter assumes it does.
 \end{draftnote}
 
 \section{Problem formulation}\label{sec:m-cmdp}

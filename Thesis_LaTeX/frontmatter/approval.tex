@@ -1,8 +1,43 @@
-\chapter*{Approval}
-\addcontentsline{toc}{chapter}{Approval}
+% APPROVAL -- KUET_FORMAT_SPEC.md section 7.
+% The Board of Examiners is a TABLE INSIDE THIS PAGE, not a separate page.
+% Body text is the template's boilerplate, copied verbatim.
+\kuetfrontheading{Approval}
+
+\vspace{3\baselineskip}
+
+This is to certify that the thesis work submitted by \studentname{} entitled
+``\thesistitle'' has been approved by the board of examiners for the partial fulfillment of the
+requirements for the degree of Bachelor of Science in the Department of Mechatronics Engineering,
+Khulna University of Engineering \& Technology, Khulna, Bangladesh in \defensemonthyear.
+
+\vspace{\baselineskip}
+
+\begin{center}\bfseries BOARD OF EXAMINERS\end{center}
+
+% One block per examiner. \examiner{number}{name}{designation}{department}{role}
+\newcommand{\examiner}[5]{%
+  \par\vspace{1.5\baselineskip}
+  \noindent
+  \begin{minipage}[t]{0.08\textwidth}\raggedright #1.\end{minipage}%
+  \begin{minipage}[t]{0.62\textwidth}
+    \rule{0.9\linewidth}{0.4pt}\\
+    Name: #2\\
+    Designation: #3\\
+    Department: #4\\
+    KUET, Khulna-9203, Bangladesh.
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.26\textwidth}\raggedleft #5\end{minipage}\par}
+
+\examiner{1}{\supervisorname}{\supervisordesignation}{\supervisordepartment}{Chairman\\(Supervisor)}
 
 \begin{draftnote}
-Not written yet. KUET mandates this page --- see logbook/08\_project\_context.md,
-"Required KUET thesis-book structure". Wording and layout should be copied from
-the official KUET template once it is in the repo.
+Members 2 onward are not filled in. The board composition is not recorded anywhere in the repo.
+\texttt{logbook/08\_project\_context.md} notes only a precedent: Md. Shohanur Rahman, Assistant
+Professor, Dept. of Mechatronics Engineering, KUET, served as external on the predecessor's
+board. Get the real list from the supervisor and add \texttt{\textbackslash examiner} lines here.
 \end{draftnote}
+
+\examiner{2}{\todo{name}}{\todo{designation}}{\todo{department}}{Member}
+\examiner{3}{\todo{name}}{\todo{designation}}{\todo{department}}{Member\\(External)}
+
+\clearpage

@@ -1,30 +1,48 @@
-\makeatletter
-% Placeholder title page. The official KUET title page has a mandated layout
-% (crest, exact wording, spacing) -- replace this wholesale when the template
-% arrives. Facts below are from logbook/08_project_context.md.
+% Title page -- KUET_FORMAT_SPEC.md section 7.
+% Wording below is the template's own boilerplate, copied verbatim.
+% Note "fulfillment" is the template's spelling -- do not anglicise it.
 \begin{titlepage}
+\thispagestyle{empty}
 \centering
-\vspace*{2cm}
-{\LARGE\bfseries \@title \par}
-\vspace{2.5cm}
-{\large by \par}
-\vspace{0.5cm}
-{\large\bfseries Touhid \par}
-\vspace{0.4cm}
-{\large Roll No.: \textbf{[TODO: roll number]} \par}
-\vfill
-{\large A thesis submitted in partial fulfilment of the requirements\\
-for the degree of Bachelor of Science in Mechatronics Engineering \par}
-\vspace{1.5cm}
-{\large Supervisor \par}
-{\large\bfseries Dr.\ Md.\ Helal-An-Nahiyan \par}
-{\large Professor, Department of Mechanical Engineering \par}
-\vspace{1.5cm}
-{\large Department of Mechatronics Engineering \par}
-{\large Khulna University of Engineering \& Technology \par}
-{\large Khulna-9203, Bangladesh \par}
-\vspace{1cm}
-{\large \textbf{[TODO: submission month, year]} \par}
+\setstretch{1.25}\vspace*{-10mm}
+
+{\fontsize{14}{20}\bfseries \thesistitle \par}
+
+\vspace{2\baselineskip}
+
+{\fontsize{12}{18}\selectfont A thesis submitted in partial fulfillment of the requirements for the degree of \par}
+{\fontsize{12}{18}\selectfont Bachelor of Science \par}
+{\fontsize{12}{18}\selectfont in \par}
+{\fontsize{12}{18}\selectfont Mechatronics Engineering \par}
+
+\vspace{0.5\baselineskip}
+{\fontsize{12}{18}\selectfont by \par}
+{\fontsize{12}{18}\bfseries \studentname \par}
+
+\vspace{1.5\baselineskip}
+
+{\fontsize{12}{18}\selectfont Supervised by \par}
+{\fontsize{12}{18}\bfseries \supervisorname \par}
+
+\vspace{1.5\baselineskip}
+
+% University monogram. Drop the KUET crest in as figures/kuet_monogram.pdf
+% (or .png) and it appears automatically; until then a labelled box holds
+% the space so the layout does not shift when it arrives.
+\IfFileExists{figures/kuet_monogram.pdf}%
+  {\includegraphics[height=28mm]{kuet_monogram.pdf}}%
+  {\IfFileExists{figures/kuet_monogram.png}%
+    {\includegraphics[height=28mm]{kuet_monogram.png}}%
+    {\framebox[30mm]{\rule{0pt}{28mm}\small\itshape monogram}}}
+
+\vspace{\baselineskip}
+
+{\fontsize{12}{18}\selectfont Department of Mechatronics Engineering \par}
+{\fontsize{12}{18}\selectfont Khulna University of Engineering \& Technology \par}
+{\fontsize{12}{18}\selectfont Khulna-9203, Bangladesh \par}
+
+\vspace{0.5\baselineskip}
+
+{\fontsize{12}{18}\bfseries Date of Defense: \defensemonthyear \par}
+
 \end{titlepage}
-\cleardoublepage
-\makeatother

@@ -2068,3 +2068,49 @@ project word list) and un-ignored from the blanket `.vscode/` rule.
 `thesis-format.sty` are stand-ins. Tables came through pandoc as uncaptioned `longtable`s, so the
 List of Tables is empty and "Table 4.1" is bold text rather than a float. Chapter 4 figures still
 need regenerating from matrix-v2. Chapters 1, 2, 5, 6 not started.
+
+---
+
+## 2026-08-02 (Day 25, cont.) — official KUET template received; project rebuilt against it
+
+The six official MTE templates arrived (`Thesis_LaTeX/kuet_thesis_style/`). They are far more
+prescriptive than the repo's second-hand notes, and they contradict those notes in three places.
+
+**Measured the format out of the Word XML** rather than trusting the prose, and recorded it in
+`Thesis_LaTeX/KUET_FORMAT_SPEC.md`, which is now the authority for `thesis-format.sty`.
+Headlines: A4, margins 30 mm top and left / 25 mm right and bottom, no running headers, page
+numbers centred in the front matter but right-aligned in the body, body 12 pt Times New Roman
+at 1.5 line spacing justified, chapter headings 14 pt bold centred, sections 12 pt bold,
+sub-sections 12 pt italic, captions 10 pt centred and not bold with a full stop after the
+number, table captions above and figure captions below.
+
+**Two long-open questions closed by the measurement.** Font size is 12 pt for body text —
+the 14 pt in the personal note is the *chapter heading* size, which is where that note came
+from. And line spacing is 1.5, not 1.25: LaTeX's baseline is already 1.2x, so Word's 1.5 is a
+stretch factor of 1.25, meaning the repo's "1.25" and the template's "1.5" were probably the
+same instruction expressed in different units all along. Implemented as `\onehalfspacing`.
+
+**Structure changed from six chapters to the template's seven**: Introduction / Motivation and
+Background Study / Methodology / Design procedure and Experimental set-up / Implementation /
+Results and Discussions / Conclusion and Future Work. Chapters 4 and 5 are hardware-shaped in
+the template and are mapped onto their simulation equivalents, kept separate rather than merged
+(confirmed). The existing Methodology chapter is now too big for its slot — the environment,
+calibration and protocol material has to move out to Chapter 4 and the software realisation to
+Chapter 5. Flagged in the file, not yet done.
+
+**Thesis retitled** to match what was actually delivered: *Safe Constrained Reinforcement
+Learning for Precision Grasping on a UR5e Manipulator: A Simulation Study*. The filed title
+promised IBVS and hardware transfer, both of which were abandoned. Chapter 1 will scope the
+restriction explicitly and Chapter 7 carries the two layers as future work.
+
+**Front matter rebuilt** from the template boilerplate with real details (Md. Abdur Rabbi,
+2031023, defense 08 August 2026, submission 06 August 2026): cover page, title page,
+declaration, approval with the Board of Examiners table inside it — it is not a separate page,
+contrary to `08_project_context.md` — acknowledgement, abstract, contents, list of tables, list
+of figures, list of nomenclature. All facts live in one place, `frontmatter/_thesis_details.tex`.
+
+Verified: `latexmk -pdf` exits 0 from a clean copy, 38 pages, zero errors, zero undefined
+references. Cover, title, declaration and a chapter opening inspected as rendered pages.
+
+**Schedule risk, stated plainly.** Submission is 06 August, four days out, for a 60–100 page
+book of which two chapters exist and Chapter 2 is blocked until the reference PDFs are uploaded.
