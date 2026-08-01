@@ -93,12 +93,21 @@ Opened: 2026-07-29 (Day 19, evening)
 > directly (git operations don't need the lab PC's GPU, same as the Day-24 freeze).
 >
 > **NOT run — this sandbox has no GPU/Isaac Sim (`nvidia-smi`, `import torch` both fail here,
-> confirmed this session).** Steps 3 (smoke) through 8 (eval) of `RUN_CHECKLIST_v2.md`, the
-> per-iteration λ extraction (new arm + retrospective on `cppo`), the results file, and the
-> thesis §4.3/§4.7 update all remain for Touhid to run on the lab PC. Exact commands prepared
-> and handed off in the same session's chat reply — not duplicated here to avoid drift between
-> two copies; if picking this up cold, ask for them again or reconstruct from
-> `RUN_CHECKLIST_v2.md` Steps 3–9 with `cppo15` substituted for `cppo10`.
+> confirmed this session).** Steps 3 (smoke) through 8 (eval) of `RUN_CHECKLIST_v2.md`, and the
+> results file / thesis §4.3/§4.7 update, all remain for Touhid to run on the lab PC.
+> `run_cppo15_seeds.sh` (smoke + full 10-seed training) and `run_eval_cppo15.sh` (eval, scoped
+> to the new checkpoints — `ctrl` doesn't need re-running) are written and `bash -n` clean, not
+> executed. If picking this up cold: Step 1 resolve-check still needs running first (substitute
+> `rsl_rl_cppo15_cfg_entry_point`), then `./run_cppo15_seeds.sh smoke`, then the full run.
+>
+> **The retrospective λ half of item 5 is DONE, no GPU needed.** `summarize_runs.py` already
+> wrote per-iteration `Loss/cost_lambda` for all 10 `cppo`(25) runs to `results/tb_csv/` last
+> session; read directly this session. Every seed shows an early transient spike (λ 14–48 around
+> iteration 50–60) that decays to 0 by ~iteration 70–115 for 8 of 10 seeds; only seeds 5 and 53
+> stay engaged almost to the end. Full table and corrected framing:
+> `MATRIX_V2_PARTIAL_3ARM.md` §4.1 (dated update, replaces the "not yet measured" note). The
+> `cppo15` half of item 5 (log λ per iteration as part of that run) still needs the actual
+> training to exist first.
 
 > ## Historical — EXECUTION STATUS (2026-07-31, Day 23, cont.), superseded by the block above
 >

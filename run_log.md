@@ -1932,3 +1932,15 @@ reused unmodified), Step 7 report (new `Comparison_test/results/` file), Step 8 
 
 **NEXT:** Touhid runs the handed-off commands on the lab PC; a follow-up session (or continuing
 this one, if the GPU becomes reachable) reads the reports and does Steps 5/7/8/9 for real.
+
+**Addendum, same session — the retrospective λ half of item 5 turned out to be already
+possible.** `summarize_runs.py` had already written the full per-iteration `Loss/cost_lambda`
+trajectory for all 10 `cppo` (budget-25) runs to `results/tb_csv/` last session; nobody had read
+it for this question yet. Pure CSV read, no GPU: every seed shows a large early transient λ spike
+(14–48, around iteration 50–60) regardless of eventual natural cost, decaying to 0 by iteration
+~70–115 for 8 of 10 seeds; only seeds 5 and 53 stay substantively engaged almost to iteration
+1500. Written up in `MATRIX_V2_PARTIAL_3ARM.md` §4.1 as a dated update, replacing the "not yet
+measured" limitation and correcting this session's own first-guess reading before committing it.
+Also wrote `run_cppo15_seeds.sh` (smoke + 10-seed training launcher, modeled on
+`run_matrix_v2.sh`'s verified pattern) and `run_eval_cppo15.sh` (eval launcher scoped to the new
+checkpoints only — `ctrl` doesn't need re-evaluating). Both `bash -n` clean; neither executed.
