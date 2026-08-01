@@ -4783,3 +4783,1293 @@ EVAL  label=cppo_s54  backend=rsl_rl  eval_seed=103
   [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo_s54_seed103.csv]
   [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
 [report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s1  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s1  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.80%   <- headline
+         ... reached at any point   :  99.80%
+         ... legacy z > 0.040 m      :  99.80%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  96.90%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.20%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.80%
+  Goal distance (m)          : mean 0.0060  median 0.0049  p90 0.0070  max 0.4723
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  14.93% of steps  |   35.70% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0623   worst 0.0000   floor 0.06
+  Episodic cost    : mean 15.44   p90 59.30   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s1_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s1  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s1  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  98.40%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.90%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0050  median 0.0049  p90 0.0069  max 0.0204
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  16.59% of steps  |   35.70% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0618   worst 0.0000   floor 0.06
+  Episodic cost    : mean 15.35   p90 69.24   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s1_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s1  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s1  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.60%   <- headline
+         ... reached at any point   :  99.70%
+         ... legacy z > 0.040 m      :  99.60%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  96.50%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.40%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.60%
+  Goal distance (m)          : mean 0.0070  median 0.0049  p90 0.0071  max 0.5006
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  17.05% of steps  |   36.30% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.20% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0619   worst 0.0000   floor 0.06
+  Episodic cost    : mean 17.27   p90 74.04   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s1_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s2  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s2  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.70%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0046  median 0.0046  p90 0.0063  max 0.0144
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  15.00% of steps  |   38.70% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0640   worst 0.0117   floor 0.06
+  Episodic cost    : mean 4.83   p90 14.00   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s2_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s2  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s2  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.80%   <- headline
+         ... reached at any point   :  99.90%
+         ... legacy z > 0.040 m      :  99.80%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.40%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.80%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.80%
+  Goal distance (m)          : mean 0.0056  median 0.0046  p90 0.0062  max 0.5497
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  16.01% of steps  |   36.80% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.13% of steps  |    0.20% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0643   worst 0.0226   floor 0.06
+  Episodic cost    : mean 4.59   p90 12.89   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s2_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s2  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s2  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.80%   <- headline
+         ... reached at any point   :  99.80%
+         ... legacy z > 0.040 m      :  99.80%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.30%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.80%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.80%
+  Goal distance (m)          : mean 0.0052  median 0.0046  p90 0.0061  max 0.3624
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  15.90% of steps  |   35.20% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0645   worst 0.0124   floor 0.06
+  Episodic cost    : mean 5.16   p90 15.02   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s2_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s3  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s3  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.90%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      :  99.90%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.70%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.90%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.90%
+  Goal distance (m)          : mean 0.0047  median 0.0042  p90 0.0051  max 0.4619
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  24.42% of steps  |   38.80% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0629   worst 0.0000   floor 0.06
+  Episodic cost    : mean 10.67   p90 43.32   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s3_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s3  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s3  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.90%   <- headline
+         ... reached at any point   :  99.90%
+         ... legacy z > 0.040 m      :  99.90%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.40%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.90%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.90%
+  Goal distance (m)          : mean 0.0050  median 0.0042  p90 0.0051  max 0.7081
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  25.44% of steps  |   39.50% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0622   worst 0.0225   floor 0.06
+  Episodic cost    : mean 11.81   p90 50.06   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s3_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s3  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s3  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.80%   <- headline
+         ... reached at any point   :  99.80%
+         ... legacy z > 0.040 m      :  99.80%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.40%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.80%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.80%
+  Goal distance (m)          : mean 0.0051  median 0.0041  p90 0.0051  max 0.5646
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  24.92% of steps  |   38.10% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.10% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0636   worst 0.0174   floor 0.06
+  Episodic cost    : mean 10.98   p90 47.12   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s3_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s4  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s4  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  98.60%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0039  median 0.0037  p90 0.0053  max 0.0186
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  11.89% of steps  |   29.70% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0660   worst 0.0247   floor 0.06
+  Episodic cost    : mean 3.05   p90 8.67   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s4_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s4  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s4  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.50%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0038  median 0.0038  p90 0.0052  max 0.0115
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  13.04% of steps  |   28.10% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0658   worst 0.0302   floor 0.06
+  Episodic cost    : mean 3.60   p90 11.52   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s4_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s4  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s4  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.90%   <- headline
+         ... reached at any point   :  99.90%
+         ... legacy z > 0.040 m      :  99.90%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.00%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.90%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.90%
+  Goal distance (m)          : mean 0.0043  median 0.0038  p90 0.0052  max 0.3971
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  13.12% of steps  |   30.30% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0660   worst 0.0315   floor 0.06
+  Episodic cost    : mean 3.65   p90 11.74   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s4_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s5  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s5  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.90%   <- headline
+         ... reached at any point   :  99.90%
+         ... legacy z > 0.040 m      :  99.90%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.70%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.90%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.90%
+  Goal distance (m)          : mean 0.0051  median 0.0042  p90 0.0057  max 0.6484
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  40.17% of steps  |   54.80% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0581   worst 0.0209   floor 0.06
+  Episodic cost    : mean 14.17   p90 46.82   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s5_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s5  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s5  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.80%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0045  median 0.0043  p90 0.0058  max 0.0124
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  41.12% of steps  |   55.20% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0576   worst 0.0266   floor 0.06
+  Episodic cost    : mean 14.13   p90 45.86   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s5_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s5  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s5  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.70%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0044  median 0.0043  p90 0.0057  max 0.0117
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  41.92% of steps  |   56.10% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0577   worst 0.0211   floor 0.06
+  Episodic cost    : mean 15.16   p90 51.17   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s5_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s50  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s50  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.80%   <- headline
+         ... reached at any point   :  99.80%
+         ... legacy z > 0.040 m      :  99.80%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.60%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.80%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.80%
+  Goal distance (m)          : mean 0.0050  median 0.0040  p90 0.0057  max 0.5850
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  19.77% of steps  |   40.30% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0635   worst 0.0131   floor 0.06
+  Episodic cost    : mean 10.79   p90 44.97   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s50_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s50  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s50  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.70%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0041  median 0.0041  p90 0.0058  max 0.0122
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  22.61% of steps  |   42.90% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0626   worst 0.0162   floor 0.06
+  Episodic cost    : mean 10.60   p90 39.00   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s50_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s50  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s50  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.70%   <- headline
+         ... reached at any point   :  99.70%
+         ... legacy z > 0.040 m      :  99.70%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.10%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.70%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.70%
+  Goal distance (m)          : mean 0.0052  median 0.0040  p90 0.0059  max 0.5832
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  21.28% of steps  |   40.70% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.10% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0635   worst 0.0125   floor 0.06
+  Episodic cost    : mean 11.66   p90 49.22   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s50_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s51  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s51  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.90%   <- headline
+         ... reached at any point   :  99.90%
+         ... legacy z > 0.040 m      :  99.90%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  98.30%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.90%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.90%
+  Goal distance (m)          : mean 0.0051  median 0.0046  p90 0.0063  max 0.3862
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  20.20% of steps  |   26.20% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0685   worst 0.0102   floor 0.06
+  Episodic cost    : mean 14.78   p90 67.80   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s51_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s51  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s51  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.80%   <- headline
+         ... reached at any point   :  99.90%
+         ... legacy z > 0.040 m      :  99.80%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  98.20%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.80%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.80%
+  Goal distance (m)          : mean 0.0055  median 0.0047  p90 0.0063  max 0.4690
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  23.36% of steps  |   29.00% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0678   worst 0.0130   floor 0.06
+  Episodic cost    : mean 15.26   p90 65.51   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s51_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s51  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s51  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.60%   <- headline
+         ... reached at any point   :  99.70%
+         ... legacy z > 0.040 m      :  99.60%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  98.70%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.60%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.60%
+  Goal distance (m)          : mean 0.0064  median 0.0047  p90 0.0062  max 0.6163
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  21.55% of steps  |   27.40% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0679   worst 0.0103   floor 0.06
+  Episodic cost    : mean 15.85   p90 69.91   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s51_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s52  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s52  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.40%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0041  median 0.0039  p90 0.0055  max 0.0119
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  29.74% of steps  |   46.70% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0613   worst 0.0227   floor 0.06
+  Episodic cost    : mean 10.24   p90 42.96   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s52_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s52  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s52  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.50%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0041  median 0.0040  p90 0.0056  max 0.0126
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  28.25% of steps  |   44.80% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0615   worst 0.0235   floor 0.06
+  Episodic cost    : mean 11.25   p90 44.78   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s52_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s52  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s52  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.40%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0041  median 0.0040  p90 0.0054  max 0.0130
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  27.78% of steps  |   42.70% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0620   worst 0.0267   floor 0.06
+  Episodic cost    : mean 10.39   p90 42.84   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s52_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s53  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s53  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.90%   <- headline
+         ... reached at any point   :  99.90%
+         ... legacy z > 0.040 m      :  99.90%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.60%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.90%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.90%
+  Goal distance (m)          : mean 0.0044  median 0.0039  p90 0.0059  max 0.3387
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  11.02% of steps  |   26.60% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0671   worst 0.0106   floor 0.06
+  Episodic cost    : mean 7.59   p90 21.41   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s53_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s53  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s53  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.90%   <- headline
+         ... reached at any point   :  99.90%
+         ... legacy z > 0.040 m      :  99.90%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.30%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.90%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.90%
+  Goal distance (m)          : mean 0.0047  median 0.0040  p90 0.0058  max 0.6211
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  11.96% of steps  |   27.20% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0669   worst 0.0182   floor 0.06
+  Episodic cost    : mean 7.27   p90 18.48   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s53_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s53  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s53  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.60%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0040  median 0.0038  p90 0.0057  max 0.0151
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  11.56% of steps  |   26.70% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0674   worst 0.0108   floor 0.06
+  Episodic cost    : mean 8.25   p90 18.94   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s53_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s54  backend=rsl_rl  eval_seed=101
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s54  /  101
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height : 100.00%   <- headline
+         ... reached at any point   : 100.00%
+         ... legacy z > 0.040 m      : 100.00%   (Day-22 definition)
+         mean commanded goal height : 0.296 m  (bar = 0.148 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.60%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) : 100.00%
+  GOAL-REACH <   5.0 cm (and lifted) : 100.00%
+  Goal distance (m)          : mean 0.0042  median 0.0041  p90 0.0059  max 0.0119
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  34.73% of steps  |   41.20% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0615   worst 0.0143   floor 0.06
+  Episodic cost    : mean 15.51   p90 57.88   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s54_seed101.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s54  backend=rsl_rl  eval_seed=102
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s54  /  102
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.80%   <- headline
+         ... reached at any point   :  99.80%
+         ... legacy z > 0.040 m      :  99.80%   (Day-22 definition)
+         mean commanded goal height : 0.299 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.40%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.80%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.80%
+  Goal distance (m)          : mean 0.0049  median 0.0040  p90 0.0058  max 0.4177
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  33.31% of steps  |   38.90% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0625   worst 0.0203   floor 0.06
+  Episodic cost    : mean 13.46   p90 50.38   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s54_seed102.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]
+
+==============================================================================
+EVAL  label=cppo15_s54  backend=rsl_rl  eval_seed=103
+==============================================================================
+[progress] task       : Isaac-Lift-Cube-UR5e-v0
+[progress] checkpoint : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54/model_1499.pt
+[progress] num_envs=128  episodes=1000  agent=rsl_rl_cppo15_cfg_entry_point
+[progress] success rules: lift >= 0.50 x commanded goal height  |  goal-reach < 1.0 cm  (extras: 2.0 cm, 5.0 cm)
+[progress] building scene (gym.make) ...
+[progress] thresholds: MANIP_FLOOR=0.06  JOINT_LIMIT_MARGIN=0.175  COLLISION_Z_FLOOR=0.05
+[progress] policy loaded, scene up. Scoring 1000 episodes ...
+[progress] 128 / 1000 episodes
+[progress] 256 / 1000 episodes
+[progress] 384 / 1000 episodes
+[progress] 512 / 1000 episodes
+[progress] 640 / 1000 episodes
+[progress] 768 / 1000 episodes
+[progress] 896 / 1000 episodes
+[progress] 1024 / 1000 episodes
+
+------------------------------------------------------------------------------
+  Label / eval seed  : cppo15_s54  /  103
+  Checkpoint         : logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54/model_1499.pt
+  Episodes scored    : 1000   (mean length 250.0 steps)
+  --- TASK ---------------------------------------------------------------
+  LIFT   >= 0.50 x goal height :  99.80%   <- headline
+         ... reached at any point   :  99.80%
+         ... legacy z > 0.040 m      :  99.80%   (Day-22 definition)
+         mean commanded goal height : 0.300 m  (bar = 0.150 m)
+  GOAL-REACH <   1.0 cm (and lifted) :  99.20%   <- headline
+  GOAL-REACH <   2.0 cm (and lifted) :  99.80%
+  GOAL-REACH <   5.0 cm (and lifted) :  99.80%
+  Goal distance (m)          : mean 0.0050  median 0.0040  p90 0.0060  max 0.5671
+  --- SAFETY (frozen policy, measured HERE, not from training logs) ------
+  Singularity  :  36.97% of steps  |   42.80% of episodes touched it
+  Joint limit  :   0.00% of steps  |    0.00% of episodes touched it
+  Collision    :   0.00% of steps  |    0.00% of episodes touched it
+  Manipulability w : mean-of-episode-min 0.0612   worst 0.0165   floor 0.06
+  Episodic cost    : mean 16.91   p90 60.67   (cost_limit = 25)
+------------------------------------------------------------------------------
+  [per-episode csv: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_episodes/cppo15_s54_seed103.csv]
+  [summary row appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_results.csv]
+[report appended to /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/eval_policy_report.txt]

@@ -4,7 +4,190 @@ TRAINING RUN SUMMARY
 log root : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl
 report   : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/summarize_runs_report.txt
 
-found 33 run(s)
+found 43 run(s)
+
+------------------------------------------------------------------------------
+RUN: ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 36
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_lambda                      0.1552 |       0.1982
+    Loss/cost_value_function              0.1326 |       0.1036
+    Loss/mean_episode_cost               24.2586 |      27.0969
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   163.8746 |     165.4915
+    Train/mean_reward/time              163.8746 |     165.4915
+    safety/cost_collision                 0.0000 |       0.0000
+    safety/cost_joint_limit               0.0044 |       0.0035
+    safety/cost_singularity               0.0924 |       0.0968
+    safety/cost_total                     0.0967 |       0.1003
+    safety/manipulability_min             0.0234 |       0.0226
+    safety/viol_collision                 0.0000 |       0.0000
+    safety/viol_joint_limit               0.0093 |       0.0078
+    safety/viol_singularity               0.5482 |       0.5727
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 36
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.1119 |       0.1113
+    Loss/mean_episode_cost                9.7845 |       6.7755
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   166.1642 |     166.3709
+    Train/mean_reward/time              166.1642 |     166.3709
+    safety/cost_collision                 0.0000 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0390 |       0.0383
+    safety/cost_total                     0.0390 |       0.0383
+    safety/manipulability_min          7.261e-04 |    6.642e-04
+    safety/viol_collision                 0.0000 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.1377 |       0.1409
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 36
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_lambda                      0.0588 |       0.2721
+    Loss/cost_value_function              0.2958 |       0.1934
+    Loss/mean_episode_cost               20.8876 |      27.5084
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   158.3020 |     160.0206
+    Train/mean_reward/time              158.3020 |     160.0206
+    safety/cost_collision                 0.0000 |       0.0000
+    safety/cost_joint_limit               0.0092 |       0.0058
+    safety/cost_singularity               0.0738 |       0.0753
+    safety/cost_total                     0.0830 |       0.0811
+    safety/manipulability_min             0.0135 |       0.0152
+    safety/viol_collision                 0.0000 |       0.0000
+    safety/viol_joint_limit               0.0163 |       0.0113
+    safety/viol_singularity               0.5823 |       0.6479
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
 
 ------------------------------------------------------------------------------
 RUN: ur5e_lift/2026-08-01_00-01-25_ppo_s1
@@ -534,189 +717,6 @@ RUN: ur5e_lift/2026-08-01_04-56-17_ppo_s54
     Episode_Termination/time_out
     Loss/entropy
     Loss/learning_rate
-    Loss/surrogate
-    Loss/value_function
-    Metrics/object_pose/orientation_error
-    Metrics/object_pose/position_error
-    Perf/collection time
-    Perf/learning_time
-    Perf/total_fps
-    Policy/mean_noise_std
-    Train/mean_episode_length
-    Train/mean_episode_length/time
-    Train/mean_reward
-    Train/mean_reward/time
-    safety/cost_collision
-    safety/cost_joint_limit
-    safety/cost_singularity
-    safety/cost_total
-    safety/manipulability_mean
-    safety/manipulability_min
-    safety/viol_collision
-    safety/viol_joint_limit
-    safety/viol_singularity
-
-------------------------------------------------------------------------------
-RUN: ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1
-------------------------------------------------------------------------------
-  iterations logged : 1499
-  scalar tags       : 36
-
-  key metrics (tail-mean over last 10% of iterations | final point):
-    Loss/cost_lambda                      0.1552 |       0.1982
-    Loss/cost_value_function              0.1326 |       0.1036
-    Loss/mean_episode_cost               24.2586 |      27.0969
-    Train/mean_episode_length           250.0000 |     250.0000
-    Train/mean_episode_length/time      250.0000 |     250.0000
-    Train/mean_reward                   163.8746 |     165.4915
-    Train/mean_reward/time              163.8746 |     165.4915
-    safety/cost_collision                 0.0000 |       0.0000
-    safety/cost_joint_limit               0.0044 |       0.0035
-    safety/cost_singularity               0.0924 |       0.0968
-    safety/cost_total                     0.0967 |       0.1003
-    safety/manipulability_min             0.0234 |       0.0226
-    safety/viol_collision                 0.0000 |       0.0000
-    safety/viol_joint_limit               0.0093 |       0.0078
-    safety/viol_singularity               0.5482 |       0.5727
-
-  all scalar tags:
-    Curriculum/action_rate
-    Curriculum/joint_vel
-    Episode_Reward/action_rate
-    Episode_Reward/joint_vel
-    Episode_Reward/lifting_object
-    Episode_Reward/object_goal_tracking
-    Episode_Reward/object_goal_tracking_fine_grained
-    Episode_Reward/reaching_object
-    Episode_Termination/object_dropping
-    Episode_Termination/time_out
-    Loss/cost_lambda
-    Loss/cost_value_function
-    Loss/entropy
-    Loss/learning_rate
-    Loss/mean_episode_cost
-    Loss/surrogate
-    Loss/value_function
-    Metrics/object_pose/orientation_error
-    Metrics/object_pose/position_error
-    Perf/collection time
-    Perf/learning_time
-    Perf/total_fps
-    Policy/mean_noise_std
-    Train/mean_episode_length
-    Train/mean_episode_length/time
-    Train/mean_reward
-    Train/mean_reward/time
-    safety/cost_collision
-    safety/cost_joint_limit
-    safety/cost_singularity
-    safety/cost_total
-    safety/manipulability_mean
-    safety/manipulability_min
-    safety/viol_collision
-    safety/viol_joint_limit
-    safety/viol_singularity
-
-------------------------------------------------------------------------------
-RUN: ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2
-------------------------------------------------------------------------------
-  iterations logged : 1499
-  scalar tags       : 36
-
-  key metrics (tail-mean over last 10% of iterations | final point):
-    Loss/cost_lambda                      0.0000 |       0.0000
-    Loss/cost_value_function              0.1119 |       0.1113
-    Loss/mean_episode_cost                9.7845 |       6.7755
-    Train/mean_episode_length           250.0000 |     250.0000
-    Train/mean_episode_length/time      250.0000 |     250.0000
-    Train/mean_reward                   166.1642 |     166.3709
-    Train/mean_reward/time              166.1642 |     166.3709
-    safety/cost_collision                 0.0000 |       0.0000
-    safety/cost_joint_limit               0.0000 |       0.0000
-    safety/cost_singularity               0.0390 |       0.0383
-    safety/cost_total                     0.0390 |       0.0383
-    safety/manipulability_min          7.261e-04 |    6.642e-04
-    safety/viol_collision                 0.0000 |       0.0000
-    safety/viol_joint_limit               0.0000 |       0.0000
-    safety/viol_singularity               0.1377 |       0.1409
-
-  all scalar tags:
-    Curriculum/action_rate
-    Curriculum/joint_vel
-    Episode_Reward/action_rate
-    Episode_Reward/joint_vel
-    Episode_Reward/lifting_object
-    Episode_Reward/object_goal_tracking
-    Episode_Reward/object_goal_tracking_fine_grained
-    Episode_Reward/reaching_object
-    Episode_Termination/object_dropping
-    Episode_Termination/time_out
-    Loss/cost_lambda
-    Loss/cost_value_function
-    Loss/entropy
-    Loss/learning_rate
-    Loss/mean_episode_cost
-    Loss/surrogate
-    Loss/value_function
-    Metrics/object_pose/orientation_error
-    Metrics/object_pose/position_error
-    Perf/collection time
-    Perf/learning_time
-    Perf/total_fps
-    Policy/mean_noise_std
-    Train/mean_episode_length
-    Train/mean_episode_length/time
-    Train/mean_reward
-    Train/mean_reward/time
-    safety/cost_collision
-    safety/cost_joint_limit
-    safety/cost_singularity
-    safety/cost_total
-    safety/manipulability_mean
-    safety/manipulability_min
-    safety/viol_collision
-    safety/viol_joint_limit
-    safety/viol_singularity
-
-------------------------------------------------------------------------------
-RUN: ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3
-------------------------------------------------------------------------------
-  iterations logged : 1499
-  scalar tags       : 36
-
-  key metrics (tail-mean over last 10% of iterations | final point):
-    Loss/cost_lambda                      0.0588 |       0.2721
-    Loss/cost_value_function              0.2958 |       0.1934
-    Loss/mean_episode_cost               20.8876 |      27.5084
-    Train/mean_episode_length           250.0000 |     250.0000
-    Train/mean_episode_length/time      250.0000 |     250.0000
-    Train/mean_reward                   158.3020 |     160.0206
-    Train/mean_reward/time              158.3020 |     160.0206
-    safety/cost_collision                 0.0000 |       0.0000
-    safety/cost_joint_limit               0.0092 |       0.0058
-    safety/cost_singularity               0.0738 |       0.0753
-    safety/cost_total                     0.0830 |       0.0811
-    safety/manipulability_min             0.0135 |       0.0152
-    safety/viol_collision                 0.0000 |       0.0000
-    safety/viol_joint_limit               0.0163 |       0.0113
-    safety/viol_singularity               0.5823 |       0.6479
-
-  all scalar tags:
-    Curriculum/action_rate
-    Curriculum/joint_vel
-    Episode_Reward/action_rate
-    Episode_Reward/joint_vel
-    Episode_Reward/lifting_object
-    Episode_Reward/object_goal_tracking
-    Episode_Reward/object_goal_tracking_fine_grained
-    Episode_Reward/reaching_object
-    Episode_Termination/object_dropping
-    Episode_Termination/time_out
-    Loss/cost_lambda
-    Loss/cost_value_function
-    Loss/entropy
-    Loss/learning_rate
-    Loss/mean_episode_cost
     Loss/surrogate
     Loss/value_function
     Metrics/object_pose/orientation_error
@@ -1348,6 +1348,656 @@ RUN: ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54
     safety/viol_collision              9.067e-05 |    1.526e-04
     safety/viol_joint_limit               0.0000 |       0.0000
     safety/viol_singularity               0.1265 |       0.1223
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.9386 |       1.0018
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0042 |       0.0528
+    Loss/cost_value_function              0.0647 |       0.0586
+    Loss/mean_episode_cost               14.0791 |      15.0267
+    Train/mean_episode_length           249.9709 |     250.0000
+    Train/mean_episode_length/time      249.9709 |     250.0000
+    Train/mean_reward                   132.7681 |     133.1945
+    Train/mean_reward/time              132.7681 |     133.1945
+    safety/cost_collision              2.496e-07 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0567 |       0.0607
+    safety/cost_total                     0.0567 |       0.0607
+    safety/manipulability_min          1.612e-04 |    1.484e-04
+    safety/viol_collision              1.370e-05 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.1540 |       0.1611
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.3253 |       0.3269
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0246 |       0.0193
+    Loss/mean_episode_cost                4.8789 |       4.9031
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   132.9343 |     133.5417
+    Train/mean_reward/time              132.9343 |     133.5417
+    safety/cost_collision              2.646e-06 |    5.831e-07
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0196 |       0.0193
+    safety/cost_total                     0.0196 |       0.0193
+    safety/manipulability_min             0.0127 |       0.0058
+    safety/viol_collision              1.538e-04 |    4.069e-05
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.1512 |       0.1481
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.7743 |       0.8011
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0346 |       0.0357
+    Loss/mean_episode_cost               11.6141 |      12.0172
+    Train/mean_episode_length           249.9741 |     250.0000
+    Train/mean_episode_length/time      249.9741 |     250.0000
+    Train/mean_reward                   134.5379 |     134.2691
+    Train/mean_reward/time              134.5379 |     134.2691
+    safety/cost_collision              3.043e-08 |       0.0000
+    safety/cost_joint_limit            7.516e-06 |       0.0000
+    safety/cost_singularity               0.0465 |       0.0457
+    safety/cost_total                     0.0465 |       0.0457
+    safety/manipulability_min             0.0114 |    8.834e-05
+    safety/viol_collision              3.255e-06 |       0.0000
+    safety/viol_joint_limit            1.431e-05 |       0.0000
+    safety/viol_singularity               0.2565 |       0.2469
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.2556 |       0.2315
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0115 |       0.0133
+    Loss/mean_episode_cost                3.8333 |       3.4722
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   134.7279 |     135.2815
+    Train/mean_reward/time              134.7279 |     135.2815
+    safety/cost_collision              7.231e-08 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0153 |       0.0152
+    safety/cost_total                     0.0153 |       0.0152
+    safety/manipulability_min             0.0340 |       0.0345
+    safety/viol_collision              8.477e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.1311 |       0.1300
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.9590 |       0.9314
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                   9.911e-04 |       0.0000
+    Loss/cost_value_function              0.0246 |       0.0217
+    Loss/mean_episode_cost               14.3856 |      13.9710
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   134.2157 |     134.9664
+    Train/mean_reward/time              134.2157 |     134.9664
+    safety/cost_collision                 0.0000 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0574 |       0.0554
+    safety/cost_total                     0.0574 |       0.0554
+    safety/manipulability_min             0.0221 |       0.0199
+    safety/viol_collision                 0.0000 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.4171 |       0.3980
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.7393 |       0.7516
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0258 |       0.0205
+    Loss/mean_episode_cost               11.0894 |      11.2735
+    Train/mean_episode_length           249.9743 |     250.0000
+    Train/mean_episode_length/time      249.9743 |     250.0000
+    Train/mean_reward                   130.6302 |     131.5144
+    Train/mean_reward/time              130.6302 |     131.5144
+    safety/cost_collision              7.023e-08 |    3.605e-07
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0444 |       0.0488
+    safety/cost_total                     0.0444 |       0.0488
+    safety/manipulability_min             0.0135 |       0.0165
+    safety/viol_collision              6.510e-06 |    5.086e-05
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.2180 |       0.2332
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.9724 |       0.9704
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0458 |       0.0000
+    Loss/cost_value_function              0.0389 |       0.0243
+    Loss/mean_episode_cost               14.5856 |      14.5554
+    Train/mean_episode_length           249.9096 |     250.0000
+    Train/mean_episode_length/time      249.9096 |     250.0000
+    Train/mean_reward                   132.2618 |     129.5821
+    Train/mean_reward/time              132.2618 |     129.5821
+    safety/cost_collision              2.324e-07 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0582 |       0.0621
+    safety/cost_total                     0.0582 |       0.0621
+    safety/manipulability_min             0.0106 |       0.0088
+    safety/viol_collision              2.964e-05 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.2092 |       0.2170
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.7103 |       0.7289
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0383 |       0.0359
+    Loss/mean_episode_cost               10.6542 |      10.9338
+    Train/mean_episode_length           249.9899 |     250.0000
+    Train/mean_episode_length/time      249.9899 |     250.0000
+    Train/mean_reward                   133.9135 |     134.1364
+    Train/mean_reward/time              133.9135 |     134.1364
+    safety/cost_collision              6.591e-09 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0426 |       0.0426
+    safety/cost_total                     0.0426 |       0.0426
+    safety/manipulability_min             0.0271 |       0.0266
+    safety/viol_collision              1.153e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.2837 |       0.2863
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.5202 |       0.5417
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0501 |       0.0415
+    Loss/mean_episode_cost                7.8031 |       8.1261
+    Train/mean_episode_length           249.9734 |     250.0000
+    Train/mean_episode_length/time      249.9734 |     250.0000
+    Train/mean_reward                   133.2703 |     133.7779
+    Train/mean_reward/time              133.2703 |     133.7779
+    safety/cost_collision              6.059e-09 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0310 |       0.0297
+    safety/cost_total                     0.0310 |       0.0297
+    safety/manipulability_min             0.0099 |       0.0103
+    safety/viol_collision              1.289e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.1164 |       0.1151
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.9689 |       0.9911
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0076 |       0.0000
+    Loss/cost_value_function              0.0239 |       0.0186
+    Loss/mean_episode_cost               14.5336 |      14.8661
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   134.4832 |     134.9866
+    Train/mean_reward/time              134.4832 |     134.9866
+    safety/cost_collision              1.059e-07 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0583 |       0.0589
+    safety/cost_total                     0.0583 |       0.0589
+    safety/manipulability_min             0.0139 |       0.0135
+    safety/viol_collision              1.614e-05 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.3402 |       0.3433
 
   all scalar tags:
     Curriculum/action_rate
@@ -2044,599 +2694,769 @@ CROSS-RUN TABLE
 ==============================================================================
 
 Loss/cost_budget_used   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499            n/a
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.7203
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.6659
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.4772
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.7876
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.9660
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.9541
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.6806
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.3798
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.9404
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.4793
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         4.0839
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.3061
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         6.4920
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         1.2016
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.7638
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.3440
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0714
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         4.2773
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.7524
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.3179
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499            n/a
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499            n/a
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499            n/a
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499            n/a
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499         0.7203
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499         0.6659
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499         0.4772
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499         0.7876
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.9660
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499         0.9541
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.6806
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         0.3798
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499         0.9404
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499         0.4793
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499         0.9386
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         0.3253
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499         0.7743
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         0.2556
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.9590
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499         0.7393
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499         0.9724
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499         0.7103
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         0.5202
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499         0.9689
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499         4.0839
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         0.3061
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499         6.4920
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499         1.2016
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499         0.7638
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499         0.3440
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         0.0714
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499         4.2773
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499         0.7524
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         0.3179
 
 Loss/cost_episodes_in_estimate   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499            n/a
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499      4.096e+03
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499      4.096e+03
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499      4.096e+03
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499      4.096e+03
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499      4.096e+03
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499      4.096e+03
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499      4.096e+03
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499      4.096e+03
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499      4.096e+03
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499      4.096e+03
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499      4.096e+03
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499            n/a
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499            n/a
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499            n/a
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499            n/a
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499      4.096e+03
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499      4.096e+03
 
 Loss/cost_lambda   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.1552
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0588
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0130
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499      5.647e-04
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0895
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0000
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.1552
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         0.0000
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.0588
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499            n/a
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.0130
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499      5.647e-04
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499         0.0895
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499         0.0042
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499      9.911e-04
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499         0.0458
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499         0.0076
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         0.0000
 
 Loss/cost_value_function   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.1326
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.1119
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.2958
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0820
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0253
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0677
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0884
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0284
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0787
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0277
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0291
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0725
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0883
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.7664
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0552
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.3227
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0726
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0463
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0817
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0107
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.4975
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0495
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.3104
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.1326
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         0.1119
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.2958
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499            n/a
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499         0.0820
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499         0.0253
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499         0.0677
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499         0.0884
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.0284
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499         0.0787
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.0277
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         0.0291
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499         0.0725
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499         0.0883
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499         0.0647
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         0.0246
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499         0.0346
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         0.0115
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.0246
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499         0.0258
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499         0.0389
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499         0.0383
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         0.0501
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499         0.0239
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499         0.7664
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         0.0552
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499         0.3227
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499         0.0726
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499         0.0463
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499         0.0817
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         0.0107
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499         0.4975
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499         0.0495
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         0.3104
 
 Loss/mean_episode_cost   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499        24.2586
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         9.7845
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499        20.8876
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499        18.0087
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499        16.6480
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499        11.9290
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499        19.6900
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499        24.1499
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499        23.8536
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499        17.0151
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         9.4955
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499        23.5109
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499        11.9830
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       102.0978
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         7.6523
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       162.2997
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499        30.0403
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499        19.0940
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         8.6000
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         1.7846
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       106.9324
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499        18.8100
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         7.9475
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499        24.2586
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         9.7845
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499        20.8876
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499            n/a
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499        18.0087
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499        16.6480
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499        11.9290
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499        19.6900
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499        24.1499
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499        23.8536
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499        17.0151
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         9.4955
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499        23.5109
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499        11.9830
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499        14.0791
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         4.8789
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499        11.6141
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         3.8333
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499        14.3856
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499        11.0894
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499        14.5856
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499        10.6542
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         7.8031
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499        14.5336
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499       102.0978
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         7.6523
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499       162.2997
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499        30.0403
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499        19.0940
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499         8.6000
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         1.7846
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499       106.9324
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499        18.8100
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         7.9475
 
 Train/mean_episode_length   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499       249.9885
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499       249.9863
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499       249.8252
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499       249.9292
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499       249.8697
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499       249.9725
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499       249.9724
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499       249.8476
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499       250.0000
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499       250.0000
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499       249.9444
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499       250.0000
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499       249.9774
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499       249.9928
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499       250.0000
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499       249.8997
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499       249.9005
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499       249.9741
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499       249.9768
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499       249.8415
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       249.9885
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499       249.9863
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       249.8252
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499       249.9292
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499       249.8697
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499       249.9725
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499       249.9724
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       249.8476
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499       250.0000
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499       250.0000
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499       250.0000
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499       250.0000
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499       250.0000
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499       249.9885
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499       249.9863
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499       249.8252
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499       249.9292
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499       249.8697
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499       249.9725
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499       249.9724
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499       249.8476
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499       250.0000
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499       249.9444
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499       249.9774
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499       249.9928
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499       249.8997
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499       249.9005
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499       249.9741
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499       249.9768
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499       249.8415
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499       249.9709
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499       250.0000
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499       249.9741
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499       250.0000
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499       250.0000
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499       249.9743
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499       249.9096
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499       249.9899
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499       249.9734
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499       250.0000
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499       249.9885
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499       249.9863
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499       249.8252
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499       249.9292
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499       249.8697
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499       249.9725
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499       249.9724
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499       249.8476
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499       250.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499       250.0000
 
 Train/mean_episode_length/time   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499       249.9885
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499       249.9863
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499       249.8252
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499       249.9292
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499       249.8697
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499       249.9725
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499       249.9724
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499       249.8476
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499       250.0000
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499       250.0000
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499       249.9444
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499       250.0000
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499       249.9774
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499       249.9928
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499       250.0000
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499       249.8997
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499       249.9005
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499       249.9741
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499       249.9768
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499       249.8415
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       249.9885
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499       249.9863
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       249.8252
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499       249.9292
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499       249.8697
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499       249.9725
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499       249.9724
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       249.8476
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499       250.0000
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499       250.0000
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499       250.0000
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499       250.0000
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499       250.0000
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499       249.9885
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499       249.9863
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499       249.8252
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499       249.9292
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499       249.8697
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499       249.9725
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499       249.9724
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499       249.8476
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499       250.0000
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499       249.9444
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499       249.9774
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499       249.9928
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499       249.8997
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499       249.9005
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499       249.9741
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499       249.9768
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499       249.8415
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499       249.9709
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499       250.0000
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499       249.9741
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499       250.0000
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499       250.0000
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499       249.9743
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499       249.9096
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499       249.9899
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499       249.9734
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499       250.0000
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499       249.9885
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499       249.9863
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499       249.8252
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499       249.9292
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499       249.8697
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499       249.9725
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499       249.9724
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499       249.8476
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499       250.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499       250.0000
 
 Train/mean_reward   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499       131.5380
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499       133.8982
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499       133.0692
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499       134.2868
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499       132.7355
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499       132.1378
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499       137.2815
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499       132.0847
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499       134.3350
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499       134.3376
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499       163.8746
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499       166.1642
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499       158.3020
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499       134.7915
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499       134.9170
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499       132.5698
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499       131.4999
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499       135.0462
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499       132.0242
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499       132.9752
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499       132.7188
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499       130.6288
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499       129.3365
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       131.5380
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499       133.8982
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       133.0692
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499       134.2868
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499       132.7355
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499       132.1378
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499       137.2815
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       132.0847
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499       134.3350
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499       134.3376
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499       163.8746
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499       166.1642
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499       158.3020
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499       131.5380
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499       133.8982
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499       133.0692
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499       134.2868
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499       132.7355
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499       132.1378
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499       137.2815
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499       132.0847
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499       134.3350
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499       134.3376
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499       134.7915
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499       134.9170
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499       132.5698
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499       131.4999
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499       135.0462
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499       132.0242
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499       132.9752
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499       132.7188
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499       130.6288
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499       129.3365
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499       132.7681
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499       132.9343
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499       134.5379
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499       134.7279
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499       134.2157
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499       130.6302
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499       132.2618
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499       133.9135
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499       133.2703
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499       134.4832
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499       131.5380
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499       133.8982
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499       133.0692
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499       134.2868
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499       132.7355
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499       132.1378
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499       137.2815
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499       132.0847
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499       134.3350
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499       134.3376
 
 Train/mean_reward/time   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499       131.5380
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499       133.8982
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499       133.0692
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499       134.2868
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499       132.7355
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499       132.1378
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499       137.2815
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499       132.0847
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499       134.3350
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499       134.3376
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499       163.8746
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499       166.1642
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499       158.3020
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499       134.7915
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499       134.9170
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499       132.5698
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499       131.4999
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499       135.0462
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499       132.0242
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499       132.9752
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499       132.7188
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499       130.6288
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499       129.3365
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       131.5380
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499       133.8982
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       133.0692
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499       134.2868
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499       132.7355
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499       132.1378
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499       137.2815
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       132.0847
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499       134.3350
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499       134.3376
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499       163.8746
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499       166.1642
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499       158.3020
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499       131.5380
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499       133.8982
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499       133.0692
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499       134.2868
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499       132.7355
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499       132.1378
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499       137.2815
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499       132.0847
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499       134.3350
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499       134.3376
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499       134.7915
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499       134.9170
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499       132.5698
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499       131.4999
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499       135.0462
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499       132.0242
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499       132.9752
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499       132.7188
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499       130.6288
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499       129.3365
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499       132.7681
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499       132.9343
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499       134.5379
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499       134.7279
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499       134.2157
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499       130.6302
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499       132.2618
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499       133.9135
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499       133.2703
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499       134.4832
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499       131.5380
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499       133.8982
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499       133.0692
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499       134.2868
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499       132.7355
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499       132.1378
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499       137.2815
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499       132.0847
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499       134.3350
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499       134.3376
 
 safety/cost_collision   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499      6.675e-08
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499      1.154e-07
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      2.282e-07
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499      3.896e-08
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499      3.694e-09
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499      1.411e-06
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499      1.161e-07
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499      1.836e-09
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499      1.328e-10
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499      1.979e-06
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499      4.049e-09
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499      1.580e-07
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499      1.212e-09
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499      6.512e-09
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499      1.789e-08
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499      5.353e-09
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499      9.963e-07
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499      6.675e-08
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499      1.154e-07
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      2.282e-07
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499      3.896e-08
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499      3.694e-09
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      1.411e-06
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499      1.161e-07
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499      1.836e-09
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499      1.328e-10
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499      1.979e-06
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.0000
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         0.0000
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499      6.675e-08
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499      1.154e-07
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499      2.282e-07
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499      3.896e-08
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499      3.694e-09
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499      1.411e-06
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499      1.161e-07
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499      1.836e-09
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499      1.328e-10
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499      1.979e-06
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499      4.049e-09
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499      1.580e-07
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499      1.212e-09
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499      6.512e-09
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499      1.789e-08
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499      5.353e-09
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499      9.963e-07
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499      2.496e-07
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499      2.646e-06
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499      3.043e-08
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499      7.231e-08
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499      7.023e-08
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499      2.324e-07
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499      6.591e-09
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499      6.059e-09
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499      1.059e-07
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499      6.675e-08
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499      1.154e-07
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499      2.282e-07
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499      3.896e-08
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499      3.694e-09
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499      1.411e-06
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499      1.161e-07
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499      1.836e-09
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499      1.328e-10
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499      1.979e-06
 
 safety/cost_joint_limit   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.3492
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0000
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      8.701e-07
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.0000
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0000
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499      2.199e-04
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0000
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.0000
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0000
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0169
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0044
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0092
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.3492
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      8.701e-07
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      2.199e-04
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0169
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.0044
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         0.0000
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.0092
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499         0.3492
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499      8.701e-07
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499      2.199e-04
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499         0.0169
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499      7.516e-06
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499         0.3492
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499      8.701e-07
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499      2.199e-04
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         0.0169
 
 safety/cost_singularity   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.0603
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0307
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499         0.6499
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.1208
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0762
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499         0.0342
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0072
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.4276
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0751
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0162
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0924
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0390
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0738
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0727
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0667
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0479
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0789
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0962
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0956
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0679
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0377
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0938
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0480
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.0603
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0307
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.6499
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.1208
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0762
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0342
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0072
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.4276
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0751
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0162
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.0924
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         0.0390
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.0738
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499         0.0603
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499         0.0307
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499         0.6499
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499         0.1208
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499         0.0762
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499         0.0342
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499         0.0072
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499         0.4276
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499         0.0751
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499         0.0162
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499         0.0727
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499         0.0667
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499         0.0479
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499         0.0789
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.0962
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499         0.0956
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.0679
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         0.0377
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499         0.0938
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499         0.0480
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499         0.0567
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         0.0196
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499         0.0465
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         0.0153
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.0574
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499         0.0444
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499         0.0582
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499         0.0426
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         0.0310
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499         0.0583
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499         0.0603
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         0.0307
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499         0.6499
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499         0.1208
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499         0.0762
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499         0.0342
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         0.0072
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499         0.4276
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499         0.0751
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         0.0162
 
 safety/cost_total   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.4094
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0307
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499         0.6499
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.1208
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0762
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499         0.0345
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0072
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.4276
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0751
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0330
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0967
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0390
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0830
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0727
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0667
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0479
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0789
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0962
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0956
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0679
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0377
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0938
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0480
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.4094
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0307
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.6499
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.1208
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0762
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0345
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0072
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.4276
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0751
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0330
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.0967
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         0.0390
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.0830
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499         0.4094
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499         0.0307
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499         0.6499
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499         0.1208
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499         0.0762
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499         0.0345
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499         0.0072
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499         0.4276
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499         0.0751
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499         0.0330
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499         0.0727
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499         0.0667
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499         0.0479
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499         0.0789
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.0962
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499         0.0956
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.0679
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         0.0377
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499         0.0938
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499         0.0480
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499         0.0567
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         0.0196
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499         0.0465
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         0.0153
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.0574
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499         0.0444
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499         0.0582
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499         0.0426
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         0.0310
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499         0.0583
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499         0.4094
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         0.0307
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499         0.6499
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499         0.1208
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499         0.0762
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499         0.0345
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         0.0072
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499         0.4276
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499         0.0751
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         0.0330
 
 safety/manipulability_min   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.0034
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0042
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      7.419e-06
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.0018
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0073
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499         0.0035
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0380
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499      1.311e-05
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0024
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0120
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0234
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499      7.261e-04
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0135
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499      1.310e-04
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499      8.206e-04
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499      1.843e-04
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499      8.096e-05
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0087
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499      6.161e-04
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0049
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0155
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0119
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499      2.404e-04
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.0034
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0042
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      7.419e-06
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0018
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0073
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0035
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0380
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499      1.311e-05
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0024
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0120
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.0234
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499      7.261e-04
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.0135
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499         0.0034
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499         0.0042
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499      7.419e-06
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499         0.0018
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499         0.0073
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499         0.0035
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499         0.0380
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499      1.311e-05
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499         0.0024
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499         0.0120
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499      1.310e-04
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499      8.206e-04
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499      1.843e-04
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499      8.096e-05
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.0087
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499      6.161e-04
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.0049
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         0.0155
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499         0.0119
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499      2.404e-04
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499      1.612e-04
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         0.0127
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499         0.0114
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         0.0340
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.0221
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499         0.0135
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499         0.0106
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499         0.0271
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         0.0099
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499         0.0139
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499         0.0034
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         0.0042
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499      7.419e-06
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499         0.0018
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499         0.0073
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499         0.0035
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         0.0380
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499      1.311e-05
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499         0.0024
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         0.0120
 
 safety/viol_collision   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499      9.020e-06
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499      1.506e-05
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      2.543e-05
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499      4.069e-06
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499      9.494e-07
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499      1.272e-04
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499      8.206e-06
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499      8.138e-07
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499      6.782e-08
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499      1.356e-04
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499      6.104e-07
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499      3.445e-05
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499      3.391e-07
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499      1.763e-06
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499      2.170e-06
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499      1.017e-06
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499      9.067e-05
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499      9.020e-06
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499      1.506e-05
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      2.543e-05
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499      4.069e-06
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499      9.494e-07
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      1.272e-04
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499      8.206e-06
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499      8.138e-07
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499      6.782e-08
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499      1.356e-04
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.0000
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         0.0000
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499      9.020e-06
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499      1.506e-05
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499      2.543e-05
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499      4.069e-06
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499      9.494e-07
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499      1.272e-04
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499      8.206e-06
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499      8.138e-07
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499      6.782e-08
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499      1.356e-04
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499      6.104e-07
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499      3.445e-05
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499      3.391e-07
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499      1.763e-06
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499      2.170e-06
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499      1.017e-06
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499      9.067e-05
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499      1.370e-05
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499      1.538e-04
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499      3.255e-06
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499      8.477e-06
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499      6.510e-06
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499      2.964e-05
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499      1.153e-06
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499      1.289e-06
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499      1.614e-05
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499      9.020e-06
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499      1.506e-05
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499      2.543e-05
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499      4.069e-06
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499      9.494e-07
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499      1.272e-04
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499      8.206e-06
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499      8.138e-07
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499      6.782e-08
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499      1.356e-04
 
 safety/viol_joint_limit   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.3539
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0000
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      9.494e-07
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.0000
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0000
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499      2.463e-04
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0000
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.0000
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0000
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0276
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0093
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0163
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0000
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.3539
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      9.494e-07
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      2.463e-04
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0000
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0276
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.0093
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         0.0000
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.0163
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499         0.3539
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499      9.494e-07
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499      2.463e-04
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499         0.0276
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499      1.431e-05
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         0.0000
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499         0.3539
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499      9.494e-07
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499      2.463e-04
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         0.0276
 
 safety/viol_singularity   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.2242
-    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.1297
-    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499         0.9105
-    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.3757
-    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.2530
-    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499         0.1340
-    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0784
-    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.6808
-    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.3083
-    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0842
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.5482
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.1377
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.5823
-    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.1804
-    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.2156
-    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.1299
-    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.1758
-    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.4428
-    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.3242
-    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.2618
-    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.2324
-    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.5166
-    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.1265
-    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.2242
-    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.1297
-    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.9105
-    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.3757
-    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.2530
-    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.1340
-    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0784
-    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.6808
-    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.3083
-    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0842
+    ur5_lift_cppo_v0/2026-07-30_02-44-49_cppo_s1     iters=1499         0.5482
+    ur5_lift_cppo_v0/2026-07-30_02-55-40_cppo_s2     iters=1499         0.1377
+    ur5_lift_cppo_v0/2026-07-30_03-06-40_cppo_s3     iters=1499         0.5823
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1             iters=1499         0.2242
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2             iters=1499         0.1297
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3             iters=1499         0.9105
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4             iters=1499         0.3757
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5             iters=1499         0.2530
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50            iters=1499         0.1340
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51            iters=1499         0.0784
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52            iters=1499         0.6808
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53            iters=1499         0.3083
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54            iters=1499         0.0842
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1       iters=1499         0.1804
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2       iters=1499         0.2156
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3       iters=1499         0.1299
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4       iters=1499         0.1758
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5       iters=1499         0.4428
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50      iters=1499         0.3242
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51      iters=1499         0.2618
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52      iters=1499         0.2324
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53      iters=1499         0.5166
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54      iters=1499         0.1265
+    ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1   iters=1499         0.1540
+    ur5e_lift_cppo15/2026-08-01_17-53-14_cppo15_s2   iters=1499         0.1512
+    ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3   iters=1499         0.2565
+    ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4   iters=1499         0.1311
+    ur5e_lift_cppo15/2026-08-01_18-30-16_cppo15_s5   iters=1499         0.4171
+    ur5e_lift_cppo15/2026-08-01_18-41-20_cppo15_s50  iters=1499         0.2180
+    ur5e_lift_cppo15/2026-08-01_18-52-32_cppo15_s51  iters=1499         0.2092
+    ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52  iters=1499         0.2837
+    ur5e_lift_cppo15/2026-08-01_19-15-27_cppo15_s53  iters=1499         0.1164
+    ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54  iters=1499         0.3402
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1       iters=1499         0.2242
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2       iters=1499         0.1297
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3       iters=1499         0.9105
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4       iters=1499         0.3757
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5       iters=1499         0.2530
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50      iters=1499         0.1340
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51      iters=1499         0.0784
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52      iters=1499         0.6808
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53      iters=1499         0.3083
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54      iters=1499         0.0842
 
 ==============================================================================
 CSVs written to: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/results/tb_csv
