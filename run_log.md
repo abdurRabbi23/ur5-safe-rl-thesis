@@ -1879,3 +1879,56 @@ Table 4.5, since the variance finding reads far better graphically than as a ten
 source `[TODO-A]`/`[TODO-B]`; confirm the Times New Roman 12-vs-14 question with the supervisor
 before locking any chapter; check whether Chapter 3 narrates the audit/withdrawal, since §4.2
 currently assumes it does.
+
+## 2026-08-01 (Day 24, cont. 2) — `cppo15` arm prepared; freeze committed; one stale-doc claim corrected
+Separate Cowork session, same day, picked up from `logbook/NEXT_SESSION_cppo15.md`. Sandbox
+confirmed to have no GPU/Isaac Sim (`nvidia-smi`: command not found; `import torch`: not
+installed) — same limitation as every other session here. Code prep + git only; no training,
+no evaluation, no thesis-chapter update (there is no new data yet to write it from).
+
+**λ-arithmetic re-verified independently against `MATRIX_V2_PARTIAL_3ARM.md` §4.1's actual
+per-seed table** (not taken on trust): `ctrl` natural cost by seed (1/2/3/4/5/50/51/52/53/54) =
+102.1/7.7/162.3/30.0/19.1/8.6/1.8/106.9/18.8/7.9. Budget 15 binds on {1,3,4,5,52,53}, slack on
+{2,50,51,54}. Budget 10 binds on the identical set. Minimum natural cost across all 10 seeds is
+1.8 (seed 51) — only a budget below that binds on every seed. The claimed arithmetic in
+`NEXT_SESSION_cppo15.md` holds exactly. No basis found to prefer 10 over 15 (identical bind
+partition; 10 is a larger deviation from the registered design for no extra seed coverage) — not
+pushing back on Touhid's call.
+
+**Created the arm.** `UR5eLiftCPPO15RunnerCfg` added to `agents/rsl_rl_cppo_cfg.py`, entry point
+`rsl_rl_cppo15_cfg_entry_point` registered on `-v0`/`-Play-v0` in `tasks/lift/__init__.py`.
+Confirmed by `git diff` to differ from the parent `cppo` cfg by `cost_limit` (25.0 → 15.0) only.
+`python3 -m py_compile` passes on both files (syntax only — `isaaclab` isn't importable in this
+sandbox, so this is not a functional check; Step 1's actual resolve-check still needs the lab PC).
+
+**Found and corrected a documentation error, not a real risk.** `MATRIX_V2_PARTIAL_3ARM.md` §5,
+`09_comparison_test.md`, and `NEXT_SESSION_cppo15.md` all state the 3 superseded pre-audit
+`cppo_s1/s2/s3` runs sit in `logs/rsl_rl/ur5e_lift_cppo/` under the same labels as the new
+matrix-v2 runs — a checkpoint-selection collision risk. Checked the actual directory: that claim
+is wrong. The stale runs are in `logs/rsl_rl/ur5_lift_cppo_v0/` (missing the "e" in "ur5", plus a
+`_v0` suffix) — a different, non-colliding directory. `ur5e_lift_cppo/` contains only the 10
+2026-08-01-dated runs. Touhid's call: leave the stale directory alone (no fix needed since there
+was never a real collision) and correct the record in `09_comparison_test.md` so this doesn't
+get re-flagged as live risk in a future session.
+
+**Freeze.** Working tree at pickup was NOT clean against `matrix-v2` (`567e4c0`) — but the drift
+was entirely Day-24 output (eval CSVs, `summarize_runs_report.txt`, the new results file, the
+draft thesis chapter, logbook/run_log) never committed after that batch's training+eval, not
+code. Confirmed via `git diff 567e4c0 -- '*.py' '*.yaml' '*.usd'` returning empty. Touhid's call
+on sequencing: committed the pending output/docs first (`684c595`), then the `cppo15` cfg as its
+own commit, then tagged `matrix-v2-cppo15` — keeps "closing out the prior batch" and "starting
+the new arm" as separate, legible commits. Hit the familiar stale `.git/index.lock` blocker
+(same as Day 19 and Day 24 earlier) — same fix, `allow_cowork_file_delete` + `rm`.
+
+**NOT done — needs the lab PC, commands prepared and handed to Touhid in-chat:** Step 1 resolve
+check (env actually imports `rsl_rl_cppo15_cfg_entry_point` and reports `cost_limit=15.0`), Step
+3 smoke (50 iters, seed 1, confirm `Loss/cost_lambda` departs from 0 — natural cost 102.1 at
+seed 1 makes this a near-certain pass, but it's the whole point of smoke-testing first), Step 4
+full 10-seed × 1500-iter training, per-iteration λ extraction for `cppo15` (as part of this run,
+not after) AND retrospectively for the existing `cppo` runs (closes the open Day-24 item), Step
+6 evaluation (script must be adapted from the 3-arm-scoped `run_eval_matrix_v2_3arm.sh`, not
+reused unmodified), Step 7 report (new `Comparison_test/results/` file), Step 8 thesis update
+(`Results_Chapter_Layer1.md` §4.3/§4.7) — none of these can happen until real run data exists.
+
+**NEXT:** Touhid runs the handed-off commands on the lab PC; a follow-up session (or continuing
+this one, if the GPU becomes reachable) reads the reports and does Steps 5/7/8/9 for real.

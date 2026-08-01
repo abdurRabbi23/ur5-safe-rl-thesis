@@ -68,6 +68,37 @@ Opened: 2026-07-29 (Day 19, evening)
 > under the same labels as the new ones (checkpoint-selection logic resolves correctly via
 > mtime, verified, but this is a standing risk, not a fix); `skrl_ppo_cfg.yaml` still unverified
 > under skrl 2.1.0 (open since Day 22-23).
+>
+> **Correction 2026-08-01 (Day 24, cont. — separate session, cfg prep only, no runs).** The
+> "NOT yet done" bullet above is wrong about where the stale runs live. Checked directly: the 3
+> superseded pre-audit `cppo_s1/s2/s3` runs are in `logs/rsl_rl/ur5_lift_cppo_v0/` (note: no
+> "e" in "ur5", plus a `_v0` suffix) — a **different directory** from `logs/rsl_rl/ur5e_lift_cppo/`,
+> which holds only the 10 new matrix-v2 runs. They do not collide and never did; the "archive
+> before training" concern in `logbook/NEXT_SESSION_cppo15.md` Rule 3 does not apply. Left in
+> place (Touhid's call) rather than moved/deleted — corrected here so it isn't re-flagged as a
+> live risk later.
+>
+> **`cppo15` arm created this session, replacing the registered `cppo10`, at
+> `cost_limit = 15`.** New class `UR5eLiftCPPO15RunnerCfg` in `agents/rsl_rl_cppo_cfg.py`,
+> entry point `rsl_rl_cppo15_cfg_entry_point` registered on `-v0` and `-Play-v0`. Differs from
+> the parent `cppo` cfg by `cost_limit` only (25.0 → 15.0), verified by `git diff`. Deviation
+> from `ALGORITHM_AUDIT.md` §4's registered `cppo10` design, justification re-verified against
+> `MATRIX_V2_PARTIAL_3ARM.md` §4.1's actual per-seed table (not assumed): a budget of 15 binds
+> on seeds 1/3/4/5/52/53 and is slack on 2/50/51/54; a budget of 10 binds on the identical
+> partition (min natural cost across all 10 seeds is 1.8, seed 51 — only a budget below that
+> binds everywhere). Full reasoning in the class docstring and `logbook/NEXT_SESSION_cppo15.md`.
+>
+> **Freeze:** commit `684c595` (Day-24 batch results/thesis/logbook — output only, no code) +
+> a second commit adding the `cppo15` cfg, tag `matrix-v2-cppo15`. Both from this session
+> directly (git operations don't need the lab PC's GPU, same as the Day-24 freeze).
+>
+> **NOT run — this sandbox has no GPU/Isaac Sim (`nvidia-smi`, `import torch` both fail here,
+> confirmed this session).** Steps 3 (smoke) through 8 (eval) of `RUN_CHECKLIST_v2.md`, the
+> per-iteration λ extraction (new arm + retrospective on `cppo`), the results file, and the
+> thesis §4.3/§4.7 update all remain for Touhid to run on the lab PC. Exact commands prepared
+> and handed off in the same session's chat reply — not duplicated here to avoid drift between
+> two copies; if picking this up cold, ask for them again or reconstruct from
+> `RUN_CHECKLIST_v2.md` Steps 3–9 with `cppo15` substituted for `cppo10`.
 
 > ## Historical — EXECUTION STATUS (2026-07-31, Day 23, cont.), superseded by the block above
 >
