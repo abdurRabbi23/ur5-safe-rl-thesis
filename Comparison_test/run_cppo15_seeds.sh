@@ -88,19 +88,23 @@ verify_run() {
 }
 
 if [[ "$MODE" == "smoke" ]]; then
-    log "=== SMOKE: cppo15, seed 1, 50 iterations ==="
+    ITERS="${2:-50}"
+    log "=== SMOKE: cppo15, seed 1, ${ITERS} iterations ==="
     started=$(date +%s)
     ../IsaacLab/isaaclab.sh -p ur5_grasp/scripts/train.py \
         --task "$TASK" --headless --num_envs 512 \
-        --max_iterations 50 --seed 1 --run_name "cppo15_smoke_$(date +%H%M%S)" --agent "$AGENT"
+        --max_iterations "$ITERS" --seed 1 --run_name "cppo15_smoke${ITERS}_$(date +%H%M%S)" --agent "$AGENT"
     rc=$?
-    verify_run "logs/rsl_rl/$EXP/*cppo15_smoke*" "cppo15_smoke" "$rc" "$started"
+    verify_run "logs/rsl_rl/$EXP/*cppo15_smoke${ITERS}*" "cppo15_smoke${ITERS}" "$rc" "$started"
     log ""
-    log "NEXT: read Loss/cost_lambda from this run's TB scalars (or wait for"
-    log "  ../IsaacLab/isaaclab.sh -p ur5_grasp/tools/summarize_runs.py to pick it up)."
-    log "  It MUST depart from 0 — seed 1's ctrl natural cost is 102.1 against budget 15."
-    log "  If it stays at 0, STOP. Something is wrong with the entry point; do not launch"
-    log "  the full 10-seed run."
+    log "NEXT: read Loss/cost_lambda (and Loss/mean_episode_cost) from this run's TB scalars."
+    log "  A 50-iter window is known (2026-08-01 session) to be too short to see engagement even"
+    log "  for the wider budget=25 arm (lambda first departs ~iter 31-43, peaks ~iter 50-58 there)."
+    log "  Before ~iter 30 mean_episode_cost is expected to sit far below any tried budget (~0.1-0.2),"
+    log "  so lambda=0 through there is CORRECT dual-ascent behaviour, not a bug. Only treat lambda=0"
+    log "  as suspicious once mean_episode_cost has climbed to within range of cost_limit=15 and"
+    log "  lambda still hasn't moved. If that happens, STOP — something is wrong with the entry"
+    log "  point; do not launch the full 10-seed run."
     exit "$fail_count"
 fi
 
