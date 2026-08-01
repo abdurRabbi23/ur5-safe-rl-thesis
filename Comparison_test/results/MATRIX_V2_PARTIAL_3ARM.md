@@ -182,6 +182,39 @@ Range: `ctrl` 1.8–162.3 (~90×). `cppo` 9.5–24.1 (~2.5×), pulled into a ban
 > trajectory. Pull `Loss/cost_lambda` per iteration from the training event files to convert the
 > inference into evidence. Until then, do not quote a λ peak or an engagement iteration for any
 > seed.
+>
+> **Update 2026-08-01 (Day 24, cont. 2) — now measured.** `summarize_runs.py` had already written
+> the full per-iteration `Loss/cost_lambda` trajectory for all 10 `cppo` runs to
+> `results/tb_csv/*__Loss__cost_lambda.csv` during the Day-24 session; it was written but never
+> read for this question. Read directly (no training run needed):
+>
+> | seed | 1 | 2 | 3 | 4 | 5 | 50 | 51 | 52 | 53 | 54 |
+> |---|---|---|---|---|---|---|---|---|---|---|
+> | max λ | 15.84 | 29.25 | 40.46 | 30.30 | 22.15 | 17.14 | 14.25 | 46.32 | 20.38 | 48.05 |
+> | max λ at iter | 58 | 55 | 54 | 54 | 51 | 50 | 52 | 54 | 57 | 58 |
+> | last iter with λ>0 | 78 | 90 | 101 | 90 | 1491 | 1499 | 70 | 109 | 1499 | 114 |
+> | final λ | 0 | 0 | 0 | 0 | 0 | 0.0054 | 0 | 0 | 0.1543 | 0 |
+>
+> The actual mechanism is **not** "λ engages hard on the high-cost seeds and relaxes once under
+> budget" (the retracted sentence) nor purely "λ stays engaged on whichever seeds end non-zero"
+> (this correction's own first guess, checked against the data before writing it down). It is:
+> **every one of the 10 seeds gets a large early transient spike** (λ climbing to 14–48 within the
+> first ~50–60 iterations, before the policy has learned much), which then decays back toward 0 by
+> roughly iteration 70–115 for 7 of the 10 seeds (1,2,3,4,50,51,52,54 — note 50 and 52 decay too,
+> despite the early table listing 50's *final* λ as non-zero: seed 50 goes to exactly 0 for most of
+> training and picks up a small late value again, see below) — and stays substantively engaged
+> almost to the end of training for exactly 2 seeds, **5 and 53** (last λ>0 at iteration 1491 and
+> 1499 of 1500). Seed 50's case is intermediate: 71 non-zero iterations total, mostly in the early
+> spike, with a small (0.0054) reactivation right at the final iteration — closer to "decayed" than
+> "sustained" in shape, unlike 5 and 53.
+>
+> This means the early part of every `cppo` run looks identical in *kind* to seeds 5/53's
+> late-training behaviour — a universal transient, not evidence by itself that a seed will end up
+> needing the constraint. What distinguishes 5 and 53 is that their spike does not decay: the
+> Lagrangian stays live for almost the entire 1500 iterations. Framing revised accordingly; do not
+> reuse the retracted "engages precisely on 5/50/53" sentence, and do not describe the early spike
+> as unique to any subset of seeds — it is common to all 10. Source: `results/tb_csv/2026-08-01_*
+> _cppo_s{1,2,3,4,5,50,51,52,53,54}__Loss__cost_lambda.csv`, read directly, not derived.
 
 Confirmed independently on held-out evaluation episodes (not training rollout): cost mean
 47.68 → 18.41 (−61%), but **std across seeds 54.04 → 5.36, a ~10× tightening**. Which basin
