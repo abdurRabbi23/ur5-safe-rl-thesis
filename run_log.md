@@ -1989,3 +1989,34 @@ failed — 50 iterations was too short a window, not evidence of a wiring bug. E
 by iteration 75; `cost_lambda` responded, rising to 7.08 by iteration 140 and pulling cost back
 down to 7.30 by iteration 150 — the dual-ascent loop engaging and doing its job. Entry point
 confirmed correctly wired. Cleared to launch the full 10-seed batch.
+
+## 2026-08-02 — Training stopped; git migration lab PC → GitHub → laptop; writing env started
+
+**Decision: no further training.** matrix-v2 partial batch (ppo/ctrl/cppo, 10 seeds, tag
+`matrix-v2`) is now the final result set. `cppo10` and `sac`, previously "not yet trained," are
+cut permanently — Results chapter §4.7 limitation #1 is no longer provisional. Full remaining
+scope is thesis writing/formatting.
+
+**Git migration, three-machine story.** Discovered `main` (lab PC) and `origin/main` (GitHub) had
+silently diverged since 2026-07-22 — traced to the Day 18 restart decision (this file, above,
+2026-07-28 entry): the repo was reset to pre-Layer-2 commit `8d4cb41`, abandoning Layer 2 (IBVS) /
+Layer 3 (RH-P12-RN) work under tag `backup/pre-layer1-reset`, but GitHub's `main` was never
+force-updated to match and sat frozen at the old tip (`0c320cf`) while local gained 19 new
+commits GitHub never saw. First attempt was a straight `git merge origin/main` — wrong move,
+would have resurrected the abandoned Layer 2/3 code into the main line; caught before committing,
+aborted with `git merge --abort`. Correct fix: pushed the `backup/pre-layer1-reset` tag to origin
+(preserves the abandoned history on GitHub too), then `git push origin main --force-with-lease`
+to make `origin/main` match local. Verified both at `cde5e0c`. Laptop then cloned fresh from
+corrected `origin/main` — verified clean (HEAD/main/origin/main/origin/HEAD all at `cde5e0c`, all
+5 tags present). **Laptop is now primary for writing.** Lab PC keeps the untracked working tree
+(IsaacLab/, checkpoints, logs — always correctly gitignored) as the raw-artifact archive. Loose
+end: a local branch `backup-before-merge-2026-08-02` (merge safety net) likely still sits unused
+on the lab PC — harmless, delete next time that machine is touched.
+
+**Writing environment — started, not finished.** Decided: LaTeX (KUET thesis-book convention),
+not Word. Touhid has the official KUET `.cls`/`.sty` template but it wasn't supplied before this
+session ended; next session needs it (or a decision to build a generic skeleton first and swap
+the real template in later) before the LaTeX project (`Thesis_LaTeX/`, chapters ported from
+`Thesis_Documentation/*_Chapter_Layer1.md` via pandoc, seeded `references.bib`, VS Code +
+LaTeX Workshop config) can be built. Full detail and exact next steps: `logbook/HANDOFF.md`
+(rewritten today — paste it into the next session).
