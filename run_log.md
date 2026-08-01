@@ -1944,3 +1944,17 @@ measured" limitation and correcting this session's own first-guess reading befor
 Also wrote `run_cppo15_seeds.sh` (smoke + 10-seed training launcher, modeled on
 `run_matrix_v2.sh`'s verified pattern) and `run_eval_cppo15.sh` (eval launcher scoped to the new
 checkpoints only — `ctrl` doesn't need re-evaluating). Both `bash -n` clean; neither executed.
+
+**Addendum — smoke test run on the lab PC, iterated twice.** First smoke (50 iters, seed 1,
+512 envs): `Loss/cost_lambda` stayed flat 0.0 throughout. NOT treated as a fail on sight —
+checked `Loss/mean_episode_cost` for the same run first (0.10-0.17 through iter 48, two orders
+of magnitude below `cost_limit=15`), confirmed by hand that the dual-ascent update
+`clip(0 + 0.035*(0.1-15), 0, 100) = 0` is the mathematically correct output at that cost level,
+and that the retrospective `cppo`(25) data pulled earlier this session shows lambda doesn't
+typically depart 0 before iteration ~31-43 even at the wider budget. Verdict: inconclusive, not
+failed — 50 iterations was too short a window, not evidence of a wiring bug. Extended
+`run_cppo15_seeds.sh smoke <N>` to take an iteration count (`c1e4a1b`) and re-ran at 150 iters.
+**Second smoke (150 iters, seed 1): PASS.** `mean_episode_cost` climbed to 18.99 (above budget)
+by iteration 75; `cost_lambda` responded, rising to 7.08 by iteration 140 and pulling cost back
+down to 7.30 by iteration 150 — the dual-ascent loop engaging and doing its job. Entry point
+confirmed correctly wired. Cleared to launch the full 10-seed batch.
