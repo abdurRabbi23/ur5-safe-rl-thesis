@@ -1874,6 +1874,37 @@ is a substitution rather than a weakening. Prompt for the next session written t
 both the new arm and retrospectively for `cppo` at 25) and archiving the 3 stale pre-audit run
 dirs before anything new trains.
 
+**Per-seed appendix tables built (same session, after the chapter).** New
+`results/scripts/make_per_seed_tables.py` (tb_csv → markdown + json) and `make_per_seed_pdf.py`
+(json → PDF), producing `Comparison_test/results/PER_SEED_TRAINING_TABLES.{md,pdf}` — 10 tables,
+one per seed, ppo/ctrl/cppo × {final, full-run mean, final-10% tail} for mean reward, mean episode
+cost, the three violation fractions, `lifting_object` and `reaching_object`. Runs selected by dated
+path with an explicit time cutoff (matrix ran 00:01–06:51), so neither the 2026-07-30 stale cppo
+runs nor the evening's cppo15 smokes can leak in; generator raises rather than guesses if a label
+resolves to more than one run.
+
+**Verified three ways:** all 30 source runs confirmed 2026-08-01; every rendered value re-read
+straight from the raw CSVs bypassing the generator (0 mismatches); the mean-episode-cost tail
+column reproduces all 20 of `MATRIX_V2_PARTIAL_3ARM.md` §4.1's per-seed values; ppo vs ctrl
+identical in every seed × metric × statistic (0 differences out of 630 comparisons) — an
+independent reconfirmation of §2's bitwise finding from a different data path.
+
+**Two things the per-seed view exposed that the pooled numbers hid:**
+1. **`Loss/mean_episode_cost` is not logged for `ppo` at all** — Lagrangian-runner-only tag. The
+   PDF fills that cell with `ctrl`'s value, footnoted, which is licensed by the bitwise identity.
+2. **cPPO is *worse* than ctrl on 6 of 10 seeds** (2, 5, 50, 51, 53, 54) on both episodic cost and
+   training soft-margin singularity — seed 51 rises 1.8 → 17.0. The mean improvement is carried
+   entirely by the four catastrophic seeds (1, 3, 4, 52). **This contradicted a sentence in the
+   Results chapter §4.6** ("the constraint is not a floor that makes safe seeds less safe") which
+   was written from the pooled view and was wrong. Rewritten: the constraint supplies a *ceiling*,
+   not a uniform reduction — it prevents disasters without keeping fortunate runs as fortunate.
+   Still the right trade given the draw is unknowable in advance, but it is a trade and is now
+   presented as one. Also noted that this training-time pattern does not conflict with the frozen-
+   policy evaluation numbers (Table 4.4), which measure a different thing.
+
+**Also noted:** the std values in `MATRIX_V2_PARTIAL_3ARM.md` are **population** stds (ddof = 0);
+sample stds over the 10 seeds are larger by √(10/9) ≈ 1.054. Both correct — state the convention.
+
 **NEXT (writing):** regenerate figures from matrix-v2 — highest value is a per-seed cost plot for
 Table 4.5, since the variance finding reads far better graphically than as a ten-column table;
 source `[TODO-A]`/`[TODO-B]`; confirm the Times New Roman 12-vs-14 question with the supervisor

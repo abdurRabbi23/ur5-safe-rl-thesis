@@ -311,9 +311,28 @@ telemetry would warn an engineer which one they had obtained.
 The constrained agent's row spans 9.5 to 24.1, a spread of roughly two and a half fold, and every
 seed is pulled into a band beneath the budget of 25 irrespective of where its unconstrained
 counterpart sat. Seed 3, whose control counterpart is the worst in the batch at 162.3, ends at
-11.9. Seed 51, whose control counterpart is the safest at 1.8, ends at 17.0 — the constraint is
-not a floor that makes safe seeds less safe, but the band it produces is a band, entered from
-either side.
+11.9.
+
+This must not be read as a uniform improvement, and the per-seed data makes the qualification
+unavoidable. The band is entered from *both* directions: on six of the ten seeds — 2, 5, 50, 51,
+53 and 54 — the constrained agent's episodic cost is **higher** than its control counterpart's,
+and on the same six seeds its training-time soft-margin singularity fraction is higher too. Seed
+51 is the extreme case, rising from 1.8 to 17.0. The improvement in the mean is carried entirely
+by the four seeds whose control counterparts were catastrophic (1, 3, 4 and 52, falling from
+102.1, 162.3, 30.0 and 106.9 to 18.0, 11.9, 19.7 and 9.5 respectively). What the constraint
+supplies is therefore not a reduction applied to every run, but a *ceiling*: it prevents the
+disastrous outcomes without guaranteeing that a fortunate run stays as fortunate as it would have
+been. Since which of the two a given training run will produce is not knowable in advance — that
+is precisely the lottery described above — trading an unpredictable draw between 1.8 and 162.3 for
+a reliable band around 15 is the correct trade for a system intended to run on hardware. But it is
+a trade, not a free improvement, and it should be presented as one.
+
+It is worth noting that this pattern is specific to the training-time telemetry. On the frozen
+policy over 30,000 evaluation episodes per arm, the constrained agent is ahead on the aggregate
+safety measures that matter (Table 4.4), including a 5.4-fold reduction in true singularity
+crossings. The per-seed training rows and the pooled evaluation rows are measuring different
+things — an exploring policy against a deterministic one, and a soft margin against an actual
+crossing — and they are not in conflict, but neither should be quoted as if it were the other.
 
 The effect is confirmed independently on held-out evaluation episodes rather than on training
 rollouts. Mean episodic cost falls from 47.68 to 18.41, a reduction of 61 %, but the more important

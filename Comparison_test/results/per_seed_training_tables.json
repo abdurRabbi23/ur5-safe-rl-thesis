@@ -1,0 +1,2262 @@
+{
+  "1": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 132.89642333984375,
+        "mean": 115.54347890152658,
+        "tail": 131.53800587972006,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-01-25_ppo_s1",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 132.89642333984375,
+        "mean": 115.54347890152658,
+        "tail": 131.53800587972006,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-58-26_ctrl_s1",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 135.30563354492188,
+        "mean": 119.08111768911407,
+        "tail": 134.7915461222331,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-56-53_cppo_s1",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 105.75231170654297,
+        "mean": 51.58640904700999,
+        "tail": 102.09781061808268,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_00-58-26_ctrl_s1",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 105.75231170654297,
+        "mean": 51.58640904700999,
+        "tail": 102.09781061808268,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-58-26_ctrl_s1",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 19.834136962890625,
+        "mean": 14.919629841274155,
+        "tail": 18.008703638712564,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-56-53_cppo_s1",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.2279256284236908,
+        "mean": 0.1894385900204155,
+        "tail": 0.22419312000274658,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-01-25_ppo_s1",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.2279256284236908,
+        "mean": 0.1894385900204155,
+        "tail": 0.22419312000274658,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-58-26_ctrl_s1",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.1867472380399704,
+        "mean": 0.18388391594673217,
+        "tail": 0.18036038398742676,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-56-53_cppo_s1",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.3632100522518158,
+        "mean": 0.16406752352244622,
+        "tail": 0.3538689609368642,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-01-25_ppo_s1",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.3632100522518158,
+        "mean": 0.16406752352244622,
+        "tail": 0.3538689609368642,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-58-26_ctrl_s1",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 1.8310547360063841e-07,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-56-53_cppo_s1",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.0005405544849090802,
+        "tail": 9.01963995299108e-06,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-01-25_ppo_s1",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.0005405544849090802,
+        "tail": 9.01963995299108e-06,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-58-26_ctrl_s1",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0006620483580045402,
+        "tail": 6.103515806898941e-07,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-56-53_cppo_s1",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.461243629455566,
+        "mean": 9.124898241821283,
+        "tail": 9.442866605122884,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-01-25_ppo_s1",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.461243629455566,
+        "mean": 9.124898241821283,
+        "tail": 9.442866605122884,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-58-26_ctrl_s1",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.485994338989258,
+        "mean": 8.951535839541112,
+        "tail": 9.474719753265381,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-56-53_cppo_s1",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.9002911448478699,
+        "mean": 0.8115218242272968,
+        "tail": 0.897075715859731,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-01-25_ppo_s1",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9002911448478699,
+        "mean": 0.8115218242272968,
+        "tail": 0.897075715859731,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-58-26_ctrl_s1",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.9127596616744995,
+        "mean": 0.8199689930543537,
+        "tail": 0.9122140200932821,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-56-53_cppo_s1",
+        "source_arm": "cppo"
+      }
+    }
+  },
+  "2": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 134.0218048095703,
+        "mean": 117.44014599379277,
+        "tail": 133.89822041829427,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-13-17_ppo_s2",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 134.0218048095703,
+        "mean": 117.44014599379277,
+        "tail": 133.89822041829427,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-10-06_ctrl_s2",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 135.53822326660156,
+        "mean": 115.98818388073022,
+        "tail": 134.91697448730469,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-08-26_cppo_s2",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 7.855602264404297,
+        "mean": 8.829909872374943,
+        "tail": 7.652260189056396,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_01-10-06_ctrl_s2",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 7.855602264404297,
+        "mean": 8.829909872374943,
+        "tail": 7.652260189056396,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-10-06_ctrl_s2",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 17.24576187133789,
+        "mean": 16.164585477814448,
+        "tail": 16.647960561116538,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-08-26_cppo_s2",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.123870849609375,
+        "mean": 0.12500705647624333,
+        "tail": 0.12965413868427278,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-13-17_ppo_s2",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.123870849609375,
+        "mean": 0.12500705647624333,
+        "tail": 0.12965413868427278,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-10-06_ctrl_s2",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.2207539975643158,
+        "mean": 0.2258701431703897,
+        "tail": 0.21562914152940113,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-08-26_cppo_s2",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 8.816189559487006e-08,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-13-17_ppo_s2",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 8.816189559487006e-08,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-10-06_ctrl_s2",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-08-26_cppo_s2",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.0007068752965102855,
+        "tail": 1.5055338881211355e-05,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-13-17_ppo_s2",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.0007068752965102855,
+        "tail": 1.5055338881211355e-05,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-10-06_ctrl_s2",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 1.0172526344831567e-05,
+        "mean": 0.0015371365515523697,
+        "tail": 3.445095578475351e-05,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-08-26_cppo_s2",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.503181457519531,
+        "mean": 9.145815870367883,
+        "tail": 9.494183959960937,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-13-17_ppo_s2",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.503181457519531,
+        "mean": 9.145815870367883,
+        "tail": 9.494183959960937,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-10-06_ctrl_s2",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.492762565612793,
+        "mean": 8.821466617667078,
+        "tail": 9.48400696436564,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-08-26_cppo_s2",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.9116419553756714,
+        "mean": 0.8056113206289398,
+        "tail": 0.9106042218208313,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-13-17_ppo_s2",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9116419553756714,
+        "mean": 0.8056113206289398,
+        "tail": 0.9106042218208313,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-10-06_ctrl_s2",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.9122697710990906,
+        "mean": 0.7936295253775704,
+        "tail": 0.9111761379241944,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-08-26_cppo_s2",
+        "source_arm": "cppo"
+      }
+    }
+  },
+  "3": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 133.76612854003906,
+        "mean": 117.77269347986889,
+        "tail": 133.0691717529297,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-24-40_ppo_s3",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 133.76612854003906,
+        "mean": 117.77269347986889,
+        "tail": 133.0691717529297,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-21-49_ctrl_s3",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 131.8118438720703,
+        "mean": 113.97134299104722,
+        "tail": 132.56984466552734,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-19-58_cppo_s3",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 163.06243896484375,
+        "mean": 107.8396928064134,
+        "tail": 162.29972666422526,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_01-21-49_ctrl_s3",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 163.06243896484375,
+        "mean": 107.8396928064134,
+        "tail": 162.29972666422526,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-21-49_ctrl_s3",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 12.856891632080078,
+        "mean": 10.108247862517533,
+        "tail": 11.928986911773682,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-19-58_cppo_s3",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.9167277216911316,
+        "mean": 0.7069016280298923,
+        "tail": 0.9104836908976237,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-24-40_ppo_s3",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9167277216911316,
+        "mean": 0.7069016280298923,
+        "tail": 0.9104836908976237,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-21-49_ctrl_s3",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.1247660368680954,
+        "mean": 0.12548180880674895,
+        "tail": 0.12989495684703192,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-19-58_cppo_s3",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 9.494357800576836e-08,
+        "tail": 9.494357800576836e-07,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-24-40_ppo_s3",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 9.494357800576836e-08,
+        "tail": 9.494357800576836e-07,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-21-49_ctrl_s3",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-19-58_cppo_s3",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 3.0517578125e-05,
+        "mean": 0.0005955675057023957,
+        "tail": 2.5431315910585303e-05,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-24-40_ppo_s3",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 3.0517578125e-05,
+        "mean": 0.0005955675057023957,
+        "tail": 2.5431315910585303e-05,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-21-49_ctrl_s3",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0008130900271201729,
+        "tail": 3.3908421149438557e-07,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-19-58_cppo_s3",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.513951301574707,
+        "mean": 9.158197874652494,
+        "tail": 9.491910521189372,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-24-40_ppo_s3",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.513951301574707,
+        "mean": 9.158197874652494,
+        "tail": 9.491910521189372,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-21-49_ctrl_s3",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.415874481201172,
+        "mean": 8.705239613738803,
+        "tail": 9.430274696350098,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-19-58_cppo_s3",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.9074578285217285,
+        "mean": 0.8113271392375851,
+        "tail": 0.9048361019293467,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-24-40_ppo_s3",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9074578285217285,
+        "mean": 0.8113271392375851,
+        "tail": 0.9048361019293467,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-21-49_ctrl_s3",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.8990206122398376,
+        "mean": 0.7821991221945112,
+        "tail": 0.9001879044373831,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-19-58_cppo_s3",
+        "source_arm": "cppo"
+      }
+    }
+  },
+  "4": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 134.5306854248047,
+        "mean": 120.67144164484243,
+        "tail": 134.2868096923828,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-35-41_ppo_s4",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 134.5306854248047,
+        "mean": 120.67144164484243,
+        "tail": 134.2868096923828,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-33-16_ctrl_s4",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 132.57940673828125,
+        "mean": 112.11118118939301,
+        "tail": 131.49990743001302,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-31-28_cppo_s4",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 31.5806941986084,
+        "mean": 22.951279683071405,
+        "tail": 30.040328979492188,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_01-33-16_ctrl_s4",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 31.5806941986084,
+        "mean": 22.951279683071405,
+        "tail": 30.040328979492188,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-33-16_ctrl_s4",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 20.019550323486328,
+        "mean": 13.784380723066924,
+        "tail": 19.68995215098063,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-31-28_cppo_s4",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.3843892514705658,
+        "mean": 0.3209528968924369,
+        "tail": 0.37565044045448304,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-35-41_ppo_s4",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.3843892514705658,
+        "mean": 0.3209528968924369,
+        "tail": 0.37565044045448304,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-33-16_ctrl_s4",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.182373046875,
+        "mean": 0.1472542566067265,
+        "tail": 0.17578844318787257,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-31-28_cppo_s4",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 7.459852592243503e-08,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-35-41_ppo_s4",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 7.459852592243503e-08,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-33-16_ctrl_s4",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-31-28_cppo_s4",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.0006836073370183537,
+        "tail": 4.069010556122521e-06,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-35-41_ppo_s4",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.0006836073370183537,
+        "tail": 4.069010556122521e-06,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-33-16_ctrl_s4",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0005729234650225408,
+        "tail": 1.763237887644209e-06,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-31-28_cppo_s4",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.437787055969238,
+        "mean": 9.146799503260835,
+        "tail": 9.477651456197103,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-35-41_ppo_s4",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.437787055969238,
+        "mean": 9.146799503260835,
+        "tail": 9.477651456197103,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-33-16_ctrl_s4",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.446023941040039,
+        "mean": 8.810889005953058,
+        "tail": 9.433490397135417,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-31-28_cppo_s4",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.9071499705314636,
+        "mean": 0.8270315734378528,
+        "tail": 0.9086454443136851,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-35-41_ppo_s4",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9071499705314636,
+        "mean": 0.8270315734378528,
+        "tail": 0.9086454443136851,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-33-16_ctrl_s4",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.895577609539032,
+        "mean": 0.7624750502985747,
+        "tail": 0.8868717825412751,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-31-28_cppo_s4",
+        "source_arm": "cppo"
+      }
+    }
+  },
+  "5": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 133.73602294921875,
+        "mean": 115.78876883749167,
+        "tail": 132.73546508789062,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-46-59_ppo_s5",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 133.73602294921875,
+        "mean": 115.78876883749167,
+        "tail": 132.73546508789062,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-45-10_ctrl_s5",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 135.327880859375,
+        "mean": 120.43830817528566,
+        "tail": 135.04623992919923,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-43-02_cppo_s5",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 18.884613037109375,
+        "mean": 15.843635205183158,
+        "tail": 19.094027061462402,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_01-45-10_ctrl_s5",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 18.884613037109375,
+        "mean": 15.843635205183158,
+        "tail": 19.094027061462402,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-45-10_ctrl_s5",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 22.526960372924805,
+        "mean": 21.255495061636903,
+        "tail": 24.14988057454427,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-43-02_cppo_s5",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.2529093623161316,
+        "mean": 0.21874070173657673,
+        "tail": 0.25304444213708244,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-46-59_ppo_s5",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.2529093623161316,
+        "mean": 0.21874070173657673,
+        "tail": 0.25304444213708244,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-45-10_ctrl_s5",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.4375712275505066,
+        "mean": 0.37895029238699257,
+        "tail": 0.44279806474844613,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-43-02_cppo_s5",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-46-59_ppo_s5",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-45-10_ctrl_s5",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-43-02_cppo_s5",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.0007463921659715804,
+        "tail": 9.494357921842796e-07,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-46-59_ppo_s5",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.0007463921659715804,
+        "tail": 9.494357921842796e-07,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-45-10_ctrl_s5",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0007460056112552895,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-43-02_cppo_s5",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.472189903259277,
+        "mean": 9.116992925735444,
+        "tail": 9.424123287200928,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-46-59_ppo_s5",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.472189903259277,
+        "mean": 9.116992925735444,
+        "tail": 9.424123287200928,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-45-10_ctrl_s5",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.490564346313477,
+        "mean": 8.936540807656575,
+        "tail": 9.46422201792399,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-43-02_cppo_s5",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.905831515789032,
+        "mean": 0.8150814680308104,
+        "tail": 0.9003458766142527,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_00-46-59_ppo_s5",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.905831515789032,
+        "mean": 0.8150814680308104,
+        "tail": 0.9003458766142527,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_01-45-10_ctrl_s5",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.9144128561019897,
+        "mean": 0.8233032582253218,
+        "tail": 0.9127488946914672,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_02-43-02_cppo_s5",
+        "source_arm": "cppo"
+      }
+    }
+  },
+  "50": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 132.57400512695312,
+        "mean": 118.15954828758476,
+        "tail": 132.1378428141276,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-12-13_ppo_s50",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 132.57400512695312,
+        "mean": 118.15954828758476,
+        "tail": 132.1378428141276,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-07-30_ctrl_s50",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 131.6267547607422,
+        "mean": 112.70445945377585,
+        "tail": 132.02423512776693,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-04-55_cppo_s50",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 8.953378677368164,
+        "mean": 7.426201661920007,
+        "tail": 8.59998558998108,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_05-07-30_ctrl_s50",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 8.953378677368164,
+        "mean": 7.426201661920007,
+        "tail": 8.59998558998108,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-07-30_ctrl_s50",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 24.99797248840332,
+        "mean": 19.621871386621287,
+        "tail": 23.853569094340006,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-04-55_cppo_s50",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.13201904296875,
+        "mean": 0.11024094268984724,
+        "tail": 0.1339662727713585,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-12-13_ppo_s50",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.13201904296875,
+        "mean": 0.11024094268984724,
+        "tail": 0.1339662727713585,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-07-30_ctrl_s50",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.329833984375,
+        "mean": 0.2610413492817485,
+        "tail": 0.3242457507054011,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-04-55_cppo_s50",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.000244140625,
+        "mean": 9.966363123749034e-05,
+        "tail": 0.0002463107705504323,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-12-13_ppo_s50",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.000244140625,
+        "mean": 9.966363123749034e-05,
+        "tail": 0.0002463107705504323,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-07-30_ctrl_s50",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-04-55_cppo_s50",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 0.00022379557776730508,
+        "mean": 0.0009239502279797307,
+        "tail": 0.00012722439654680784,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-12-13_ppo_s50",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.00022379557776730508,
+        "mean": 0.0009239502279797307,
+        "tail": 0.00012722439654680784,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-07-30_ctrl_s50",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0011722615945812624,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-04-55_cppo_s50",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.42967700958252,
+        "mean": 9.086653937671489,
+        "tail": 9.420903848012289,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-12-13_ppo_s50",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.42967700958252,
+        "mean": 9.086653937671489,
+        "tail": 9.420903848012289,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-07-30_ctrl_s50",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.42343807220459,
+        "mean": 8.792964203808612,
+        "tail": 9.428433774312337,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-04-55_cppo_s50",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.9010438919067383,
+        "mean": 0.8136592252153593,
+        "tail": 0.9016835987567902,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-12-13_ppo_s50",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9010438919067383,
+        "mean": 0.8136592252153593,
+        "tail": 0.9016835987567902,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-07-30_ctrl_s50",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.8983386754989624,
+        "mean": 0.7807713680961169,
+        "tail": 0.8980126416683197,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-04-55_cppo_s50",
+        "source_arm": "cppo"
+      }
+    }
+  },
+  "51": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 137.3966827392578,
+        "mean": 115.60370202149792,
+        "tail": 137.28145599365234,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-23-37_ppo_s51",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 137.3966827392578,
+        "mean": 115.60370202149792,
+        "tail": 137.28145599365234,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-19-17_ctrl_s51",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 133.4560089111328,
+        "mean": 114.3000958552941,
+        "tail": 132.97520090738934,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-16-36_cppo_s51",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 2.018465757369995,
+        "mean": 10.218298561102982,
+        "tail": 1.7846389158566793,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_05-19-17_ctrl_s51",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 2.018465757369995,
+        "mean": 10.218298561102982,
+        "tail": 1.7846389158566793,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-19-17_ctrl_s51",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 16.639869689941406,
+        "mean": 14.872308280869348,
+        "tail": 17.01506799062093,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-16-36_cppo_s51",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.0825398787856102,
+        "mean": 0.13782239178117198,
+        "tail": 0.07835293496648471,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-23-37_ppo_s51",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0825398787856102,
+        "mean": 0.13782239178117198,
+        "tail": 0.07835293496648471,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-19-17_ctrl_s51",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.2607320249080658,
+        "mean": 0.2349404299796667,
+        "tail": 0.2617832549413045,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-16-36_cppo_s51",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-23-37_ppo_s51",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-19-17_ctrl_s51",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-16-36_cppo_s51",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.0008348931465037216,
+        "tail": 8.205837936354025e-06,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-23-37_ppo_s51",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.0008348931465037216,
+        "tail": 8.205837936354025e-06,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-19-17_ctrl_s51",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0009564616188181389,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-16-36_cppo_s51",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.512066841125488,
+        "mean": 9.090534167530636,
+        "tail": 9.509514980316162,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-23-37_ppo_s51",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.512066841125488,
+        "mean": 9.090534167530636,
+        "tail": 9.509514980316162,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-19-17_ctrl_s51",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.420382499694824,
+        "mean": 8.896550110064448,
+        "tail": 9.423930002848307,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-16-36_cppo_s51",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.9190956950187683,
+        "mean": 0.8193152781954656,
+        "tail": 0.9183568267027536,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-23-37_ppo_s51",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9190956950187683,
+        "mean": 0.8193152781954656,
+        "tail": 0.9183568267027536,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-19-17_ctrl_s51",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.9030998945236206,
+        "mean": 0.7864448631436874,
+        "tail": 0.901955573161443,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-16-36_cppo_s51",
+        "source_arm": "cppo"
+      }
+    }
+  },
+  "52": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 132.42080688476562,
+        "mean": 118.23975164454275,
+        "tail": 132.08474782307943,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-34-25_ppo_s52",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 132.42080688476562,
+        "mean": 118.23975164454275,
+        "tail": 132.08474782307943,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-30-34_ctrl_s52",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 133.7383270263672,
+        "mean": 111.06177356442902,
+        "tail": 132.7187777709961,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-28-07_cppo_s52",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 104.71914672851562,
+        "mean": 69.32691483912987,
+        "tail": 106.93237915039063,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_05-30-34_ctrl_s52",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 104.71914672851562,
+        "mean": 69.32691483912987,
+        "tail": 106.93237915039063,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-30-34_ctrl_s52",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.433505058288574,
+        "mean": 7.372506600634554,
+        "tail": 9.495488719940186,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-28-07_cppo_s52",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.67333984375,
+        "mean": 0.53293138513471,
+        "tail": 0.6807658076286316,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-34-25_ppo_s52",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.67333984375,
+        "mean": 0.53293138513471,
+        "tail": 0.6807658076286316,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-30-34_ctrl_s52",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.23016357421875,
+        "mean": 0.1682522896732759,
+        "tail": 0.2323952278494835,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-28-07_cppo_s52",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-34-25_ppo_s52",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-30-34_ctrl_s52",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 1.8988716571281354e-07,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-28-07_cppo_s52",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.00046508112069386696,
+        "tail": 8.138021075865254e-07,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-34-25_ppo_s52",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.00046508112069386696,
+        "tail": 8.138021075865254e-07,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-30-34_ctrl_s52",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.00133443200216243,
+        "tail": 2.1701389414374717e-06,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-28-07_cppo_s52",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.444692611694336,
+        "mean": 9.120826838832262,
+        "tail": 9.43904275894165,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-34-25_ppo_s52",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.444692611694336,
+        "mean": 9.120826838832262,
+        "tail": 9.43904275894165,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-30-34_ctrl_s52",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.44290542602539,
+        "mean": 8.682620015324316,
+        "tail": 9.457922662099202,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-28-07_cppo_s52",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.9048210978507996,
+        "mean": 0.8093458651376423,
+        "tail": 0.9034799297650655,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-34-25_ppo_s52",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9048210978507996,
+        "mean": 0.8093458651376423,
+        "tail": 0.9034799297650655,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-30-34_ctrl_s52",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.8967130184173584,
+        "mean": 0.7553027259282923,
+        "tail": 0.8911782173315684,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-28-07_cppo_s52",
+        "source_arm": "cppo"
+      }
+    }
+  },
+  "53": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 135.07029724121094,
+        "mean": 119.94314608303146,
+        "tail": 134.33501149495441,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-45-32_ppo_s53",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 135.07029724121094,
+        "mean": 119.94314608303146,
+        "tail": 134.33501149495441,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-42-05_ctrl_s53",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 129.41693115234375,
+        "mean": 113.07417733970719,
+        "tail": 130.6287916056315,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-39-30_cppo_s53",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 18.835628509521484,
+        "mean": 14.8844842400192,
+        "tail": 18.810015500386555,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_05-42-05_ctrl_s53",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 18.835628509521484,
+        "mean": 14.8844842400192,
+        "tail": 18.810015500386555,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-42-05_ctrl_s53",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 25.734376907348633,
+        "mean": 20.302679190632624,
+        "tail": 23.510869038899738,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-39-30_cppo_s53",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.3094889521598816,
+        "mean": 0.2554062919451347,
+        "tail": 0.30831503311793007,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-45-32_ppo_s53",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.3094889521598816,
+        "mean": 0.2554062919451347,
+        "tail": 0.30831503311793007,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-42-05_ctrl_s53",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.5453084707260132,
+        "mean": 0.41429294821472773,
+        "tail": 0.5165713342030843,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-39-30_cppo_s53",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-45-32_ppo_s53",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-42-05_ctrl_s53",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-39-30_cppo_s53",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 0.0,
+        "mean": 0.00046340604730842945,
+        "tail": 6.781684229887711e-08,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-45-32_ppo_s53",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0,
+        "mean": 0.00046340604730842945,
+        "tail": 6.781684229887711e-08,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-42-05_ctrl_s53",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.00047488743910435006,
+        "tail": 1.0172526284198587e-06,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-39-30_cppo_s53",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.483170509338379,
+        "mean": 9.124283636454338,
+        "tail": 9.47306095123291,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-45-32_ppo_s53",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.483170509338379,
+        "mean": 9.124283636454338,
+        "tail": 9.47306095123291,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-42-05_ctrl_s53",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.394948959350586,
+        "mean": 8.854205973986382,
+        "tail": 9.42998238881429,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-39-30_cppo_s53",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.9087325930595398,
+        "mean": 0.8246541295145483,
+        "tail": 0.9077751080195109,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-45-32_ppo_s53",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9087325930595398,
+        "mean": 0.8246541295145483,
+        "tail": 0.9077751080195109,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-42-05_ctrl_s53",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.8834108114242554,
+        "mean": 0.7900689913823735,
+        "tail": 0.8868522346019745,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-39-30_cppo_s53",
+        "source_arm": "cppo"
+      }
+    }
+  },
+  "54": {
+    "Train__mean_reward": {
+      "ppo": {
+        "final": 135.15330505371094,
+        "mean": 112.48770325475621,
+        "tail": 134.3376197306315,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-56-17_ppo_s54",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 135.15330505371094,
+        "mean": 112.48770325475621,
+        "tail": 134.3376197306315,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-53-18_ctrl_s54",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 131.33657836914062,
+        "mean": 107.47621671189555,
+        "tail": 129.3364744567871,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-51-10_cppo_s54",
+        "source_arm": "cppo"
+      }
+    },
+    "Loss__mean_episode_cost": {
+      "ppo": {
+        "final": 10.856715202331543,
+        "mean": 13.282856842787975,
+        "tail": 7.9474677594502765,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": true,
+        "source_run": "2026-08-01_05-53-18_ctrl_s54",
+        "source_arm": "ctrl"
+      },
+      "ctrl": {
+        "final": 10.856715202331543,
+        "mean": 13.282856842787975,
+        "tail": 7.9474677594502765,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-53-18_ctrl_s54",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 12.560792922973633,
+        "mean": 10.053767815886026,
+        "tail": 11.982969156901042,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-51-10_cppo_s54",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_singularity": {
+      "ppo": {
+        "final": 0.0793355330824852,
+        "mean": 0.13217191942813708,
+        "tail": 0.08420179804166159,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-56-17_ppo_s54",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0793355330824852,
+        "mean": 0.13217191942813708,
+        "tail": 0.08420179804166159,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-53-18_ctrl_s54",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.122344970703125,
+        "mean": 0.1100058621816958,
+        "tail": 0.1265434474746386,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-51-10_cppo_s54",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_joint_limit": {
+      "ppo": {
+        "final": 0.0432332381606102,
+        "mean": 0.004678717844076042,
+        "tail": 0.027577108529706795,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-56-17_ppo_s54",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.0432332381606102,
+        "mean": 0.004678717844076042,
+        "tail": 0.027577108529706795,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-53-18_ctrl_s54",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.0,
+        "mean": 0.0,
+        "tail": 0.0,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-51-10_cppo_s54",
+        "source_arm": "cppo"
+      }
+    },
+    "safety__viol_collision": {
+      "ppo": {
+        "final": 0.000244140625,
+        "mean": 0.0006969808177715701,
+        "tail": 0.00013556586624569416,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-56-17_ppo_s54",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.000244140625,
+        "mean": 0.0006969808177715701,
+        "tail": 0.00013556586624569416,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-53-18_ctrl_s54",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.000152587890625,
+        "mean": 0.001342183473667319,
+        "tail": 9.067111766853487e-05,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-51-10_cppo_s54",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__lifting_object": {
+      "ppo": {
+        "final": 9.515518188476562,
+        "mean": 9.136594722642718,
+        "tail": 9.481229152679443,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-56-17_ppo_s54",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 9.515518188476562,
+        "mean": 9.136594722642718,
+        "tail": 9.481229152679443,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-53-18_ctrl_s54",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 9.424701690673828,
+        "mean": 8.629542274588564,
+        "tail": 9.387176443735758,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-51-10_cppo_s54",
+        "source_arm": "cppo"
+      }
+    },
+    "Episode_Reward__reaching_object": {
+      "ppo": {
+        "final": 0.9106053113937378,
+        "mean": 0.7984121405052331,
+        "tail": 0.9075336257616679,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_04-56-17_ppo_s54",
+        "source_arm": "ppo"
+      },
+      "ctrl": {
+        "final": 0.9106053113937378,
+        "mean": 0.7984121405052331,
+        "tail": 0.9075336257616679,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_05-53-18_ctrl_s54",
+        "source_arm": "ctrl"
+      },
+      "cppo": {
+        "final": 0.8815031051635742,
+        "mean": 0.7376876805690117,
+        "tail": 0.8649425474802653,
+        "n_iter": 1500,
+        "n_tail": 150,
+        "substituted": false,
+        "source_run": "2026-08-01_06-51-10_cppo_s54",
+        "source_arm": "cppo"
+      }
+    }
+  }
+}
