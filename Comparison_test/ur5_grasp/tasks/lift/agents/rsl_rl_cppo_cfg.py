@@ -135,6 +135,46 @@ class UR5eLiftCPPO10RunnerCfg(UR5eLiftCPPORunnerCfg):
 
 
 @configclass
+class UR5eLiftCPPO15RunnerCfg(UR5eLiftCPPORunnerCfg):
+    """cPPO with cost_limit = 15, REPLACING the registered `cppo10` arm (Day 24, cont.).
+
+    Why 15 and not the registered 10. `ALGORITHM_AUDIT.md` §A2 justified cost_limit=10 as
+    "below the natural cost on every observed seed" -- true against the 3-seed 2026-07-30
+    data it was written from, but NOT true against the 10-seed `ctrl` data in
+    MATRIX_V2_PARTIAL_3ARM.md §4.1 (natural cost 1.8-162.3 across seeds 1-5/50-54). Checked
+    directly (2026-08-01, Day 24 cont. session) before this class was written:
+        budget 15 binds (natural cost > budget) on seeds 1, 3, 4, 5, 52, 53 -- slack on 2, 50, 51, 54
+        budget 10 binds on the SAME six seeds -- slack on the same four
+    The partition is identical: 10 would not have met its own "binds on every seed" criterion
+    either. Only a budget below 1.8 (seed 51's natural cost, the minimum across all ten seeds)
+    binds on every seed, which is far below any achievable operating point for this task. 15
+    and 10 therefore differ only in DEPTH of bind on the same six seeds, not in which seeds
+    bind -- making 15 a substitution for the registered arm, not a weakening of it. Full
+    reasoning: logbook/NEXT_SESSION_cppo15.md.
+
+    Still valid only at episode_length_s = 5.0 -- the budget is episodic over a per-step
+    cost, so episode length rescales it. Same caveat as the parent.
+    """
+
+    experiment_name = "ur5e_lift_cppo15"
+    algorithm = RslRlCppoAlgorithmCfg(
+        value_loss_coef=1.0,
+        use_clipped_value_loss=True,
+        clip_param=0.2,
+        entropy_coef=0.006,
+        num_learning_epochs=5,
+        num_mini_batches=4,
+        learning_rate=1.0e-4,
+        schedule="adaptive",
+        gamma=0.98,
+        lam=0.95,
+        desired_kl=0.01,
+        max_grad_norm=1.0,
+        cost_limit=15.0,          # <-- THE ONLY DIFFERENCE FROM THE PARENT
+    )
+
+
+@configclass
 class UR5eLiftCtrlRunnerCfg(UR5eLiftCPPORunnerCfg):
     """CONTROL ARM: the cost critic, with the constraint switched off (lambda_max = 0).
 
