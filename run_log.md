@@ -1710,3 +1710,172 @@ been run under 2.1.0 — assume it needs the same class of check before Step 6, 
 fine just because SAC's issues are now fixed. Next: Step 4 (recalibrate `MANIP_FLOOR` /
 `cost_limit` / `COLLISION_Z_FLOOR` / `JOINT_LIMIT_MARGIN` against today's four task-defining
 changes).
+
+## 2026-08-01 (Day 24) — Step 4 recalibrated, Step 5 frozen (`matrix-v2`), 3-arm×10-seed matrix
+trained + evaluated. Cowork session, continued from Day 23 (cont.).
+
+**Step 4 — recalibrated against a converged (1500-iter) baseline, not a short probe.** First
+attempt used `calibrate_manipulability.py`'s default checkpoint, which turned out to be the
+50-iteration Step-2 smoke train (`model_49.pt`) — an almost-untrained policy, giving a bogus
+distribution (`min w = 0.00000`, an outright singularity, vs Day-9's `0.021`). Caught before
+acting on it. Retrained a dedicated 1500-iter `calib_probe_v2` (seed 1, plain PPO) and
+re-calibrated against that instead:
+- `MANIP_FLOOR`: **0.045 → 0.06**. At 0.045 the baseline violation rate had drifted to ~8%
+  (below the original p10–p25 target band); 0.06 restores it to ~p18 (~18–20%), matching Day-9's
+  calibration philosophy under the new (widened) goal box.
+- `JOINT_LIMIT_MARGIN`: held at 0.175 rad (Touhid's call), but reclassified — no longer
+  "inactive by construction." Baseline within-margin rate is now **33.7%**, higher than
+  singularity's own violation rate. The widened goal box made this a second genuinely active
+  constraint, not merely monitored. Methods framing updated accordingly.
+- `COLLISION_Z_FLOOR`: held at 0.05 m, confirmed still inactive (0.0% violation), margin thinned
+  from 125 mm to ~44 mm clearance-above-floor — noted, not acted on.
+- `cost_limit`: held at 25 (not retuned further), after a second probe (`cost_probe_v2_ctrl`,
+  full 1500-iter `ctrl` agent, the correct choice since Loss/mean_episode_cost is a
+  Lagrangian-runner-only tag) showed natural cost ~105 for that one seed — later shown by the
+  full 10-seed matrix to be a highly seed-variable quantity (1.8–164.5), not a fixed property of
+  the task. Decomposition: singularity ~14, joint-limit ~90 of that single seed's ~105 (joint-limit
+  now the larger contributor, confirming the reclassification above).
+All four constants' inline comments in `ur5e_lift_env.py` / `agents/rsl_rl_cppo_cfg.py` updated
+with the recheck, old value, new finding, and source run — not silently assumed.
+
+**Step 5 — froze and tagged.** `git commit` (`567e4c0`) + `git tag matrix-v2`, run directly from
+this session (git operations don't need the lab PC's GPU). Hit the known stale
+`.git/index.lock` blocker from Day 19 again (sandbox can't unlink its own lock files);
+same fix, `allow_cowork_file_delete` + `rm`. Working tree clean after commit.
+
+**Step 6 (partial) — 3 arms × 10 seeds trained**, not the full 5-arm×5-seed matrix: `ppo`,
+`ctrl`, `cppo` only, seeds 1–5 **and** 50–54 (Touhid asked for the extra 5 mid-session, for
+tighter statistics on the ctrl-vs-ppo null and the per-seed cost-variance finding below).
+`cppo10` and `sac` explicitly out of scope for this batch. All 1500 iterations, num_envs=4096,
+against the frozen `matrix-v2` commit. 30/30 checkpoints verified on disk (`model_1499.pt`), not
+just clean logs.
+
+**Housekeeping trap found, not yet fixed:** 3 superseded pre-audit `cppo_s1/s2/s3` runs
+(2026-07-30, gradient-clip-bug era) still sit in `logs/rsl_rl/ur5e_lift_cppo/` under the same
+labels as the new ones. `summarize_runs.py`'s report keeps them distinguishable by full
+timestamped path, and `run_eval_matrix_v2_3arm.sh`'s `ls -t | head -1` checkpoint selection
+resolves to the newer run correctly (verified) — but both are relying on file metadata rather
+than the old runs being gone. Should be archived out of the live folder; not done yet.
+
+**Headline finding — `ctrl` and `ppo` are not just statistically null, they are bitwise
+identical.** Every `Train/mean_reward` and `safety/*` value matches ppo-vs-ctrl to 4 decimal
+places across all 10 seed pairs, including chaotic near-zero quantities like
+`manipulability_min` (e.g. both `ppo_s3`/`ctrl_s3` read `7.419e-06`). Verified this is not a
+duplicated-file bug (distinct event-file hashes, sizes, PIDs) by opening both `model_1499.pt`
+checkpoints directly and hashing every stored tensor: all 68 of `ppo_s1`'s actor+reward-critic
+tensors are byte-identical inside `ctrl_s1`'s checkpoint. With the Day-23 gradient-clip fix
+applied and λ=0, ctrl's actor loss is algebraically identical to PPO's — and empirically, the
+RNG stream driving rollout/optimization was apparently not perturbed by the cost critic's extra
+parameter draws in this codebase, contrary to the audit's A4 assumption. Effect verified;
+mechanism (e.g. separate CPU/CUDA generator streams) not traced in source. This is the strongest
+possible form of the audit's expected null result, and it reproduced again independently at
+evaluation time (see below).
+
+**Second headline finding — cPPO's main effect is collapsing seed-to-seed safety VARIANCE, not
+just the mean.** `ctrl`'s per-seed natural episodic cost ranges from 1.8 to 164.5 across the 10
+seeds (~90×) — which basin unconstrained PPO lands in is close to a lottery. `cppo` pulls every
+seed into a narrow 9.5–24 band regardless of that seed's `ctrl` starting point, at ~0.7% reward
+cost. Confirmed independently at eval time (30,000 pooled episodes/arm): cost mean 47.68→18.41,
+but the more important number is std across seeds 54.0→5.4, a ~10× tightening.
+
+**Evaluation (Step 8, scoped script `run_eval_matrix_v2_3arm.sh`, not the shared
+`run_eval_policy_v2.sh`):** 3 arms × 10 seeds × eval-seeds 101/102/103, 1000 episodes each,
+deterministic frozen policy. `eval_policy_results.csv` (append-only) turned out to already carry
+20 stale rows from the old superseded `run_eval_policy.sh` sweep (pre-freeze `ppo_s1/s2/s3`,
+pre-audit `cppo_s1/s2/s3`) — filtered by checkpoint path date before analysis; the per-episode
+CSVs under `eval_episodes/` were safe (opened in `"w"` mode, so each rerun overwrites rather than
+appends). ppo-vs-ctrl null reconfirmed exactly on the frozen policy. Pooled over 30,000 episodes
+per arm: **true singularity crossings (w < 1e-4)** — ppo/ctrl 1.343% (403 episodes) vs cppo
+0.250% (75 episodes); **joint-limit touched at all** — ppo/ctrl 5.37% of episodes vs **cppo
+0.00%, all 10 seeds**; goal-reach <1cm 94.28% (ppo/ctrl) vs 96.49% (cppo) — safety came at
+essentially no task cost, if anything slightly better goal-reach. Honest counter-note: cppo's
+single-worst-episode manipulability (`min_w_worst`) was not shallower than ppo/ctrl's — the
+constraint reduces frequency/consistency of near-singular excursions, not necessarily their rare
+worst-case depth.
+
+**Deliverables:** `Comparison_test/results/MATRIX_V2_PARTIAL_3ARM.md` (full write-up, explicitly
+flagged 3-of-5-arm/10-seed subset) and `Comparison_test/results/MATRIX_V2_PARTIAL_3ARM_report.pdf`
+(same content, English — no Bengali-script font available in this sandbox to build a Bangla PDF,
+confirmed no `fc-list :lang=bn` hits and no network/root access to install one; Touhid chose
+English over uploading a font file). New script `Comparison_test/run_eval_matrix_v2_3arm.sh`,
+scoped copy of `run_eval_policy_v2.sh` for this batch — do not extend it to the eventual 5-arm
+matrix, use the original script for that.
+
+**NEXT:** archive the 3 superseded pre-audit `cppo_s1/s2/s3` run dirs; `cppo10` + `sac` remain
+out of scope until a future session; `skrl_ppo_cfg.yaml` still unverified under skrl 2.1.0 (Day
+23 open item, still open).
+
+## 2026-08-01 (Day 24, cont.) — Results chapter drafted from the matrix-v2 partial batch
+Separate Cowork session, same day. Writing only — no runs, no code changes.
+
+**Wrote `Thesis_Documentation/Results_Chapter_Layer1.md`** — Chapter 4 (Results & Discussion),
+Layer 1, thesis-book prose. New file rather than editing `06_Results_and_Experiments.md`, matching
+the `Methods_Chapter_Layer1.md` precedent (that file is a reproducibility page; this is book
+prose). Sections: 4.1 design/provenance, 4.2 the ctrl≡ppo bitwise validity check, 4.3 the
+decomposition and what it licenses, 4.4 task performance, 4.5 safety, 4.6 the variance collapse,
+4.7 limitations, 4.8 summary. Every number sourced from `MATRIX_V2_PARTIAL_3ARM.md` only; nothing
+re-derived or estimated. IEEE numeric style with a provisional local reference list plus two
+explicit `[TODO-A]`/`[TODO-B]` citation placeholders (Yoshikawa manipulability; PPO-Lagrangian) —
+neither is in the project bibliography and both must be sourced before submission, same class of
+problem as the missing Xia 2024.
+
+**Framing decision (Touhid's call, after pushback):** the variance-collapse finding is written as
+the primary result **of this partial batch**, explicitly about a borderline-to-binding budget, with
+the pre-registered safe-RL claim (`cppo10` vs `ctrl`, an actively-binding budget) stated as
+unanswered. Rejected the unhedged "primary safe-RL result" framing because `ALGORITHM_AUDIT.md` §4
+registered `cppo10 vs ctrl` as "this, and only this, is the safe-RL claim" — an examiner holding
+the audit would catch the overreach.
+
+**Found and corrected a self-contradiction in `MATRIX_V2_PARTIAL_3ARM.md` §4.1.** It read "λ
+engages (departs from 0) precisely on the seeds whose cost sits closest to the budget (5, 50, 53)".
+That row is λ at the **final iteration**, not a trajectory. By §2's own argument (λ ≡ 0 ⇒
+algebraically `ctrl` ⇒ same weights), if λ were truly 0 throughout on the other seven seeds those
+runs would be bitwise identical to `ctrl` — and they demonstrably are not (seed 1: `cppo` 18.0 vs
+`ctrl` 102.1). λ must have engaged hard on the high-cost seeds and relaxed to 0 once cost went
+under budget. Sentence retracted in place with a dated correction note; a new limitation bullet
+records that **per-iteration λ curves were never extracted for this batch**, so the
+engagement-then-relaxation account is an inference the converged costs require, not a measurement.
+**Do not quote a λ peak or engagement iteration for any seed until `Loss/cost_lambda` is pulled
+per-iteration from the training event files.** The chapter is written to not depend on it.
+
+**Marked the withdrawn prose in `06_Results_and_Experiments.md`.** Its "Results-chapter write-up
+(draft prose)" section (16.86 % vs 6.65 %, floor 0.045, single seed) and the four figures in
+`Thesis_Documentation/assets/` are all pre-audit and were still sitting there unlabelled, one
+copy-paste away from the thesis. Both now carry 🛑 WITHDRAWN banners pointing at the new chapter
+and at `MATRIX_V2_PARTIAL_3ARM.md`; kept rather than deleted, per this repo's convention on
+superseded entries. Repro commands at the top of that file are untouched and still valid.
+
+**Numbers verified**, not assumed: every figure in the chapter was extracted and checked back
+against `MATRIX_V2_PARTIAL_3ARM.md`, and each derived ratio recomputed from its stated inputs
+(162.3/1.8 ≈ 90×, 24.1/9.5 ≈ 2.5×, 1.343/0.250 ≈ 5.4×, 54.04/5.36 ≈ 10×, 47.68→18.41 = −61 %).
+One discrepancy noted and resolved in favour of the source of truth: the Day-24 `run_log` entry and
+`09_comparison_test.md`'s pick-up block both say `ctrl`'s cost range tops out at **164.5**, while
+`MATRIX_V2_PARTIAL_3ARM.md` §4.1's per-seed table maxes at **162.3** (seed 3). The chapter uses
+162.3. Worth reconciling — one of the two is a typo and the per-seed table is the more likely to be
+right.
+
+**Two honest-reporting points deliberately written in**, both weaker than the headline: the 0.920
+reward gap is *smaller than either arm's seed-to-seed std* (1.58 / 1.80), so it is presented as an
+upper bound on any task cost rather than as a measured penalty; and the identical worst-episode
+manipulability (0.000001 both) is stated plainly, with the practical consequence spelled out —
+the constraint buys expected exposure, not worst-case severity, so a hardware safety case still
+needs its instantaneous protection. Noted alongside it that the worst *episode* is nonetheless
+cheaper (cost max 224.07 vs 343.01), which is a real distinction and not a softening.
+
+**Decision (Touhid, end of session): the binding-budget arm is `cppo15` at `cost_limit = 15`,
+replacing the pre-registered `cppo10`, on all 10 seeds.** Deviation from `ALGORITHM_AUDIT.md` §4 —
+justification recorded in `logbook/NEXT_SESSION_cppo15.md` and to be re-verified next session
+before it is written anywhere. Short form: §A2 justified 10 as "below the natural cost on every
+observed seed" from 3 seeds; against the 10-seed table (§4.1) a budget of 15 binds on seeds
+1/3/4/5/52/53 and is slack on 2/50/51/54 — **and a budget of 10 binds on exactly the same six**.
+Only a budget below 1.8 binds on every seed. 15 and 10 differ in depth of bind, not breadth, so 15
+is a substitution rather than a weakening. Prompt for the next session written to
+`logbook/NEXT_SESSION_cppo15.md`; it also folds in the outstanding λ-trajectory extraction (for
+both the new arm and retrospectively for `cppo` at 25) and archiving the 3 stale pre-audit run
+dirs before anything new trains.
+
+**NEXT (writing):** regenerate figures from matrix-v2 — highest value is a per-seed cost plot for
+Table 4.5, since the variance finding reads far better graphically than as a ten-column table;
+source `[TODO-A]`/`[TODO-B]`; confirm the Times New Roman 12-vs-14 question with the supervisor
+before locking any chapter; check whether Chapter 3 narrates the audit/withdrawal, since §4.2
+currently assumes it does.
