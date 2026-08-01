@@ -1,0 +1,84 @@
+% =====================================================================
+%  UR5e Safe Reinforcement Learning Grasping -- thesis book
+%  Touhid  |  Dept. of Mechatronics Engineering, KUET
+%
+%  Build:  latexmk -pdf main.tex        (or the VS Code LaTeX Workshop button)
+%  Engine: pdflatex + newtx  (Times New Roman metrics)
+% =====================================================================
+
+% ---------------------------------------------------------------------
+%  >>> FONT SIZE SWITCH <<<  the only place the body size is set.
+%  UNRESOLVED since Day 7: project instructions say 12pt, a personal note
+%  says 14pt.  Change the number below and rebuild -- nothing else needs
+%  to move.  (extbook is used instead of book precisely because the
+%  standard classes cannot do 14pt.)
+% ---------------------------------------------------------------------
+\documentclass[12pt,a4paper,oneside]{extbook}
+
+% ---------------------------------------------------------------------
+%  Formatting.  Pass [final] instead of [draft] to hide all draft notes
+%  and turn every unsourced \todocite into a hard build error.
+%  Replace this line with the official KUET class when it arrives.
+% ---------------------------------------------------------------------
+\usepackage[draft]{thesis-format}
+
+% Title exactly as filed (logbook/08_project_context.md).
+\title{Safe Adaptive Image-Based Visual Servoing with Constrained Reinforcement
+       Learning for Precision Grasping on a UR5 Manipulator:\\
+       From Simulation to Real Hardware}
+\author{Touhid}
+\date{\today}
+
+\begin{document}
+
+% ---------------------------------------------------------------------
+%  Front matter, in the order KUET requires
+%  (logbook/08_project_context.md, "Required KUET thesis-book structure")
+% ---------------------------------------------------------------------
+\frontmatter
+\input{frontmatter/titlepage}
+\input{frontmatter/declaration}
+\input{frontmatter/approval}
+\input{frontmatter/board_of_examiners}
+\input{frontmatter/acknowledgement}
+\input{frontmatter/abstract}
+
+\tableofcontents
+\listoftables
+\listoffigures
+\input{frontmatter/abbreviations}
+
+% --------------------------- body ------------------------------------
+\mainmatter
+
+% Chapters 1 and 2 are not drafted yet.  Their .md sources do not exist
+% either; see logbook/06_writing.md.
+% \input{chapters/01_introduction}
+% \input{chapters/02_literature_review}
+
+% Keep Methodology at 3 and Results at 4 while 1-2 are missing, so the
+% numbering in the draft matches the numbering in the prose.
+% DELETE this line the moment chapters/01 and chapters/02 are uncommented.
+\setcounter{chapter}{2}
+
+\input{chapters/03_methodology}
+\input{chapters/04_results}
+
+% Chapter 5 -- Relation with a Real-World Problem + SDG mapping.
+% KUET-specific, not started (logbook/06_writing.md).
+% \input{chapters/05_realworld_sdg}
+% \input{chapters/06_conclusion}
+
+% ------------------------- back matter -------------------------------
+\backmatter
+% KUET requires IEEE numeric style.  unsrt is the fallback for minimal TeX
+% installs that lack IEEEtran.bst -- it is numeric too, so numbering is
+% unaffected, only the entry punctuation differs.
+\IfFileExists{IEEEtran.bst}{\bibliographystyle{IEEEtran}}{\bibliographystyle{unsrt}}
+% No \cite commands exist yet -- the ported chapters still use bracketed
+% numerals as literal text. \nocite{*} makes the seeded entries visible in the
+% draft build; DELETE it once real \cite commands are in the prose.
+\nocite{*}
+\bibliography{references}
+
+\end{document}

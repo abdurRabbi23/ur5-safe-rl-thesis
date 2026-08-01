@@ -1,6 +1,6 @@
 # HANDOFF — paste this into a new session
 
-Updated 2026-08-02. Overwrite whenever the next action changes.
+Updated 2026-08-02 (Day 25, evening). Overwrite whenever the next action changes.
 
 ```
 Read logbook/00_INDEX.md first for project background, but note its "Current status" section is
@@ -58,40 +58,53 @@ damage was done. If `git status` on any machine ever shows unexpected divergence
 figure out why before pushing/pulling.
 
 =============================================================================
-NEXT ACTION — writing environment setup. Started, not finished.
+NEXT ACTION — the LaTeX environment is BUILT. Two things block progress.
 =============================================================================
-Decision made so far: LaTeX (not Word, not staying in Markdown-only), matching the KUET thesis
-book convention. Touhid has the official KUET .cls/.sty template file(s) already, but they were
-NOT YET SUPPLIED to the assistant when this session ended — the question "upload the template
-now vs. build a generic skeleton first and swap the real template in later" was asked but not
-answered before the session closed.
+Done 2026-08-02 (Day 25), committed and pushed: `Thesis_LaTeX/` exists and compiles clean
+(`latexmk -pdf`, 34 pages, 0 LaTeX errors, 0 undefined refs, 0 bibtex errors). Chapters 3 and 4
+are ported from the Markdown drafts. `references.bib` is seeded. `.gitignore` and
+`.vscode/{settings,extensions}.json` are in place. Read `Thesis_LaTeX/README.md` before touching
+any of it — do NOT re-derive the structure and do NOT re-run `Thesis_LaTeX/tools/` over a chapter
+that has been edited since porting.
 
-IMMEDIATE NEXT: get the KUET template file(s) (ask Touhid to attach them, or confirm building a
-generic skeleton now is fine), then build:
-- A LaTeX project (suggested location: Thesis_LaTeX/ at repo root, alongside Thesis_Documentation/
-  — do not delete/replace Thesis_Documentation/, the .md chapter drafts stay the source of truth
-  until each chapter is ported).
-- main.tex + one .tex per chapter, converted from the existing drafts via pandoc as a starting
-  point (Thesis_Documentation/Methods_Chapter_Layer1.md and Results_Chapter_Layer1.md exist now;
-  more chapters will follow the same *_Chapter_Layer1.md naming convention per logbook/06_writing.md).
-- Formatting per logbook/06_writing.md's stated rules: Times New Roman, justified, 1.25 line
-  spacing, full page width, figures/tables + captions centre-aligned. NOTE: font size 12 vs 14 is
-  STILL UNRESOLVED (open since Day 7) — do not lock it into the template preamble without asking
-  Touhid first.
-- references.bib seeded from the 3 provisional refs at the end of Results_Chapter_Layer1.md, plus
-  placeholder entries for [TODO-A]/[TODO-B] so they're structurally ready once sourced.
-- A .gitignore addition for LaTeX build junk (*.aux, *.log, *.out, *.toc, *.bbl, *.blg, *.synctex.gz)
-  before anything is committed.
-- VS Code config (settings.json + extensions.json) recommending LaTeX Workshop + a spellcheck
-  extension, per Touhid's ask for "editor + live preview".
-- pandoc and a full LaTeX toolchain (pdflatex/xelatex/latexmk) are confirmed available in the
-  assistant's sandbox for testing conversion/compilation before handing anything to Touhid.
+Settled this session, do not re-ask:
+- Engine: pdflatex + newtx (falls back to mathptmx if newtx is absent; same metrics).
+- Font size: NOT decided, and deliberately not locked. It is one commented line in `main.tex`
+  (`\documentclass[12pt,...]{extbook}`). `extbook`, not `book`, because the standard classes
+  cannot do 14pt. Currently sitting at 12pt as a placeholder value, not as a decision.
+- Draft apparatus: `\usepackage[draft|final]{thesis-format}`. In `final`, any surviving
+  `\todocite` is a HARD BUILD ERROR. This is now the enforcement mechanism for [TODO-A]/[TODO-B]
+  — they cannot be forgotten. Verified: `final` currently fails on exactly those two.
+- Porting rule: a chapter's `.md` in `Thesis_Documentation/` is the source of truth ONLY until it
+  has a `.tex`. Chapters 3 and 4 now live in `Thesis_LaTeX/chapters/`; their `.md` files are
+  frozen dated records. Edit the `.tex`.
 
-After the LaTeX project is built and compiles cleanly on at least one converted chapter: commit
-it in the repo (wherever it was built — check which machine's folder is connected this session),
-push, and if built anywhere other than the laptop, walk Touhid through pulling it there, since
-laptop is now primary.
+BLOCKER 1 — the official KUET .cls/.sty is still not in the repo. Touhid said he would attach it
+and the session ended before he did. Everything in `Thesis_LaTeX/thesis-format.sty` and
+`frontmatter/titlepage.tex` is a stand-in built from logbook/06_writing.md + 08_project_context.md.
+`thesis-format.sty` is the single swap point — main.tex and chapters/*.tex are written so they
+should not need to change when the real template arrives. ASK FOR THE FILE FIRST.
 
-Update run_log.md with a dated entry once this is done, and refresh logbook/06_writing.md's
-"Next steps" list to match.
+BLOCKER 2 — font size 12 vs 14, open since Day 7, needs the supervisor not the assistant.
+KUET precedent (Masrul Khan's book) uses 12; a personal note says 14. One line, one rebuild.
+
+Then, in rough order:
+- Regenerate the Chapter 4 figures from matrix-v2 into `Thesis_LaTeX/figures/`. Highest value is
+  the per-seed episodic-cost plot behind Table 4.5 — the variance finding reads far better
+  graphically than as a ten-column table. The four old figures in `Thesis_Documentation/assets/`
+  are WITHDRAWN (Day-19 single-seed data) and must not be used.
+- Convert the ported tables. They came through pandoc as uncaptioned `longtable`s, so the List of
+  Tables is empty and "Table 4.1" is bold body text rather than a real float reference.
+- Source [TODO-A] (Yoshikawa manipulability) and [TODO-B] (PPO-Lagrangian). Two commented
+  skeletons are already waiting in `references.bib` with notes on what to verify. After filling
+  them: replace `\todocite{A}`/`\todocite{B}` with `\cite`, delete `\nocite{*}` from main.tex,
+  and switch the package option to `[final]` to confirm the build is clean.
+- Write Chapters 1, 2, 5, 6 and the front-matter pages — all stubbed in `Thesis_LaTeX/`, all
+  currently printing a red "not written yet" box. Chapter 5 (Relation with a Real-World Problem
+  + SDG mapping) is the KUET-specific one that is easy to forget.
+- When Chapters 1 and 2 are uncommented in `main.tex`, DELETE the `\setcounter{chapter}{2}` line
+  that is currently holding Methodology at 3 and Results at 4.
+
+Update run_log.md with a dated entry and refresh logbook/06_writing.md's "Next steps" whenever
+any of the above lands.
 ```

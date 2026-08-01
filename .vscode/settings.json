@@ -1,0 +1,59 @@
+{
+  // ---- LaTeX Workshop: build + live preview -------------------------
+  // Build with the green arrow, or Ctrl/Cmd+Alt+B. The PDF opens in a tab
+  // beside the source and refreshes on every successful build.
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk (pdflatex)",
+      "tools": ["latexmk"]
+    }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": [
+        "-pdf",
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-outdir=%OUTDIR%",
+        "%DOC%"
+      ],
+      "env": {}
+    }
+  ],
+  "latex-workshop.latex.rootFile": "Thesis_LaTeX/main.tex",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.autoClean.run": "onBuilt",
+  "latex-workshop.latex.clean.subfolder.enabled": true,
+  "latex-workshop.synctex.afterBuild.enabled": true,
+  "latex-workshop.message.error.show": true,
+  "latex-workshop.message.warning.show": false,
+
+  // ---- writing comfort ----------------------------------------------
+  "[latex]": {
+    "editor.wordWrap": "on",
+    "editor.rulers": [100],
+    "editor.quickSuggestions": { "comments": false, "strings": false, "other": false }
+  },
+  "[bibtex]": {
+    "editor.wordWrap": "on"
+  },
+
+  // ---- spellcheck -----------------------------------------------------
+  "cSpell.language": "en-GB",
+  "cSpell.enabledFileTypes": { "latex": true, "markdown": true },
+  "cSpell.words": [
+    "cPPO", "PPO", "IBVS", "UR5e", "Isaac", "IsaacLab", "Robotiq", "KUET",
+    "Yoshikawa", "Lagrangian", "manipulability", "singularities", "rsl",
+    "skrl", "checkpointing", "latexmk", "extbook", "newtx", "matrix-v2"
+  ],
+
+  "files.exclude": {
+    "**/*.aux": true, "**/*.bbl": true, "**/*.blg": true, "**/*.fdb_latexmk": true,
+    "**/*.fls": true, "**/*.lof": true, "**/*.lot": true, "**/*.out": true,
+    "**/*.synctex.gz": true, "**/*.toc": true
+  }
+}

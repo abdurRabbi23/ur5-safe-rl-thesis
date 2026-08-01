@@ -2020,3 +2020,51 @@ the real template in later) before the LaTeX project (`Thesis_LaTeX/`, chapters 
 `Thesis_Documentation/*_Chapter_Layer1.md` via pandoc, seeded `references.bib`, VS Code +
 LaTeX Workshop config) can be built. Full detail and exact next steps: `logbook/HANDOFF.md`
 (rewritten today — paste it into the next session).
+
+---
+
+## 2026-08-02 (Day 25) — LaTeX writing environment built and compiling
+
+Answered the three questions that were left open when the last session closed: KUET template to be
+attached (not yet in the repo as of this entry, so the build is a stand-in), font size handled as a
+switch rather than a decision, engine **pdflatex + newtx**.
+
+**Built `Thesis_LaTeX/`.** `main.tex` (front matter in KUET's mandated order, chapter list,
+bibliography), `thesis-format.sty` (all formatting in one file — this is the single swap point for
+the official KUET class when it lands), `chapters/`, `frontmatter/`, `references.bib`, `figures/`,
+`tools/`, `README.md`. `Thesis_Documentation/` untouched; a `.md` chapter is frozen as a dated
+record only once its `.tex` exists.
+
+**Ported both existing chapters** via `tools/md2tex.sh` (unicode maths → LaTeX maths, hand-typed
+section numbers stripped) + `tools/cleanup.py` (pandoc scaffolding removed, minipage table cells
+flattened, short stable labels). Then by hand: five display equations rebuilt as numbered
+`equation` environments, and every "Section 4.2" / "Chapter 3" style cross-reference in the prose
+converted to a real `\ref`, so the numbering can no longer drift from the text.
+
+**Two switches, both in `main.tex`.** Body font size is one commented line — 12 vs 14 is *still*
+unresolved (Day 7) and deliberately not locked; `extbook` is used instead of `book` because the
+standard classes cannot do 14pt. `\usepackage[draft|final]{thesis-format}` toggles the draft
+apparatus: in `draft`, provenance notes and `[TODO-A]`/`[TODO-B]` print as red markers and the
+provisional reference list is kept but not printed; in `final` they all vanish **and any surviving
+`\todocite` becomes a hard build error**. Verified: `final` currently fails on exactly the two
+known placeholders (§4.1, §4.5), which is the intended behaviour — the unsourced citations can no
+longer be forgotten.
+
+**`references.bib` seeded** with the three verified entries from the end of the Results chapter.
+`[TODO-A]` (Yoshikawa) and `[TODO-B]` (PPO-Lagrangian) are commented skeletons with a note on what
+to verify; neither is cited. Style is IEEE numeric (`IEEEtran`, falling back to `unsrt` where
+`IEEEtran.bst` is absent).
+
+**Verification.** `latexmk -pdf` exits 0: 34 pages, zero LaTeX errors, zero undefined references,
+zero bibtex errors. Rendered pages inspected — Times, justified, 1.25 spacing, chapters numbered 3
+and 4 (`\setcounter{chapter}{2}` holds the numbering while Chapters 1–2 are unwritten), equations
+numbered 3.1–3.4 and 4.1, draft-note boxes rendering.
+
+Also: LaTeX build artefacts added to `.gitignore`; `.vscode/settings.json` + `extensions.json`
+added (LaTeX Workshop, latexmk recipe, build-on-save, PDF in a side tab, en-GB spellcheck with a
+project word list) and un-ignored from the blanket `.vscode/` rule.
+
+**Known gaps carried forward:** official KUET template still not in the repo, so the title page and
+`thesis-format.sty` are stand-ins. Tables came through pandoc as uncaptioned `longtable`s, so the
+List of Tables is empty and "Table 4.1" is bold text rather than a float. Chapter 4 figures still
+need regenerating from matrix-v2. Chapters 1, 2, 5, 6 not started.

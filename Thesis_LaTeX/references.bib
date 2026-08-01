@@ -1,0 +1,92 @@
+% =====================================================================
+%  references.bib -- UR5e safe-RL thesis
+%  IEEE numeric style ([n] in text, numbered list) per KUET requirement.
+%
+%  Seeded 2026-08-02 from the provisional list at the end of
+%  Thesis_Documentation/Results_Chapter_Layer1.md, plus the cross-checks in
+%  logbook/\texttt{08\_project\_context.md}.
+% =====================================================================
+
+% ---------------------------------------------------------------------
+%  Verified entries
+% ---------------------------------------------------------------------
+
+@article{khan2026rl_precision_grasping,
+  author  = {Khan, Fawad and others},
+  title   = {Reinforcement learning for precision grasping and safety-critical
+             coordination in a robotic arm},
+  journal = {Intelligent Service Robotics},
+  volume  = {19},
+  number  = {16},
+  year    = {2026},
+  doi     = {10.1007/s11370-025-00668-0},
+  note    = {Safety Gym + Panda arm, PPO vs cPPO. Uses PPO-Lagrangian but is not
+             its origin -- see TODO-B below.}
+}
+
+@article{shahid2022continuous_grasping,
+  author  = {Shahid, Asad Ali and others},
+  title   = {Learning continuous control actions for robotic grasping with
+             reinforcement learning},
+  journal = {Autonomous Robots},
+  volume  = {46},
+  pages   = {483--498},
+  year    = {2022},
+  doi     = {10.1007/s10514-022-10034-z},
+  note    = {VERIFY exact title against the PDF before submission -- the entry in
+             \texttt{08\_project\_context.md} abbreviates it.}
+}
+
+@phdthesis{khan2025csrt_ibvs,
+  author  = {Khan, Md Masrul},
+  title   = {{CSRT} tracking and classical image-based visual servoing on a
+             5-{DOF} manipulator},
+  school  = {Dept. of Mechatronics Engineering, Khulna University of Engineering
+             \& Technology},
+  address = {Khulna, Bangladesh},
+  type    = {{BSc} thesis},
+  month   = dec,
+  year    = {2025},
+  note    = {Predecessor work, same lab and supervisor. Classical-IBVS baseline
+             for lit-review positioning.}
+}
+
+% ---------------------------------------------------------------------
+%  UNSOURCED -- structurally ready, do not \cite until verified.
+%  These correspond to \todocite{A} and \todocite{B} in the Results chapter.
+%  Building main.tex with the [final] option turns any remaining \todocite
+%  into a hard error, so these cannot be forgotten.
+% ---------------------------------------------------------------------
+
+% [TODO-A] -- Yoshikawa's manipulability measure.
+%   Needed where w = sqrt(det(J J^T)) is first used as a safety quantity
+%   (Results chapter, Safety section; also the Methods cost function).
+%   Likely canonical source, NOT YET CHECKED AGAINST THE PAPER:
+%     T. Yoshikawa, "Manipulability of robotic mechanisms,"
+%     Int. J. Robotics Research, vol. 4, no. 2, 1985.
+%   Confirm author initial, volume/number, page range and year, then uncomment.
+%
+%   article{yoshikawa1985manipulability,   <-- prefix an at-sign once filled in
+%   author  = {},
+%   title   = {},
+%   journal = {},
+%   volume  = {},
+%   number  = {},
+%   pages   = {},
+%   year    = {}
+% }
+
+% [TODO-B] -- PPO-Lagrangian / constrained policy optimisation.
+%   Needed where the constrained agent is first named (Results, Experimental
+%   design; and throughout the Methods cPPO section).
+%   Candidate lines to check: the Lagrangian-PPO baseline as defined in the
+%   Safety Gym benchmark paper, and/or the constrained policy optimisation
+%   paper it is contrasted with. Pick whichever the Methods chapter actually
+%   describes, then uncomment.
+%
+%   article{ppo_lagrangian,   <-- prefix an at-sign once filled in
+%   author  = {},
+%   title   = {},
+%   journal = {},
+%   year    = {}
+% }

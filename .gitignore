@@ -16,8 +16,25 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
+# LaTeX build artefacts (Thesis_LaTeX/)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.synctex.gz
+*.toc
+*.xdv
+Thesis_LaTeX/main.pdf
+
 # Editor / OS
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
 *.swp
 .DS_Store

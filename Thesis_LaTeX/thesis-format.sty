@@ -1,0 +1,117 @@
+% =====================================================================
+%  thesis-format.sty  --  formatting for the UR5e safe-RL thesis book
+% =====================================================================
+%  THIS IS THE SWAP POINT FOR THE OFFICIAL KUET TEMPLATE.
+%
+%  Everything here is a generic stand-in built from the formatting rules
+%  recorded in logbook/06_writing.md.  When the official KUET .cls/.sty
+%  arrives, that file replaces this one; main.tex and chapters/*.tex are
+%  written so they should not need to change.
+%
+%  Rules this file implements:
+%    - Times New Roman, justified body text
+%    - 1.25 line spacing
+%    - full page width (single column, generous text block)
+%    - figures, tables and their captions centre-aligned
+%    - a few purposeful colours only
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{thesis-format}[2026/08/02 Provisional KUET-style thesis formatting]
+
+% ---------- fonts -----------------------------------------------------
+% newtx is the preferred Times clone (full TeX Live, Overleaf, MiKTeX).
+% mathptmx is the fallback so the project still builds on a minimal
+% TeX install.  Both are metric-compatible with Times New Roman.
+\IfFileExists{newtxtext.sty}{%
+  \RequirePackage{newtxtext}%
+  \RequirePackage{newtxmath}%
+}{%
+  \PackageWarning{thesis-format}{newtx not found -- falling back to mathptmx}%
+  \RequirePackage{mathptmx}%
+}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+
+% ---------- page geometry --------------------------------------------
+% Provisional: 1.5in binding edge, 1in elsewhere.  Confirm against the
+% KUET template / department handbook before the final build.
+\RequirePackage[a4paper,left=1.5in,right=1in,top=1in,bottom=1in]{geometry}
+
+% ---------- spacing and justification ---------------------------------
+\RequirePackage{setspace}
+\setstretch{1.25}
+\RequirePackage{ragged2e}          % justified is the default; loaded for \Centering
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+
+% ---------- maths, tables, floats -------------------------------------
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{array,booktabs,longtable,multirow}
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\renewcommand{\arraystretch}{1.2}
+\graphicspath{{figures/}{../Thesis_Documentation/assets/}}
+
+% ---------- captions: centred, for both figures and tables ------------
+\RequirePackage[font=small,labelfont=bf,justification=centering,
+                singlelinecheck=true]{caption}
+
+% ---------- colour ----------------------------------------------------
+% Deliberately few.  kuetblue for links, draftred for draft-only markers.
+\RequirePackage{xcolor}
+\definecolor{kuetblue}{HTML}{1A4E8A}
+\definecolor{draftred}{HTML}{B3261E}
+
+\RequirePackage[hidelinks,breaklinks=true]{hyperref}
+\hypersetup{colorlinks=false}      % printed book: no coloured link boxes
+
+% ---------- lists -----------------------------------------------------
+\RequirePackage{enumitem}
+\setlist{itemsep=2pt,parsep=0pt,topsep=4pt}
+% \tightlist is emitted by pandoc; the pandoc default template defines it,
+% and this project uses its own main.tex, so it has to be defined here.
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% ---------- headers / chapter style -----------------------------------
+\RequirePackage{fancyhdr}
+\setlength{\headheight}{15pt}      % enough for 14pt body text too
+\addtolength{\topmargin}{-3pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}%
+  \renewcommand{\headrulewidth}{0pt}}
+
+% ---------- draft machinery -------------------------------------------
+% \draftmode is set (or not) in main.tex.
+%   draftnote  : provenance / working notes attached to a chapter
+%   draftonly  : material kept in the file but never printed in the book
+%   \todocite  : an unsourced citation placeholder, loud on purpose
+\RequirePackage{comment}
+\RequirePackage{mdframed}
+
+\newif\ifthesisdraft
+\DeclareOption{draft}{\thesisdrafttrue}
+\DeclareOption{final}{\thesisdraftfalse}
+\ExecuteOptions{draft}
+\ProcessOptions\relax
+
+\ifthesisdraft
+  \newmdenv[linecolor=draftred,linewidth=0.6pt,backgroundcolor=draftred!4,
+            skipabove=8pt,skipbelow=8pt,innertopmargin=6pt,innerbottommargin=6pt,
+            frametitle={\small\bfseries\color{draftred}Draft note --- not part of the book}]
+           {draftnote}
+  \newenvironment{draftonly}{}{}
+  \newcommand{\todocite}[1]{{\bfseries\color{draftred}[TODO-#1]}}
+\else
+  \excludecomment{draftnote}
+  \excludecomment{draftonly}
+  \newcommand{\todocite}[1]{\PackageError{thesis-format}%
+    {Unsourced citation placeholder TODO-#1 still present}%
+    {Replace \string\todocite{#1} with a real \string\cite before the final build.}}
+\fi
+
+\endinput
