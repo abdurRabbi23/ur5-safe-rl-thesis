@@ -20,6 +20,10 @@ gym.register(
         #         artifact from the constraint. THIS IS THE CONTROL; do not drop it.
         "rsl_rl_cppo10_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCPPO10RunnerCfg",
         "rsl_rl_ctrl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCtrlRunnerCfg",
+        # cppo15: cost_limit 15, REPLACES cppo10 as the binding-budget arm (Day 24, cont.) --
+        # see UR5eLiftCPPO15RunnerCfg's docstring in rsl_rl_cppo_cfg.py for why. cppo10 stays
+        # registered (harmless, unused) rather than being torn out.
+        "rsl_rl_cppo15_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCPPO15RunnerCfg",
         # --- skrl agents (4-algorithm comparison) -------------------------------------
         # Selected by ur5_grasp/scripts/train_skrl.py via --algorithm: PPO maps to
         # "skrl_cfg_entry_point", anything else to "skrl_<algorithm>_cfg_entry_point".
@@ -50,6 +54,7 @@ gym.register(
         # checkpoints (it resolves the agent cfg through whichever task id it is given).
         "rsl_rl_cppo10_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCPPO10RunnerCfg",
         "rsl_rl_ctrl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCtrlRunnerCfg",
+        "rsl_rl_cppo15_cfg_entry_point": f"{agents.__name__}.rsl_rl_cppo_cfg:UR5eLiftCPPO15RunnerCfg",
         # --- skrl agents: same entry points as -v0, needed by skrl's play.py ----------
         "skrl_cfg_entry_point": f"{agents.__name__}:skrl_ppo_cfg.yaml",
         "skrl_sac_cfg_entry_point": f"{agents.__name__}:skrl_sac_cfg.yaml",  # not authored yet
