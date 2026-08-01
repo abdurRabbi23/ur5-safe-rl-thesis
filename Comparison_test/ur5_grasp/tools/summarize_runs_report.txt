@@ -4,82 +4,27 @@ TRAINING RUN SUMMARY
 log root : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/logs/rsl_rl
 report   : /home/mte/Abdur_Rabbi_THESIS/Comparison_test/ur5_grasp/tools/summarize_runs_report.txt
 
-found 14 run(s)
+found 33 run(s)
 
 ------------------------------------------------------------------------------
-RUN: ur5e_lift/2026-07-30_01-49-46_smoke_ppo
-------------------------------------------------------------------------------
-  iterations logged : 49
-  scalar tags       : 33
-
-  key metrics (tail-mean over last 10% of iterations | final point):
-    Train/mean_episode_length           246.8500 |     247.1700
-    Train/mean_episode_length/time      246.8500 |     247.1700
-    Train/mean_reward                    65.4736 |      64.8504
-    Train/mean_reward/time               65.4736 |      64.8504
-    safety/cost_collision                 0.0000 |       0.0000
-    safety/cost_joint_limit               0.0000 |       0.0000
-    safety/cost_singularity               0.5455 |       0.5666
-    safety/cost_total                     0.5455 |       0.5666
-    safety/manipulability_min          5.728e-06 |    4.905e-06
-    safety/viol_collision                 0.0000 |       0.0000
-    safety/viol_joint_limit               0.0000 |       0.0000
-    safety/viol_singularity               0.7186 |       0.7279
-
-  all scalar tags:
-    Curriculum/action_rate
-    Curriculum/joint_vel
-    Episode_Reward/action_rate
-    Episode_Reward/joint_vel
-    Episode_Reward/lifting_object
-    Episode_Reward/object_goal_tracking
-    Episode_Reward/object_goal_tracking_fine_grained
-    Episode_Reward/reaching_object
-    Episode_Termination/object_dropping
-    Episode_Termination/time_out
-    Loss/entropy
-    Loss/learning_rate
-    Loss/surrogate
-    Loss/value_function
-    Metrics/object_pose/orientation_error
-    Metrics/object_pose/position_error
-    Perf/collection time
-    Perf/learning_time
-    Perf/total_fps
-    Policy/mean_noise_std
-    Train/mean_episode_length
-    Train/mean_episode_length/time
-    Train/mean_reward
-    Train/mean_reward/time
-    safety/cost_collision
-    safety/cost_joint_limit
-    safety/cost_singularity
-    safety/cost_total
-    safety/manipulability_mean
-    safety/manipulability_min
-    safety/viol_collision
-    safety/viol_joint_limit
-    safety/viol_singularity
-
-------------------------------------------------------------------------------
-RUN: ur5e_lift/2026-07-30_02-12-31_ppo_s1
+RUN: ur5e_lift/2026-08-01_00-01-25_ppo_s1
 ------------------------------------------------------------------------------
   iterations logged : 1499
   scalar tags       : 33
 
   key metrics (tail-mean over last 10% of iterations | final point):
-    Train/mean_episode_length           249.9226 |     250.0000
-    Train/mean_episode_length/time      249.9226 |     250.0000
-    Train/mean_reward                   141.9277 |     142.8651
-    Train/mean_reward/time              141.9277 |     142.8651
-    safety/cost_collision                 0.0000 |       0.0000
-    safety/cost_joint_limit               0.3292 |       0.5474
-    safety/cost_singularity               0.4280 |       0.3565
-    safety/cost_total                     0.7572 |       0.9040
-    safety/manipulability_min          2.723e-06 |    1.000e-06
-    safety/viol_collision                 0.0000 |       0.0000
-    safety/viol_joint_limit               0.3540 |       0.5529
-    safety/viol_singularity               0.7387 |       0.6646
+    Train/mean_episode_length           249.9885 |     250.0000
+    Train/mean_episode_length/time      249.9885 |     250.0000
+    Train/mean_reward                   131.5380 |     132.8964
+    Train/mean_reward/time              131.5380 |     132.8964
+    safety/cost_collision              6.675e-08 |       0.0000
+    safety/cost_joint_limit               0.3492 |       0.3589
+    safety/cost_singularity               0.0603 |       0.0619
+    safety/cost_total                     0.4094 |       0.4207
+    safety/manipulability_min             0.0034 |       0.0017
+    safety/viol_collision              9.020e-06 |       0.0000
+    safety/viol_joint_limit               0.3539 |       0.3632
+    safety/viol_singularity               0.2242 |       0.2279
 
   all scalar tags:
     Curriculum/action_rate
@@ -117,7 +62,392 @@ RUN: ur5e_lift/2026-07-30_02-12-31_ppo_s1
     safety/viol_singularity
 
 ------------------------------------------------------------------------------
-RUN: ur5e_lift/2026-07-30_02-23-14_ppo_s2
+RUN: ur5e_lift/2026-08-01_00-13-17_ppo_s2
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           249.9863 |     250.0000
+    Train/mean_episode_length/time      249.9863 |     250.0000
+    Train/mean_reward                   133.8982 |     134.0218
+    Train/mean_reward/time              133.8982 |     134.0218
+    safety/cost_collision              1.154e-07 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0307 |       0.0304
+    safety/cost_total                     0.0307 |       0.0304
+    safety/manipulability_min             0.0042 |       0.0063
+    safety/viol_collision              1.506e-05 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.1297 |       0.1239
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-08-01_00-24-40_ppo_s3
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           249.8252 |     250.0000
+    Train/mean_episode_length/time      249.8252 |     250.0000
+    Train/mean_reward                   133.0692 |     133.7661
+    Train/mean_reward/time              133.0692 |     133.7661
+    safety/cost_collision              2.282e-07 |    2.513e-07
+    safety/cost_joint_limit            8.701e-07 |       0.0000
+    safety/cost_singularity               0.6499 |       0.6581
+    safety/cost_total                     0.6499 |       0.6581
+    safety/manipulability_min          7.419e-06 |    6.232e-06
+    safety/viol_collision              2.543e-05 |    3.052e-05
+    safety/viol_joint_limit            9.494e-07 |       0.0000
+    safety/viol_singularity               0.9105 |       0.9167
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-08-01_00-35-41_ppo_s4
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           249.9292 |     250.0000
+    Train/mean_episode_length/time      249.9292 |     250.0000
+    Train/mean_reward                   134.2868 |     134.5307
+    Train/mean_reward/time              134.2868 |     134.5307
+    safety/cost_collision              3.896e-08 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.1208 |       0.1267
+    safety/cost_total                     0.1208 |       0.1267
+    safety/manipulability_min             0.0018 |       0.0019
+    safety/viol_collision              4.069e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.3757 |       0.3844
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-08-01_00-46-59_ppo_s5
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           249.8697 |     250.0000
+    Train/mean_episode_length/time      249.8697 |     250.0000
+    Train/mean_reward                   132.7355 |     133.7360
+    Train/mean_reward/time              132.7355 |     133.7360
+    safety/cost_collision              3.694e-09 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0762 |       0.0763
+    safety/cost_total                     0.0762 |       0.0763
+    safety/manipulability_min             0.0073 |       0.0064
+    safety/viol_collision              9.494e-07 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.2530 |       0.2529
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-08-01_04-12-13_ppo_s50
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           249.9725 |     250.0000
+    Train/mean_episode_length/time      249.9725 |     250.0000
+    Train/mean_reward                   132.1378 |     132.5740
+    Train/mean_reward/time              132.1378 |     132.5740
+    safety/cost_collision              1.411e-06 |    2.262e-06
+    safety/cost_joint_limit            2.199e-04 |    2.222e-04
+    safety/cost_singularity               0.0342 |       0.0323
+    safety/cost_total                     0.0345 |       0.0325
+    safety/manipulability_min             0.0035 |       0.0020
+    safety/viol_collision              1.272e-04 |    2.238e-04
+    safety/viol_joint_limit            2.463e-04 |    2.441e-04
+    safety/viol_singularity               0.1340 |       0.1320
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-08-01_04-23-37_ppo_s51
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           249.9724 |     250.0000
+    Train/mean_episode_length/time      249.9724 |     250.0000
+    Train/mean_reward                   137.2815 |     137.3967
+    Train/mean_reward/time              137.2815 |     137.3967
+    safety/cost_collision              1.161e-07 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0072 |       0.0075
+    safety/cost_total                     0.0072 |       0.0075
+    safety/manipulability_min             0.0380 |       0.0295
+    safety/viol_collision              8.206e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.0784 |       0.0825
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-08-01_04-34-25_ppo_s52
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 33
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Train/mean_episode_length           249.8476 |     250.0000
+    Train/mean_episode_length/time      249.8476 |     250.0000
+    Train/mean_reward                   132.0847 |     132.4208
+    Train/mean_reward/time              132.0847 |     132.4208
+    safety/cost_collision              1.836e-09 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.4276 |       0.4264
+    safety/cost_total                     0.4276 |       0.4264
+    safety/manipulability_min          1.311e-05 |    7.732e-06
+    safety/viol_collision              8.138e-07 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.6808 |       0.6733
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/entropy
+    Loss/learning_rate
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift/2026-08-01_04-45-32_ppo_s53
 ------------------------------------------------------------------------------
   iterations logged : 1499
   scalar tags       : 33
@@ -125,16 +455,16 @@ RUN: ur5e_lift/2026-07-30_02-23-14_ppo_s2
   key metrics (tail-mean over last 10% of iterations | final point):
     Train/mean_episode_length           250.0000 |     250.0000
     Train/mean_episode_length/time      250.0000 |     250.0000
-    Train/mean_reward                    90.7963 |      90.7364
-    Train/mean_reward/time               90.7963 |      90.7364
-    safety/cost_collision                 0.0000 |       0.0000
-    safety/cost_joint_limit               0.9951 |       0.9699
-    safety/cost_singularity               0.7783 |       0.7724
-    safety/cost_total                     1.7733 |       1.7423
-    safety/manipulability_min          1.000e-06 |    1.000e-06
-    safety/viol_collision                 0.0000 |       0.0000
-    safety/viol_joint_limit               0.5542 |       0.5210
-    safety/viol_singularity               0.8542 |       0.8485
+    Train/mean_reward                   134.3350 |     135.0703
+    Train/mean_reward/time              134.3350 |     135.0703
+    safety/cost_collision              1.328e-10 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0751 |       0.0763
+    safety/cost_total                     0.0751 |       0.0763
+    safety/manipulability_min             0.0024 |       0.0013
+    safety/viol_collision              6.782e-08 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.3083 |       0.3095
 
   all scalar tags:
     Curriculum/action_rate
@@ -172,7 +502,7 @@ RUN: ur5e_lift/2026-07-30_02-23-14_ppo_s2
     safety/viol_singularity
 
 ------------------------------------------------------------------------------
-RUN: ur5e_lift/2026-07-30_02-34-03_ppo_s3
+RUN: ur5e_lift/2026-08-01_04-56-17_ppo_s54
 ------------------------------------------------------------------------------
   iterations logged : 1499
   scalar tags       : 33
@@ -180,16 +510,16 @@ RUN: ur5e_lift/2026-07-30_02-34-03_ppo_s3
   key metrics (tail-mean over last 10% of iterations | final point):
     Train/mean_episode_length           250.0000 |     250.0000
     Train/mean_episode_length/time      250.0000 |     250.0000
-    Train/mean_reward                   163.2904 |     164.1187
-    Train/mean_reward/time              163.2904 |     164.1187
-    safety/cost_collision                 0.0000 |       0.0000
-    safety/cost_joint_limit               0.0000 |       0.0000
-    safety/cost_singularity               0.4850 |       0.4891
-    safety/cost_total                     0.4850 |       0.4891
-    safety/manipulability_min          7.322e-05 |    6.934e-05
-    safety/viol_collision                 0.0000 |       0.0000
-    safety/viol_joint_limit               0.0000 |       0.0000
-    safety/viol_singularity               0.9188 |       0.9182
+    Train/mean_reward                   134.3376 |     135.1533
+    Train/mean_reward/time              134.3376 |     135.1533
+    safety/cost_collision              1.979e-06 |    2.644e-06
+    safety/cost_joint_limit               0.0169 |       0.0290
+    safety/cost_singularity               0.0162 |       0.0156
+    safety/cost_total                     0.0330 |       0.0446
+    safety/manipulability_min             0.0120 |       0.0040
+    safety/viol_collision              1.356e-04 |    2.441e-04
+    safety/viol_joint_limit               0.0276 |       0.0432
+    safety/viol_singularity               0.0842 |       0.0793
 
   all scalar tags:
     Curriculum/action_rate
@@ -204,122 +534,6 @@ RUN: ur5e_lift/2026-07-30_02-34-03_ppo_s3
     Episode_Termination/time_out
     Loss/entropy
     Loss/learning_rate
-    Loss/surrogate
-    Loss/value_function
-    Metrics/object_pose/orientation_error
-    Metrics/object_pose/position_error
-    Perf/collection time
-    Perf/learning_time
-    Perf/total_fps
-    Policy/mean_noise_std
-    Train/mean_episode_length
-    Train/mean_episode_length/time
-    Train/mean_reward
-    Train/mean_reward/time
-    safety/cost_collision
-    safety/cost_joint_limit
-    safety/cost_singularity
-    safety/cost_total
-    safety/manipulability_mean
-    safety/manipulability_min
-    safety/viol_collision
-    safety/viol_joint_limit
-    safety/viol_singularity
-
-------------------------------------------------------------------------------
-RUN: ur5e_lift/2026-07-31_20-25-11_smoke_202505
-------------------------------------------------------------------------------
-  iterations logged : 49
-  scalar tags       : 33
-
-  key metrics (tail-mean over last 10% of iterations | final point):
-    Train/mean_episode_length           250.0000 |     250.0000
-    Train/mean_episode_length/time      250.0000 |     250.0000
-    Train/mean_reward                     7.0269 |       8.3210
-    Train/mean_reward/time                7.0269 |       8.3210
-    safety/cost_collision              1.987e-05 |    3.101e-05
-    safety/cost_joint_limit               0.0000 |       0.0000
-    safety/cost_singularity               0.0132 |       0.0518
-    safety/cost_total                     0.0132 |       0.0518
-    safety/manipulability_min             0.0259 |       0.0017
-    safety/viol_collision                 0.0014 |       0.0019
-    safety/viol_joint_limit               0.0000 |       0.0000
-    safety/viol_singularity               0.0350 |       0.1187
-
-  all scalar tags:
-    Curriculum/action_rate
-    Curriculum/joint_vel
-    Episode_Reward/action_rate
-    Episode_Reward/joint_vel
-    Episode_Reward/lifting_object
-    Episode_Reward/object_goal_tracking
-    Episode_Reward/object_goal_tracking_fine_grained
-    Episode_Reward/reaching_object
-    Episode_Termination/object_dropping
-    Episode_Termination/time_out
-    Loss/entropy
-    Loss/learning_rate
-    Loss/surrogate
-    Loss/value_function
-    Metrics/object_pose/orientation_error
-    Metrics/object_pose/position_error
-    Perf/collection time
-    Perf/learning_time
-    Perf/total_fps
-    Policy/mean_noise_std
-    Train/mean_episode_length
-    Train/mean_episode_length/time
-    Train/mean_reward
-    Train/mean_reward/time
-    safety/cost_collision
-    safety/cost_joint_limit
-    safety/cost_singularity
-    safety/cost_total
-    safety/manipulability_mean
-    safety/manipulability_min
-    safety/viol_collision
-    safety/viol_joint_limit
-    safety/viol_singularity
-
-------------------------------------------------------------------------------
-RUN: ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo
-------------------------------------------------------------------------------
-  iterations logged : 49
-  scalar tags       : 36
-
-  key metrics (tail-mean over last 10% of iterations | final point):
-    Loss/cost_lambda                     19.3985 |      19.1795
-    Loss/cost_value_function              0.2057 |       0.0075
-    Loss/mean_episode_cost               35.1233 |       9.8563
-    Train/mean_episode_length           247.0520 |     249.5100
-    Train/mean_episode_length/time      247.0520 |     249.5100
-    Train/mean_reward                    73.6100 |      73.2143
-    Train/mean_reward/time               73.6100 |      73.2143
-    safety/cost_collision              2.247e-07 |       0.0000
-    safety/cost_joint_limit               0.0000 |       0.0000
-    safety/cost_singularity            6.384e-04 |       0.0000
-    safety/cost_total                  6.386e-04 |       0.0000
-    safety/manipulability_min             0.0472 |       0.0620
-    safety/viol_collision              1.221e-05 |       0.0000
-    safety/viol_joint_limit               0.0000 |       0.0000
-    safety/viol_singularity               0.0035 |       0.0000
-
-  all scalar tags:
-    Curriculum/action_rate
-    Curriculum/joint_vel
-    Episode_Reward/action_rate
-    Episode_Reward/joint_vel
-    Episode_Reward/lifting_object
-    Episode_Reward/object_goal_tracking
-    Episode_Reward/object_goal_tracking_fine_grained
-    Episode_Reward/reaching_object
-    Episode_Termination/object_dropping
-    Episode_Termination/time_out
-    Loss/cost_lambda
-    Loss/cost_value_function
-    Loss/entropy
-    Loss/learning_rate
-    Loss/mean_episode_cost
     Loss/surrogate
     Loss/value_function
     Metrics/object_pose/orientation_error
@@ -526,29 +740,29 @@ RUN: ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3
     safety/viol_singularity
 
 ------------------------------------------------------------------------------
-RUN: ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615
+RUN: ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1
 ------------------------------------------------------------------------------
-  iterations logged : 49
+  iterations logged : 1499
   scalar tags       : 38
 
   key metrics (tail-mean over last 10% of iterations | final point):
-    Loss/cost_budget_used                 0.0035 |       0.0036
-    Loss/cost_episodes_in_estimate     2.377e+03 |    2.475e+03
+    Loss/cost_budget_used                 0.7203 |       0.7934
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
     Loss/cost_lambda                      0.0000 |       0.0000
-    Loss/cost_value_function              0.4681 |       2.0385
-    Loss/mean_episode_cost                0.0871 |       0.0912
-    Train/mean_episode_length           250.0000 |     250.0000
-    Train/mean_episode_length/time      250.0000 |     250.0000
-    Train/mean_reward                     7.0269 |       8.3210
-    Train/mean_reward/time                7.0269 |       8.3210
-    safety/cost_collision              1.987e-05 |    3.101e-05
+    Loss/cost_value_function              0.0820 |       0.0988
+    Loss/mean_episode_cost               18.0087 |      19.8341
+    Train/mean_episode_length           249.9444 |     250.0000
+    Train/mean_episode_length/time      249.9444 |     250.0000
+    Train/mean_reward                   134.7915 |     135.3056
+    Train/mean_reward/time              134.7915 |     135.3056
+    safety/cost_collision              4.049e-09 |       0.0000
     safety/cost_joint_limit               0.0000 |       0.0000
-    safety/cost_singularity               0.0132 |       0.0518
-    safety/cost_total                     0.0132 |       0.0518
-    safety/manipulability_min             0.0259 |       0.0017
-    safety/viol_collision                 0.0014 |       0.0019
+    safety/cost_singularity               0.0727 |       0.0809
+    safety/cost_total                     0.0727 |       0.0809
+    safety/manipulability_min          1.310e-04 |    6.237e-05
+    safety/viol_collision              6.104e-07 |       0.0000
     safety/viol_joint_limit               0.0000 |       0.0000
-    safety/viol_singularity               0.0350 |       0.1187
+    safety/viol_singularity               0.1804 |       0.1867
 
   all scalar tags:
     Curriculum/action_rate
@@ -591,29 +805,29 @@ RUN: ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615
     safety/viol_singularity
 
 ------------------------------------------------------------------------------
-RUN: ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649
+RUN: ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2
 ------------------------------------------------------------------------------
-  iterations logged : 49
+  iterations logged : 1499
   scalar tags       : 38
 
   key metrics (tail-mean over last 10% of iterations | final point):
-    Loss/cost_budget_used                 0.0087 |       0.0091
-    Loss/cost_episodes_in_estimate     2.377e+03 |    2.475e+03
+    Loss/cost_budget_used                 0.6659 |       0.6898
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
     Loss/cost_lambda                      0.0000 |       0.0000
-    Loss/cost_value_function              0.4681 |       2.0385
-    Loss/mean_episode_cost                0.0871 |       0.0912
+    Loss/cost_value_function              0.0253 |       0.0208
+    Loss/mean_episode_cost               16.6480 |      17.2458
     Train/mean_episode_length           250.0000 |     250.0000
     Train/mean_episode_length/time      250.0000 |     250.0000
-    Train/mean_reward                     7.0269 |       8.3210
-    Train/mean_reward/time                7.0269 |       8.3210
-    safety/cost_collision              1.987e-05 |    3.101e-05
+    Train/mean_reward                   134.9170 |     135.5382
+    Train/mean_reward/time              134.9170 |     135.5382
+    safety/cost_collision              1.580e-07 |    1.914e-08
     safety/cost_joint_limit               0.0000 |       0.0000
-    safety/cost_singularity               0.0132 |       0.0518
-    safety/cost_total                     0.0132 |       0.0518
-    safety/manipulability_min             0.0259 |       0.0017
-    safety/viol_collision                 0.0014 |       0.0019
+    safety/cost_singularity               0.0667 |       0.0661
+    safety/cost_total                     0.0667 |       0.0661
+    safety/manipulability_min          8.206e-04 |       0.0023
+    safety/viol_collision              3.445e-05 |    1.017e-05
     safety/viol_joint_limit               0.0000 |       0.0000
-    safety/viol_singularity               0.0350 |       0.1187
+    safety/viol_singularity               0.2156 |       0.2208
 
   all scalar tags:
     Curriculum/action_rate
@@ -656,29 +870,29 @@ RUN: ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649
     safety/viol_singularity
 
 ------------------------------------------------------------------------------
-RUN: ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540
+RUN: ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3
 ------------------------------------------------------------------------------
-  iterations logged : 49
+  iterations logged : 1499
   scalar tags       : 38
 
   key metrics (tail-mean over last 10% of iterations | final point):
-    Loss/cost_budget_used                 0.0035 |       0.0036
-    Loss/cost_episodes_in_estimate     2.377e+03 |    2.475e+03
+    Loss/cost_budget_used                 0.4772 |       0.5143
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
     Loss/cost_lambda                      0.0000 |       0.0000
-    Loss/cost_value_function              0.4681 |       2.0385
-    Loss/mean_episode_cost                0.0871 |       0.0912
-    Train/mean_episode_length           250.0000 |     250.0000
-    Train/mean_episode_length/time      250.0000 |     250.0000
-    Train/mean_reward                     7.0269 |       8.3210
-    Train/mean_reward/time                7.0269 |       8.3210
-    safety/cost_collision              1.987e-05 |    3.101e-05
+    Loss/cost_value_function              0.0677 |       0.0688
+    Loss/mean_episode_cost               11.9290 |      12.8569
+    Train/mean_episode_length           249.9774 |     250.0000
+    Train/mean_episode_length/time      249.9774 |     250.0000
+    Train/mean_reward                   132.5698 |     131.8118
+    Train/mean_reward/time              132.5698 |     131.8118
+    safety/cost_collision              1.212e-09 |       0.0000
     safety/cost_joint_limit               0.0000 |       0.0000
-    safety/cost_singularity               0.0132 |       0.0518
-    safety/cost_total                     0.0132 |       0.0518
-    safety/manipulability_min             0.0259 |       0.0017
-    safety/viol_collision                 0.0014 |       0.0019
+    safety/cost_singularity               0.0479 |       0.0474
+    safety/cost_total                     0.0479 |       0.0474
+    safety/manipulability_min          1.843e-04 |    2.147e-04
+    safety/viol_collision              3.391e-07 |       0.0000
     safety/viol_joint_limit               0.0000 |       0.0000
-    safety/viol_singularity               0.0350 |       0.1187
+    safety/viol_singularity               0.1299 |       0.1248
 
   all scalar tags:
     Curriculum/action_rate
@@ -721,24 +935,94 @@ RUN: ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540
     safety/viol_singularity
 
 ------------------------------------------------------------------------------
-RUN: ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke
+RUN: ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4
 ------------------------------------------------------------------------------
-  iterations logged : 49
-  scalar tags       : 33
+  iterations logged : 1499
+  scalar tags       : 38
 
   key metrics (tail-mean over last 10% of iterations | final point):
-    Train/mean_episode_length           231.9900 |     229.2100
-    Train/mean_episode_length/time      231.9900 |     229.2100
-    Train/mean_reward                     1.2709 |       1.3450
-    Train/mean_reward/time                1.2709 |       1.3450
+    Loss/cost_budget_used                 0.7876 |       0.8008
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0884 |       0.0877
+    Loss/mean_episode_cost               19.6900 |      20.0196
+    Train/mean_episode_length           249.9928 |     250.0000
+    Train/mean_episode_length/time      249.9928 |     250.0000
+    Train/mean_reward                   131.4999 |     132.5794
+    Train/mean_reward/time              131.4999 |     132.5794
+    safety/cost_collision              6.512e-09 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0789 |       0.0843
+    safety/cost_total                     0.0789 |       0.0843
+    safety/manipulability_min          8.096e-05 |    6.216e-05
+    safety/viol_collision              1.763e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.1758 |       0.1824
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.9660 |       0.9011
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0130 |       0.0000
+    Loss/cost_value_function              0.0284 |       0.0296
+    Loss/mean_episode_cost               24.1499 |      22.5270
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   135.0462 |     135.3279
+    Train/mean_reward/time              135.0462 |     135.3279
     safety/cost_collision                 0.0000 |       0.0000
     safety/cost_joint_limit               0.0000 |       0.0000
-    safety/cost_singularity               0.0000 |       0.0000
-    safety/cost_total                     0.0000 |       0.0000
-    safety/manipulability_min             0.0706 |       0.0723
+    safety/cost_singularity               0.0962 |       0.0947
+    safety/cost_total                     0.0962 |       0.0947
+    safety/manipulability_min             0.0087 |       0.0074
     safety/viol_collision                 0.0000 |       0.0000
     safety/viol_joint_limit               0.0000 |       0.0000
-    safety/viol_singularity               0.0000 |       0.0000
+    safety/viol_singularity               0.4428 |       0.4376
 
   all scalar tags:
     Curriculum/action_rate
@@ -751,8 +1035,13 @@ RUN: ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke
     Episode_Reward/reaching_object
     Episode_Termination/object_dropping
     Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
     Loss/entropy
     Loss/learning_rate
+    Loss/mean_episode_cost
     Loss/surrogate
     Loss/value_function
     Metrics/object_pose/orientation_error
@@ -776,24 +1065,29 @@ RUN: ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke
     safety/viol_singularity
 
 ------------------------------------------------------------------------------
-RUN: ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg
+RUN: ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50
 ------------------------------------------------------------------------------
-  iterations logged : 49
-  scalar tags       : 33
+  iterations logged : 1499
+  scalar tags       : 38
 
   key metrics (tail-mean over last 10% of iterations | final point):
-    Train/mean_episode_length           162.7120 |     148.3700
-    Train/mean_episode_length/time      162.7120 |     148.3700
-    Train/mean_reward                     2.6078 |       2.4232
-    Train/mean_reward/time                2.6078 |       2.4232
-    safety/cost_collision              5.037e-05 |    5.130e-05
-    safety/cost_joint_limit               0.0014 |       0.0028
-    safety/cost_singularity               0.1293 |       0.1506
-    safety/cost_total                     0.1308 |       0.1534
-    safety/manipulability_min          1.991e-05 |    1.148e-06
-    safety/viol_collision                 0.0014 |       0.0013
-    safety/viol_joint_limit               0.0030 |       0.0061
-    safety/viol_singularity               0.2501 |       0.2690
+    Loss/cost_budget_used                 0.9541 |       0.9999
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                   5.647e-04 |       0.0054
+    Loss/cost_value_function              0.0787 |       0.0623
+    Loss/mean_episode_cost               23.8536 |      24.9980
+    Train/mean_episode_length           249.8997 |     250.0000
+    Train/mean_episode_length/time      249.8997 |     250.0000
+    Train/mean_reward                   132.0242 |     131.6268
+    Train/mean_reward/time              132.0242 |     131.6268
+    safety/cost_collision                 0.0000 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0956 |       0.0998
+    safety/cost_total                     0.0956 |       0.0998
+    safety/manipulability_min          6.161e-04 |    5.570e-04
+    safety/viol_collision                 0.0000 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.3242 |       0.3298
 
   all scalar tags:
     Curriculum/action_rate
@@ -806,8 +1100,923 @@ RUN: ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg
     Episode_Reward/reaching_object
     Episode_Termination/object_dropping
     Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
     Loss/entropy
     Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.6806 |       0.6656
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0277 |       0.0228
+    Loss/mean_episode_cost               17.0151 |      16.6399
+    Train/mean_episode_length           249.9005 |     250.0000
+    Train/mean_episode_length/time      249.9005 |     250.0000
+    Train/mean_reward                   132.9752 |     133.4560
+    Train/mean_reward/time              132.9752 |     133.4560
+    safety/cost_collision                 0.0000 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0679 |       0.0692
+    safety/cost_total                     0.0679 |       0.0692
+    safety/manipulability_min             0.0049 |       0.0059
+    safety/viol_collision                 0.0000 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.2618 |       0.2607
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.3798 |       0.3773
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0291 |       0.0231
+    Loss/mean_episode_cost                9.4955 |       9.4335
+    Train/mean_episode_length           249.9741 |     250.0000
+    Train/mean_episode_length/time      249.9741 |     250.0000
+    Train/mean_reward                   132.7188 |     133.7383
+    Train/mean_reward/time              132.7188 |     133.7383
+    safety/cost_collision              1.789e-08 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0377 |       0.0352
+    safety/cost_total                     0.0377 |       0.0352
+    safety/manipulability_min             0.0155 |       0.0207
+    safety/viol_collision              2.170e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.2324 |       0.2302
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.9404 |       1.0294
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0895 |       0.1543
+    Loss/cost_value_function              0.0725 |       0.0606
+    Loss/mean_episode_cost               23.5109 |      25.7344
+    Train/mean_episode_length           249.9768 |     248.4200
+    Train/mean_episode_length/time      249.9768 |     248.4200
+    Train/mean_reward                   130.6288 |     129.4169
+    Train/mean_reward/time              130.6288 |     129.4169
+    safety/cost_collision              5.353e-09 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0938 |       0.1014
+    safety/cost_total                     0.0938 |       0.1014
+    safety/manipulability_min             0.0119 |       0.0104
+    safety/viol_collision              1.017e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.5166 |       0.5453
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.4793 |       0.5024
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0883 |       0.0754
+    Loss/mean_episode_cost               11.9830 |      12.5608
+    Train/mean_episode_length           249.8415 |     250.0000
+    Train/mean_episode_length/time      249.8415 |     250.0000
+    Train/mean_reward                   129.3365 |     131.3366
+    Train/mean_reward/time              129.3365 |     131.3366
+    safety/cost_collision              9.963e-07 |    1.909e-06
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0480 |       0.0489
+    safety/cost_total                     0.0480 |       0.0489
+    safety/manipulability_min          2.404e-04 |    1.563e-04
+    safety/viol_collision              9.067e-05 |    1.526e-04
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.1265 |       0.1223
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 4.0839 |       4.2301
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.7664 |       0.7276
+    Loss/mean_episode_cost              102.0978 |     105.7523
+    Train/mean_episode_length           249.9885 |     250.0000
+    Train/mean_episode_length/time      249.9885 |     250.0000
+    Train/mean_reward                   131.5380 |     132.8964
+    Train/mean_reward/time              131.5380 |     132.8964
+    safety/cost_collision              6.675e-08 |       0.0000
+    safety/cost_joint_limit               0.3492 |       0.3589
+    safety/cost_singularity               0.0603 |       0.0619
+    safety/cost_total                     0.4094 |       0.4207
+    safety/manipulability_min             0.0034 |       0.0017
+    safety/viol_collision              9.020e-06 |       0.0000
+    safety/viol_joint_limit               0.3539 |       0.3632
+    safety/viol_singularity               0.2242 |       0.2279
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.3061 |       0.3142
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0552 |       0.0463
+    Loss/mean_episode_cost                7.6523 |       7.8556
+    Train/mean_episode_length           249.9863 |     250.0000
+    Train/mean_episode_length/time      249.9863 |     250.0000
+    Train/mean_reward                   133.8982 |     134.0218
+    Train/mean_reward/time              133.8982 |     134.0218
+    safety/cost_collision              1.154e-07 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0307 |       0.0304
+    safety/cost_total                     0.0307 |       0.0304
+    safety/manipulability_min             0.0042 |       0.0063
+    safety/viol_collision              1.506e-05 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.1297 |       0.1239
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 6.4920 |       6.5225
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.3227 |       0.3021
+    Loss/mean_episode_cost              162.2997 |     163.0624
+    Train/mean_episode_length           249.8252 |     250.0000
+    Train/mean_episode_length/time      249.8252 |     250.0000
+    Train/mean_reward                   133.0692 |     133.7661
+    Train/mean_reward/time              133.0692 |     133.7661
+    safety/cost_collision              2.282e-07 |    2.513e-07
+    safety/cost_joint_limit            8.701e-07 |       0.0000
+    safety/cost_singularity               0.6499 |       0.6581
+    safety/cost_total                     0.6499 |       0.6581
+    safety/manipulability_min          7.419e-06 |    6.232e-06
+    safety/viol_collision              2.543e-05 |    3.052e-05
+    safety/viol_joint_limit            9.494e-07 |       0.0000
+    safety/viol_singularity               0.9105 |       0.9167
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 1.2016 |       1.2632
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0726 |       0.0638
+    Loss/mean_episode_cost               30.0403 |      31.5807
+    Train/mean_episode_length           249.9292 |     250.0000
+    Train/mean_episode_length/time      249.9292 |     250.0000
+    Train/mean_reward                   134.2868 |     134.5307
+    Train/mean_reward/time              134.2868 |     134.5307
+    safety/cost_collision              3.896e-08 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.1208 |       0.1267
+    safety/cost_total                     0.1208 |       0.1267
+    safety/manipulability_min             0.0018 |       0.0019
+    safety/viol_collision              4.069e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.3757 |       0.3844
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.7638 |       0.7554
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0463 |       0.0481
+    Loss/mean_episode_cost               19.0940 |      18.8846
+    Train/mean_episode_length           249.8697 |     250.0000
+    Train/mean_episode_length/time      249.8697 |     250.0000
+    Train/mean_reward                   132.7355 |     133.7360
+    Train/mean_reward/time              132.7355 |     133.7360
+    safety/cost_collision              3.694e-09 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0762 |       0.0763
+    safety/cost_total                     0.0762 |       0.0763
+    safety/manipulability_min             0.0073 |       0.0064
+    safety/viol_collision              9.494e-07 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.2530 |       0.2529
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.3440 |       0.3581
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0817 |       0.0782
+    Loss/mean_episode_cost                8.6000 |       8.9534
+    Train/mean_episode_length           249.9725 |     250.0000
+    Train/mean_episode_length/time      249.9725 |     250.0000
+    Train/mean_reward                   132.1378 |     132.5740
+    Train/mean_reward/time              132.1378 |     132.5740
+    safety/cost_collision              1.411e-06 |    2.262e-06
+    safety/cost_joint_limit            2.199e-04 |    2.222e-04
+    safety/cost_singularity               0.0342 |       0.0323
+    safety/cost_total                     0.0345 |       0.0325
+    safety/manipulability_min             0.0035 |       0.0020
+    safety/viol_collision              1.272e-04 |    2.238e-04
+    safety/viol_joint_limit            2.463e-04 |    2.441e-04
+    safety/viol_singularity               0.1340 |       0.1320
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.0714 |       0.0807
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0107 |       0.0136
+    Loss/mean_episode_cost                1.7846 |       2.0185
+    Train/mean_episode_length           249.9724 |     250.0000
+    Train/mean_episode_length/time      249.9724 |     250.0000
+    Train/mean_reward                   137.2815 |     137.3967
+    Train/mean_reward/time              137.2815 |     137.3967
+    safety/cost_collision              1.161e-07 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0072 |       0.0075
+    safety/cost_total                     0.0072 |       0.0075
+    safety/manipulability_min             0.0380 |       0.0295
+    safety/viol_collision              8.206e-06 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.0784 |       0.0825
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 4.2773 |       4.1888
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.4975 |       0.4282
+    Loss/mean_episode_cost              106.9324 |     104.7191
+    Train/mean_episode_length           249.8476 |     250.0000
+    Train/mean_episode_length/time      249.8476 |     250.0000
+    Train/mean_reward                   132.0847 |     132.4208
+    Train/mean_reward/time              132.0847 |     132.4208
+    safety/cost_collision              1.836e-09 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.4276 |       0.4264
+    safety/cost_total                     0.4276 |       0.4264
+    safety/manipulability_min          1.311e-05 |    7.732e-06
+    safety/viol_collision              8.138e-07 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.6808 |       0.6733
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.7524 |       0.7534
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.0495 |       0.0419
+    Loss/mean_episode_cost               18.8100 |      18.8356
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   134.3350 |     135.0703
+    Train/mean_reward/time              134.3350 |     135.0703
+    safety/cost_collision              1.328e-10 |       0.0000
+    safety/cost_joint_limit               0.0000 |       0.0000
+    safety/cost_singularity               0.0751 |       0.0763
+    safety/cost_total                     0.0751 |       0.0763
+    safety/manipulability_min             0.0024 |       0.0013
+    safety/viol_collision              6.782e-08 |       0.0000
+    safety/viol_joint_limit               0.0000 |       0.0000
+    safety/viol_singularity               0.3083 |       0.3095
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
+    Loss/surrogate
+    Loss/value_function
+    Metrics/object_pose/orientation_error
+    Metrics/object_pose/position_error
+    Perf/collection time
+    Perf/learning_time
+    Perf/total_fps
+    Policy/mean_noise_std
+    Train/mean_episode_length
+    Train/mean_episode_length/time
+    Train/mean_reward
+    Train/mean_reward/time
+    safety/cost_collision
+    safety/cost_joint_limit
+    safety/cost_singularity
+    safety/cost_total
+    safety/manipulability_mean
+    safety/manipulability_min
+    safety/viol_collision
+    safety/viol_joint_limit
+    safety/viol_singularity
+
+------------------------------------------------------------------------------
+RUN: ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54
+------------------------------------------------------------------------------
+  iterations logged : 1499
+  scalar tags       : 38
+
+  key metrics (tail-mean over last 10% of iterations | final point):
+    Loss/cost_budget_used                 0.3179 |       0.4343
+    Loss/cost_episodes_in_estimate     4.096e+03 |    4.096e+03
+    Loss/cost_lambda                      0.0000 |       0.0000
+    Loss/cost_value_function              0.3104 |       0.4078
+    Loss/mean_episode_cost                7.9475 |      10.8567
+    Train/mean_episode_length           250.0000 |     250.0000
+    Train/mean_episode_length/time      250.0000 |     250.0000
+    Train/mean_reward                   134.3376 |     135.1533
+    Train/mean_reward/time              134.3376 |     135.1533
+    safety/cost_collision              1.979e-06 |    2.644e-06
+    safety/cost_joint_limit               0.0169 |       0.0290
+    safety/cost_singularity               0.0162 |       0.0156
+    safety/cost_total                     0.0330 |       0.0446
+    safety/manipulability_min             0.0120 |       0.0040
+    safety/viol_collision              1.356e-04 |    2.441e-04
+    safety/viol_joint_limit               0.0276 |       0.0432
+    safety/viol_singularity               0.0842 |       0.0793
+
+  all scalar tags:
+    Curriculum/action_rate
+    Curriculum/joint_vel
+    Episode_Reward/action_rate
+    Episode_Reward/joint_vel
+    Episode_Reward/lifting_object
+    Episode_Reward/object_goal_tracking
+    Episode_Reward/object_goal_tracking_fine_grained
+    Episode_Reward/reaching_object
+    Episode_Termination/object_dropping
+    Episode_Termination/time_out
+    Loss/cost_budget_used
+    Loss/cost_episodes_in_estimate
+    Loss/cost_lambda
+    Loss/cost_value_function
+    Loss/entropy
+    Loss/learning_rate
+    Loss/mean_episode_cost
     Loss/surrogate
     Loss/value_function
     Metrics/object_pose/orientation_error
@@ -835,276 +2044,599 @@ CROSS-RUN TABLE
 ==============================================================================
 
 Loss/cost_budget_used   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49              n/a
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499            n/a
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49              n/a
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49              n/a
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499            n/a
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0035
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0087
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0035
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49              n/a
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49              n/a
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499            n/a
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499            n/a
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499            n/a
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.7203
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.6659
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.4772
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.7876
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.9660
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.9541
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.6806
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.3798
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.9404
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.4793
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         4.0839
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.3061
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         6.4920
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         1.2016
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.7638
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.3440
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0714
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         4.2773
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.7524
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.3179
 
 Loss/cost_episodes_in_estimate   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49              n/a
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499            n/a
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49              n/a
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49              n/a
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499            n/a
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499            n/a
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49        2.377e+03
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49        2.377e+03
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49        2.377e+03
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49              n/a
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49              n/a
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499            n/a
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499            n/a
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499            n/a
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499      4.096e+03
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499      4.096e+03
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499      4.096e+03
 
 Loss/cost_lambda   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49              n/a
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499            n/a
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49              n/a
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49          19.3985
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.1552
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.0588
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0000
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0000
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49              n/a
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49              n/a
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.1552
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0588
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0130
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499      5.647e-04
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0895
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0000
 
 Loss/cost_value_function   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49              n/a
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499            n/a
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49              n/a
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49           0.2057
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.1326
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         0.1119
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.2958
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.4681
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.4681
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.4681
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49              n/a
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49              n/a
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.1326
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.1119
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.2958
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0820
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0253
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0677
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0884
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0284
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0787
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0277
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0291
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0725
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0883
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.7664
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0552
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.3227
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0726
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0463
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0817
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0107
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.4975
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0495
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.3104
 
 Loss/mean_episode_cost   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49              n/a
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499            n/a
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499            n/a
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49              n/a
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49          35.1233
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499        24.2586
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         9.7845
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499        20.8876
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0871
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0871
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0871
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49              n/a
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49              n/a
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499            n/a
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499            n/a
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499            n/a
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499            n/a
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499        24.2586
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         9.7845
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499        20.8876
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499        18.0087
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499        16.6480
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499        11.9290
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499        19.6900
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499        24.1499
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499        23.8536
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499        17.0151
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         9.4955
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499        23.5109
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499        11.9830
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       102.0978
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         7.6523
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       162.2997
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499        30.0403
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499        19.0940
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         8.6000
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         1.7846
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       106.9324
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499        18.8100
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         7.9475
 
 Train/mean_episode_length   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49         246.8500
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499       249.9226
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499       250.0000
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499       250.0000
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49         250.0000
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49         247.0520
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49         250.0000
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49         250.0000
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49         250.0000
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49         231.9900
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49         162.7120
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499       249.9885
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499       249.9863
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499       249.8252
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499       249.9292
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499       249.8697
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499       249.9725
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499       249.9724
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499       249.8476
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499       250.0000
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499       250.0000
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499       250.0000
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499       250.0000
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499       249.9444
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499       249.9774
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499       249.9928
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499       249.8997
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499       249.9005
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499       249.9741
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499       249.9768
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499       249.8415
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       249.9885
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499       249.9863
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       249.8252
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499       249.9292
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499       249.8697
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499       249.9725
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499       249.9724
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       249.8476
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499       250.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499       250.0000
 
 Train/mean_episode_length/time   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49         246.8500
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499       249.9226
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499       250.0000
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499       250.0000
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49         250.0000
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49         247.0520
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499       250.0000
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49         250.0000
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49         250.0000
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49         250.0000
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49         231.9900
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49         162.7120
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499       249.9885
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499       249.9863
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499       249.8252
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499       249.9292
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499       249.8697
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499       249.9725
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499       249.9724
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499       249.8476
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499       250.0000
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499       250.0000
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499       250.0000
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499       250.0000
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499       249.9444
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499       249.9774
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499       249.9928
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499       250.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499       249.8997
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499       249.9005
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499       249.9741
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499       249.9768
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499       249.8415
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       249.9885
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499       249.9863
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       249.8252
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499       249.9292
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499       249.8697
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499       249.9725
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499       249.9724
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       249.8476
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499       250.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499       250.0000
 
 Train/mean_reward   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49          65.4736
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499       141.9277
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499        90.7963
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499       163.2904
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49           7.0269
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49          73.6100
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499       163.8746
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499       166.1642
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499       158.3020
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           7.0269
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           7.0269
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           7.0269
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           1.2709
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49           2.6078
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499       131.5380
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499       133.8982
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499       133.0692
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499       134.2868
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499       132.7355
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499       132.1378
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499       137.2815
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499       132.0847
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499       134.3350
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499       134.3376
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499       163.8746
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499       166.1642
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499       158.3020
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499       134.7915
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499       134.9170
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499       132.5698
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499       131.4999
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499       135.0462
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499       132.0242
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499       132.9752
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499       132.7188
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499       130.6288
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499       129.3365
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       131.5380
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499       133.8982
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       133.0692
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499       134.2868
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499       132.7355
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499       132.1378
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499       137.2815
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       132.0847
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499       134.3350
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499       134.3376
 
 Train/mean_reward/time   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49          65.4736
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499       141.9277
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499        90.7963
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499       163.2904
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49           7.0269
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49          73.6100
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499       163.8746
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499       166.1642
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499       158.3020
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           7.0269
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           7.0269
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           7.0269
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           1.2709
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49           2.6078
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499       131.5380
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499       133.8982
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499       133.0692
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499       134.2868
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499       132.7355
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499       132.1378
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499       137.2815
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499       132.0847
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499       134.3350
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499       134.3376
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499       163.8746
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499       166.1642
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499       158.3020
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499       134.7915
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499       134.9170
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499       132.5698
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499       131.4999
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499       135.0462
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499       132.0242
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499       132.9752
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499       132.7188
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499       130.6288
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499       129.3365
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499       131.5380
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499       133.8982
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499       133.0692
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499       134.2868
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499       132.7355
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499       132.1378
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499       137.2815
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499       132.0847
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499       134.3350
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499       134.3376
 
 safety/cost_collision   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49           0.0000
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499         0.0000
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499         0.0000
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499         0.0000
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49        1.987e-05
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49        2.247e-07
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49        1.987e-05
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49        1.987e-05
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49        1.987e-05
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49        5.037e-05
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499      6.675e-08
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499      1.154e-07
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      2.282e-07
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499      3.896e-08
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499      3.694e-09
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499      1.411e-06
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499      1.161e-07
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499      1.836e-09
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499      1.328e-10
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499      1.979e-06
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0000
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499      4.049e-09
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499      1.580e-07
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499      1.212e-09
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499      6.512e-09
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499      1.789e-08
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499      5.353e-09
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499      9.963e-07
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499      6.675e-08
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499      1.154e-07
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      2.282e-07
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499      3.896e-08
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499      3.694e-09
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      1.411e-06
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499      1.161e-07
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499      1.836e-09
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499      1.328e-10
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499      1.979e-06
 
 safety/cost_joint_limit   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49           0.0000
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499         0.3292
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499         0.9951
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499         0.0000
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49           0.0000
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49           0.0000
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.0044
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.0092
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0000
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0000
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49           0.0014
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.3492
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      8.701e-07
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499      2.199e-04
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0169
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0044
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0092
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.3492
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      8.701e-07
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      2.199e-04
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0169
 
 safety/cost_singularity   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49           0.5455
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499         0.4280
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499         0.7783
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499         0.4850
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49           0.0132
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49        6.384e-04
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.0924
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         0.0390
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.0738
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0132
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0132
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0132
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49           0.1293
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.0603
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0307
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499         0.6499
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.1208
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0762
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499         0.0342
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0072
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.4276
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0751
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0162
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0924
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0390
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0738
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0727
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0667
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0479
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0789
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0962
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0956
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0679
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0377
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0938
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0480
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.0603
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0307
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.6499
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.1208
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0762
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0342
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0072
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.4276
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0751
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0162
 
 safety/cost_total   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49           0.5455
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499         0.7572
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499         1.7733
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499         0.4850
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49           0.0132
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49        6.386e-04
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.0967
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         0.0390
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.0830
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0132
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0132
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0132
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49           0.1308
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.4094
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0307
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499         0.6499
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.1208
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0762
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499         0.0345
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0072
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.4276
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0751
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0330
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0967
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0390
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0830
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0727
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0667
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0479
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0789
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0962
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0956
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0679
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0377
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0938
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0480
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.4094
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0307
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.6499
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.1208
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0762
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0345
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0072
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.4276
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0751
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0330
 
 safety/manipulability_min   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49        5.728e-06
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499      2.723e-06
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499      1.000e-06
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499      7.322e-05
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49           0.0259
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49           0.0472
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.0234
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499      7.261e-04
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.0135
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0259
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0259
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0259
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0706
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49        1.991e-05
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.0034
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0042
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      7.419e-06
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.0018
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0073
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499         0.0035
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0380
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499      1.311e-05
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0024
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0120
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0234
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499      7.261e-04
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0135
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499      1.310e-04
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499      8.206e-04
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499      1.843e-04
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499      8.096e-05
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0087
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499      6.161e-04
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0049
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0155
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0119
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499      2.404e-04
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.0034
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0042
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      7.419e-06
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0018
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0073
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.0035
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0380
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499      1.311e-05
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0024
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0120
 
 safety/viol_collision   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49           0.0000
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499         0.0000
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499         0.0000
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499         0.0000
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49           0.0014
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49        1.221e-05
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0014
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0014
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0014
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49           0.0014
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499      9.020e-06
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499      1.506e-05
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      2.543e-05
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499      4.069e-06
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499      9.494e-07
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499      1.272e-04
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499      8.206e-06
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499      8.138e-07
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499      6.782e-08
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499      1.356e-04
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0000
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499      6.104e-07
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499      3.445e-05
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499      3.391e-07
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499      1.763e-06
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499      2.170e-06
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499      1.017e-06
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499      9.067e-05
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499      9.020e-06
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499      1.506e-05
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      2.543e-05
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499      4.069e-06
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499      9.494e-07
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      1.272e-04
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499      8.206e-06
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499      8.138e-07
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499      6.782e-08
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499      1.356e-04
 
 safety/viol_joint_limit   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49           0.0000
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499         0.3540
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499         0.5542
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499         0.0000
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49           0.0000
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49           0.0000
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.0093
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         0.0000
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.0163
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0000
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0000
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49           0.0030
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.3539
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499      9.494e-07
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.0000
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499      2.463e-04
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.0000
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0276
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.0093
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.0000
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.0163
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.0000
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.3539
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499      9.494e-07
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499      2.463e-04
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.0000
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0276
 
 safety/viol_singularity   (tail-mean over last 10% of iterations)
-    ur5e_lift/2026-07-30_01-49-46_smoke_ppo                          iters=49           0.7186
-    ur5e_lift/2026-07-30_02-12-31_ppo_s1                             iters=1499         0.7387
-    ur5e_lift/2026-07-30_02-23-14_ppo_s2                             iters=1499         0.8542
-    ur5e_lift/2026-07-30_02-34-03_ppo_s3                             iters=1499         0.9188
-    ur5e_lift/2026-07-31_20-25-11_smoke_202505                       iters=49           0.0350
-    ur5e_lift_cppo/2026-07-30_01-51-41_smoke_cppo                    iters=49           0.0035
-    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1                       iters=1499         0.5482
-    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2                       iters=1499         0.1377
-    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3                       iters=1499         0.5823
-    ur5e_lift_cppo/2026-07-31_20-26-21_smoke_202615                  iters=49           0.0350
-    ur5e_lift_cppo10/2026-07-31_20-26-55_smoke_202649                iters=49           0.0350
-    ur5e_lift_ctrl/2026-07-31_20-25-46_smoke_202540                  iters=49           0.0350
-    ur5e_lift_simplegripper/2026-07-29_23-48-02_simplegripper_smoke  iters=49           0.0000
-    ur5e_lift_simplegripper/2026-07-30_01-53-47_smoke_sg             iters=49           0.2501
+    ur5e_lift/2026-08-01_00-01-25_ppo_s1         iters=1499         0.2242
+    ur5e_lift/2026-08-01_00-13-17_ppo_s2         iters=1499         0.1297
+    ur5e_lift/2026-08-01_00-24-40_ppo_s3         iters=1499         0.9105
+    ur5e_lift/2026-08-01_00-35-41_ppo_s4         iters=1499         0.3757
+    ur5e_lift/2026-08-01_00-46-59_ppo_s5         iters=1499         0.2530
+    ur5e_lift/2026-08-01_04-12-13_ppo_s50        iters=1499         0.1340
+    ur5e_lift/2026-08-01_04-23-37_ppo_s51        iters=1499         0.0784
+    ur5e_lift/2026-08-01_04-34-25_ppo_s52        iters=1499         0.6808
+    ur5e_lift/2026-08-01_04-45-32_ppo_s53        iters=1499         0.3083
+    ur5e_lift/2026-08-01_04-56-17_ppo_s54        iters=1499         0.0842
+    ur5e_lift_cppo/2026-07-30_02-44-49_cppo_s1   iters=1499         0.5482
+    ur5e_lift_cppo/2026-07-30_02-55-40_cppo_s2   iters=1499         0.1377
+    ur5e_lift_cppo/2026-07-30_03-06-40_cppo_s3   iters=1499         0.5823
+    ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1   iters=1499         0.1804
+    ur5e_lift_cppo/2026-08-01_02-08-26_cppo_s2   iters=1499         0.2156
+    ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3   iters=1499         0.1299
+    ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4   iters=1499         0.1758
+    ur5e_lift_cppo/2026-08-01_02-43-02_cppo_s5   iters=1499         0.4428
+    ur5e_lift_cppo/2026-08-01_06-04-55_cppo_s50  iters=1499         0.3242
+    ur5e_lift_cppo/2026-08-01_06-16-36_cppo_s51  iters=1499         0.2618
+    ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52  iters=1499         0.2324
+    ur5e_lift_cppo/2026-08-01_06-39-30_cppo_s53  iters=1499         0.5166
+    ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54  iters=1499         0.1265
+    ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1   iters=1499         0.2242
+    ur5e_lift_ctrl/2026-08-01_01-10-06_ctrl_s2   iters=1499         0.1297
+    ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3   iters=1499         0.9105
+    ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4   iters=1499         0.3757
+    ur5e_lift_ctrl/2026-08-01_01-45-10_ctrl_s5   iters=1499         0.2530
+    ur5e_lift_ctrl/2026-08-01_05-07-30_ctrl_s50  iters=1499         0.1340
+    ur5e_lift_ctrl/2026-08-01_05-19-17_ctrl_s51  iters=1499         0.0784
+    ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52  iters=1499         0.6808
+    ur5e_lift_ctrl/2026-08-01_05-42-05_ctrl_s53  iters=1499         0.3083
+    ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54  iters=1499         0.0842
 
 ==============================================================================
 CSVs written to: /home/mte/Abdur_Rabbi_THESIS/Comparison_test/results/tb_csv

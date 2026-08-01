@@ -6,7 +6,70 @@ Opened: 2026-07-29 (Day 19, evening)
 
 ## ⚡ Pick-up-here (for a new session)
 
-> ## ▶ EXECUTION STATUS (2026-07-31, Day 23, cont.) — mid-checklist, Step 4 next
+> ## ▶ EXECUTION STATUS (2026-08-01, Day 24) — Steps 4-6+8 done for a 3-of-5-arm subset; Step 9 partial
+>
+> **Full results:** `Comparison_test/results/MATRIX_V2_PARTIAL_3ARM.md` (+ same content as
+> `MATRIX_V2_PARTIAL_3ARM_report.pdf`, English — no Bengali font available in the sandbox to
+> render a Bangla PDF). This block is the short version.
+>
+> **Step 4 (recalibrate) — DONE.** First attempt accidentally calibrated against a 50-iteration
+> smoke checkpoint (bogus — an almost-untrained policy); caught before acting on it, redone
+> against a proper 1500-iter probe. `MANIP_FLOOR: 0.045 → 0.06`. `JOINT_LIMIT_MARGIN` held at
+> 0.175 but **reclassified from inactive to ACTIVE** (33.7% baseline violation, now the
+> *larger* of the two constraints) — the widened goal box did this. `COLLISION_Z_FLOOR` held at
+> 0.05, confirmed still inactive. `cost_limit` held at 25 — later shown to be a highly
+> seed-variable question, not a fixed slack/binding verdict (see below).
+>
+> **Step 5 (freeze) — DONE.** Commit `567e4c0`, tag `matrix-v2`.
+>
+> **Step 6 (matrix) — PARTIAL: 3 of 5 arms, but 10 seeds not 5.** `ppo` / `ctrl` / `cppo` only,
+> seeds 1-5 **and** 50-54 (Touhid asked for the extra 5 mid-session). `cppo10` and `sac` are
+> **NOT in this batch** — "does an actively-binding budget help" is still unanswered; only
+> "does a budget that's borderline-to-binding depending on seed help" is in scope here. All 30
+> checkpoints verified on disk.
+>
+> **Step 7 (the decisive check) — PASSED, unusually strongly.** ctrl vs ppo is not just
+> statistically null, it is **bitwise identical** — checkpoint-hash-verified (all 68 of ppo_s1's
+> actor+critic tensors found byte-identical inside ctrl_s1's checkpoint), reproduced
+> independently across all 10 seeds, and reproduced again at evaluation time. The A1
+> gradient-clip fix is confirmed as strongly as this kind of check can confirm anything.
+>
+> **Step 8 (eval) — DONE for this batch**, scoped script `run_eval_matrix_v2_3arm.sh` (not the
+> shared `run_eval_policy_v2.sh` — that one still expects `cppo10`/`sac`). 3 arms x 10 seeds x
+> eval-seeds 101/102/103, 1000 episodes each. Found and filtered 20 stale rows in the
+> append-only `eval_policy_results.csv` left over from the old pre-freeze/pre-audit sweep —
+> filter by checkpoint path date, not by label, if reading that file directly.
+>
+> **Headline results:** (1) ctrl≡ppo, see Step 7. (2) cPPO's main measured effect is collapsing
+> **seed-to-seed safety variance**, not just the mean — `ctrl`'s natural episodic cost ranges
+> 1.8-164.5 across seeds (~90x), `cppo` holds every seed to 9.5-24 (~2.5x), at ~0.7% reward cost.
+> (3) Pooled over 30,000 eval episodes/arm: true singularity crossings (w<1e-4) 1.343%
+> (ppo/ctrl) vs 0.250% (cppo); joint-limit touched at all 5.37% vs **0.00%, all 10 seeds**;
+> goal-reach <1cm 94.28% vs 96.49% (no task cost). Honest counter-note: cppo's single
+> worst-episode manipulability was *not* shallower than ppo/ctrl's — the constraint reduces
+> frequency/consistency of near-singular excursions, not the rare worst-case depth.
+>
+> **Written up (2026-08-01, Day 24 cont., separate session):**
+> `Thesis_Documentation/Results_Chapter_Layer1.md` — Chapter 4 prose from this batch. Two things
+> that came out of drafting it and matter here:
+> (a) **`MATRIX_V2_PARTIAL_3ARM.md` §4.1's λ sentence was wrong and is retracted in place.** That
+> row is λ at the *final iteration*, not a trajectory; λ must have engaged hard on the high-cost
+> seeds and relaxed to 0 (else, by §2's argument, those seeds would be bitwise identical to `ctrl`,
+> which they are not). **Per-iteration λ curves were never extracted for this batch — do not quote
+> a λ peak or engagement iteration for any seed** until `Loss/cost_lambda` is pulled from the event
+> files.
+> (b) **Number discrepancy, unresolved:** this block and the Day-24 `run_log` entry both say
+> `ctrl`'s cost range tops at **164.5**; `MATRIX_V2_PARTIAL_3ARM.md` §4.1's per-seed table maxes at
+> **162.3** (seed 3). The chapter uses 162.3 (source of truth, and the per-seed table is the more
+> likely to be right). One of the two is a typo — reconcile.
+>
+> **NOT yet done:** `cppo10` + `sac` (this batch deliberately excludes them); archiving the 3
+> superseded pre-audit `cppo_s1/s2/s3` run dirs still sitting in `logs/rsl_rl/ur5e_lift_cppo/`
+> under the same labels as the new ones (checkpoint-selection logic resolves correctly via
+> mtime, verified, but this is a standing risk, not a fix); `skrl_ppo_cfg.yaml` still unverified
+> under skrl 2.1.0 (open since Day 22-23).
+
+> ## Historical — EXECUTION STATUS (2026-07-31, Day 23, cont.), superseded by the block above
 >
 > Working through `Comparison_test/RUN_CHECKLIST_v2.md` on the lab PC (9 steps, reordered —
 > freeze is step 5, not step 1; see the reordering update further down).

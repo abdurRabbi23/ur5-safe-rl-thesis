@@ -1,4 +1,4 @@
-[3gH    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H [INFO] Using python from: /home/mte/miniconda3/envs/isaaclab/bin/python
+[3gH    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H  [INFO] Using python from: /home/mte/miniconda3/envs/isaaclab/bin/python
 usage: eval_policy.py [-h] [--num_envs NUM_ENVS] [--task TASK]
                       [--episodes EPISODES] [--seed SEED]
                       [--backend {rsl_rl,skrl}] [--agent AGENT]
@@ -14,7 +14,7 @@ usage: eval_policy.py [-h] [--num_envs NUM_ENVS] [--task TASK]
                       [--livestream {0,1,2}] [--enable_cameras] [--xr]
                       [--device DEVICE] [--verbose] [--info]
                       [--experience EXPERIENCE]
-                      [--rendering_mode {performance,quality,balanced}]
+                      [--rendering_mode {balanced,quality,performance}]
                       [--kit_args KIT_ARGS] [--anim_recording_enabled]
                       [--anim_recording_start_time ANIM_RECORDING_START_TIME]
                       [--anim_recording_stop_time ANIM_RECORDING_STOP_TIME]
@@ -95,7 +95,7 @@ app_launcher arguments:
                         flag. If a relative path is provided, it is resolved
                         relative to the `apps` folder in Isaac Sim and Isaac
                         Lab (in that order).
-  --rendering_mode {performance,quality,balanced}
+  --rendering_mode {balanced,quality,performance}
                         Sets the rendering mode. Preset settings files can be
                         found in apps/rendering_modes. Can be "performance",
                         "balanced", or "quality". Individual settings can be

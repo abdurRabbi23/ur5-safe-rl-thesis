@@ -108,7 +108,26 @@ constraint is earned at no measurable task cost.
 
 ---
 
-## Layer 1 — Results-chapter write-up (draft prose)
+## Layer 1 — Results-chapter write-up (draft prose) — 🛑 WITHDRAWN 2026-07-31, DO NOT QUOTE
+
+> # 🛑 WITHDRAWN — superseded, do not quote any number below
+>
+> **Every number in this section is withdrawn.** It is single-seed, pre-audit prose written
+> 2026-07-19 against `MANIP_FLOOR = 0.045` and a cPPO-vs-PPO comparison that the Day-23 algorithm
+> audit (`Comparison_test/results/ALGORITHM_AUDIT.md`) found **confounded**: the gap was produced
+> by a single global gradient-norm clip spanning the cost critic, not by the safety constraint,
+> which sat at λ = 0 for essentially the whole run. The 16.86 % vs 6.65 % singularity figures, the
+> 100.0 / 99.6 goal-reach rates, and the λ-dynamics narrative are all artifacts of that bug or of
+> the metric ceiling described in audit finding A6.
+>
+> **Current Results chapter:** `Thesis_Documentation/Results_Chapter_Layer1.md` (matrix v2,
+> 3 arms × 10 seeds, 30,000 evaluation episodes per arm).
+> **Current numbers, source of truth:** `Comparison_test/results/MATRIX_V2_PARTIAL_3ARM.md`.
+>
+> Kept only as a dated record of what was believed on 2026-07-19, per this repo's convention of
+> not rewriting superseded entries. The tables in "Layer 1 — Calibration" and "Layer 1 — The
+> headline benchmark" above this section are withdrawn on the same grounds; the reproduce-a-run
+> commands at the top of this file are still valid.
 
 > Draft for the thesis Results chapter. Refers to Table 1 (the docx above). Prose only, no lists,
 > per the thesis formatting rules.
@@ -151,7 +170,13 @@ manipulation policy is meant to deliver.
 
 ---
 
-## Figures (for the write-up) — ✅ generated 2026-07-20
+## Figures (for the write-up) — ✅ generated 2026-07-20 — 🛑 built from WITHDRAWN data
+
+> These four figures were generated from the single-seed, pre-audit 2026-07-19 runs and are
+> withdrawn along with the prose above. **Do not use them with
+> `Thesis_Documentation/Results_Chapter_Layer1.md`.** They must be regenerated from the matrix-v2
+> data before the Results chapter is typeset; the highest-value new figure is a per-seed episodic
+> cost plot for `ctrl` vs `cppo` (Table 4.5 of that chapter).
 
 Exported to `assets/` (PNG at 300 dpi + vector PDF). Regenerate any time with
 `results/scripts/make_layer1_figs.py`.
