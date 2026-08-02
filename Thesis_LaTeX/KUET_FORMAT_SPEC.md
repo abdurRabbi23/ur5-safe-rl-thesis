@@ -32,7 +32,7 @@ The "25 mm / 30 mm" callouts drawn on the cover and title page templates agree w
 | Cover page | none | — | not counted |
 | Title page | i | not printed | |
 | Declaration → Approval | ii, iii | **centred** footer | `pgNumType start=2 fmt=lowerRoman` |
-| Acknowledgement → Nomenclature | iv onward | **centred** footer | `pgNumType start=4` |
+| Acknowledgement → Abbreviations | iv onward | **centred** footer | `pgNumType start=4` |
 | Chapter 1 onward | 1, 2, 3 … | **right-aligned** footer | arabic restart |
 
 The footer alignment genuinely changes between front matter (centre) and body (right). Both
@@ -69,13 +69,14 @@ Everything is Times New Roman. Sizes below are the real ones (Word stores half-p
 
 Cover page → Title page → Declaration → Approval (with the Board of Examiners table inside it)
 → Acknowledgement → Abstract → Table of Contents → List of Tables → List of Figures →
-List of Nomenclature → Chapters → References → Appendices.
+List of Abbreviations → Chapters → References → Appendices.
 
 Notes:
 - **Board of Examiners is not a separate page.** It is a table inside APPROVAL. (The repo's
   `logbook/08_project_context.md` lists it as its own page — that is wrong.)
-- The list page is **List of Nomenclature**, not "List of Abbreviations", and the sample mixes
-  units, symbols and acronyms in one two-column table.
+- The final list page is **List of Abbreviations** (accepted book). The generic template calls
+  it "List of Nomenclature" and mixes units, symbols and acronyms in one two-column table; we
+  keep the book's title and separate the symbols into a second block.
 - List of Tables / List of Figures use a three-column layout: number, description, page, with a
   bold header row.
 
