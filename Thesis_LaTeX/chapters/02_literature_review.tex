@@ -1,0 +1,342 @@
+\chapter{Literature Review}\label{ch:litreview}
+
+\begin{draftnote}
+MODULE 3 --- first draft, written 2026-08-02 (Day 25, evening).
+
+\textbf{The old ``BLOCKED: no reference PDFs are in this repo'' note is superseded and has been
+deleted.} The chapter is written from the 21 verified entries in \texttt{references.bib} against
+the spine agreed in \texttt{logbook/10\_references.md}. Every citation here appears in that claim
+map; if a new claim is added, add its row to the map first.
+
+\textbf{Claim discipline used.} Load-bearing technical claims are drawn from the constrained-RL
+foundations and from the three papers held in full (\cite{khan2026rl_precision_grasping},
+\cite{shahid2022continuous_grasping}, \cite{ferreira2025grasping}). The surveys and application
+papers are cited for framing, taxonomy and positioning only, and no specific numerical result is
+attributed to a paper not held. Section~\ref{sec:b-gap} is load-bearing --- it is where the gap
+statement is made, and Chapter~\ref{ch:intro} should restate it.
+
+\textbf{Open for revision:} target is 8--10 pages, check against the built PDF. Consider whether
+Section~\ref{sec:b-repro} belongs here or in Chapter~\ref{ch:methods} --- it is placed here
+because it motivates the ten-seed protocol, but it is arguably method rather than background.
+\end{draftnote}
+
+\section{The safety requirement in learned manipulation}\label{sec:b-motivation}
+
+A robot manipulator that learns its own control policy poses a problem that a manipulator running
+a hand-written controller does not. The behaviour of a classical controller can be inspected,
+bounded and argued about before the machine is switched on; the behaviour of a policy obtained by
+reinforcement learning is a consequence of an optimisation run, and is known only through the
+statistics of the trajectories it produces. When such a policy is to be deployed on a physical arm
+sharing its workspace with people, equipment or the workpiece itself, the question of what it does
+in the configurations it visits rarely is not a secondary concern. It is the condition on which
+deployment depends at all.
+
+The difficulty is that reinforcement learning, in its standard form, offers a single channel
+through which a designer expresses what the agent should and should not do: the reward function.
+Safety requirements expressed through that channel become penalty terms, and a penalty term must
+be given a weight. That weight is a trade-off rate between task performance and safety which the
+designer must fix before knowing what either will be worth, and which has no natural units --- it
+is a number tuned until the resulting behaviour looks acceptable. Achiam \emph{et al.}
+\cite{achiam2017cpo} make this argument directly in motivating constrained policy optimisation:
+for systems that interact physically with or around humans, it is more natural to specify a reward
+function \emph{and} a set of constraints than to encode both into one scalar objective.
+
+The alternative is to keep the safety requirement outside the reward and impose it as a constraint
+with a budget. A budget has a property the weight does not: it can be stated in advance, in the
+units of the quantity being constrained, and it can be audited afterwards against what the trained
+policy actually spent. This distinction --- \emph{a shaped reward requires the designer to guess a
+weight, a constraint requires only that they state a limit} --- is the premise of this thesis, and
+Section~\ref{sec:b-manip} shows that it separates two otherwise similar bodies of work on
+singularity avoidance.
+
+This chapter reviews the literature establishing that premise and locates this thesis within it.
+Section~\ref{sec:b-saferl} introduces safe reinforcement learning and the taxonomy under which
+this work falls. Section~\ref{sec:b-cmdp} gives the constrained Markov decision process, the
+formalism used throughout. Section~\ref{sec:b-cpo} covers the deep constrained policy optimisation
+algorithms from which the constrained agent is taken. Section~\ref{sec:b-roboticsafety} turns to
+safety in robot learning specifically, and Section~\ref{sec:b-manipulation} to reinforcement
+learning on manipulators and on the UR5 in particular. Section~\ref{sec:b-manip} treats
+manipulability and singularity avoidance, the operative safety quantity of this work.
+Section~\ref{sec:b-repro} addresses seed variance. Section~\ref{sec:b-gap} states the gap this
+thesis addresses.
+
+\section{Safe reinforcement learning}\label{sec:b-saferl}
+
+Safe reinforcement learning is the study of methods that optimise a policy while respecting some
+notion of acceptable behaviour during learning, at deployment, or both. The organising survey of
+the field is that of García and Fernández \cite{garcia2015survey}, which divides the literature
+into two branches according to where the safety requirement is inserted. The first modifies the
+\emph{optimisation criterion}, so that the objective the agent maximises is itself changed --- by
+a risk-sensitive transformation, by a worst-case criterion, or by the addition of explicit
+constraints. The second modifies the \emph{exploration process}, leaving the objective intact but
+restricting or guiding the actions the agent may try, typically using external knowledge such as a
+teacher, a demonstration set or a backup controller.
+
+This thesis belongs to the first branch, and to its constrained-criterion sub-family in
+particular. The distinction matters for reading Chapter~\ref{ch:results}: methods in the second
+branch aim to make the learning process itself safe and are evaluated on violations accumulated
+\emph{during} training, whereas methods in the first aim to produce a policy that satisfies a
+requirement once trained, and are properly evaluated on the frozen policy. The evaluation protocol
+of this work follows the latter convention, and Section~\ref{sec:r-design} explains why an earlier
+version of these results, which read safety figures from training-time telemetry, was withdrawn.
+
+The more recent review by Gu \emph{et al.} \cite{gu2024review} surveys the field after the
+deep-learning era and reports that the constrained-criterion approach, expressed as a constrained
+Markov decision process, has become the prevailing formalism for safe reinforcement learning. That
+observation places the present work inside the mainstream of the field rather than at its margin,
+and it is why the CMDP is adopted here without further argument.
+
+\begin{kuettable}{Where the safety requirement is inserted: the two branches of safe
+reinforcement learning.}{tab:b-taxonomy}
+\begin{tabular}{p{3.1cm}p{4.7cm}p{4.4cm}}
+\hline
+\textbf{Branch} & \textbf{Mechanism} & \textbf{Evaluated on} \\
+\hline
+Modify the optimisation criterion & Risk-sensitive or worst-case objectives; explicit constraints
+on expected cumulative cost & The trained policy, on held-out episodes \\
+Modify the exploration process & Teacher guidance, demonstrations, backup controllers, action
+shielding & Violations accumulated during training \\
+\hline
+\end{tabular}
+\end{kuettable}
+
+\section{The constrained Markov decision process}\label{sec:b-cmdp}
+
+The formal object underlying the constrained-criterion branch is the constrained Markov decision
+process, developed in its modern form by Altman \cite{altman1999cmdp}. A standard Markov decision
+process is the tuple (S, A, P, r, \(\gamma\)) over a state space S, an action space A, a transition
+kernel P, a reward function r and a discount factor \(\gamma\). A CMDP augments this with a cost
+function c and a budget d, and asks for a policy maximising expected return subject to a bound on
+expected cumulative cost. Chapter~\ref{ch:methods} states the optimisation problem in full; what
+matters here is what the formalism buys.
+
+Two properties are relevant. The first is that the safety requirement is expressed in the units of
+the cost rather than in units of reward, so it can be set from a measurement of the system rather
+than from a tuning exercise --- the calibration procedure of Section~\ref{sec:m-calib} depends on
+this. The second is that the constrained problem admits a Lagrangian relaxation, in which the
+constraint is folded into the objective through a multiplier \(\lambda\) that is itself optimised.
+The duality theory licensing that treatment is the contribution of \cite{altman1999cmdp}, and it is
+what makes the algorithms of the next section possible: rather than solving a constrained problem
+directly, they solve a sequence of unconstrained problems in which the penalty weight is not
+guessed by the designer but driven by the observed violation.
+
+That last point deserves emphasis, because it is easily lost. A Lagrangian method does end up
+optimising a weighted sum of reward and cost, which superficially resembles reward shaping. The
+difference is that the weight is not a hyperparameter. It is a dual variable that rises while the
+budget is exceeded and falls once it is met, so the designer specifies the budget and the optimiser
+discovers whatever weight is required to satisfy it.
+
+\section{Constrained policy optimisation in deep reinforcement learning}\label{sec:b-cpo}
+
+The policy-gradient algorithm used as the baseline throughout this thesis is proximal policy
+optimisation \cite{schulman2017ppo}, which limits the size of each policy update through a clipped
+surrogate objective and has become the default on-policy method for continuous control. Its
+popularity is partly a matter of robustness: it attains much of the reliability of trust-region
+methods at a fraction of their implementation complexity, which is also why it is the algorithm
+most commonly extended when a constraint is to be added.
+
+Constrained policy optimisation (CPO) \cite{achiam2017cpo} was the first algorithm to bring the
+CMDP into deep reinforcement learning at scale. It extends the trust-region approach so that each
+update both improves the return and maintains approximate constraint satisfaction, computing a
+penalty coefficient afresh at every step. Its significance for this thesis is as much conceptual as
+algorithmic: it established the constrained formulation as a practical alternative to reward
+shaping for high-dimensional continuous control, and it supplies the motivating argument quoted in
+Section~\ref{sec:b-motivation}.
+
+The algorithm actually implemented here, however, is the Lagrangian variant of PPO, as specified in
+the Safety Gym benchmark report of Ray \emph{et al.} \cite{ray2019benchmarking}. That report
+proposes constrained reinforcement learning as the standard formalism for safe exploration and
+supplies a benchmark suite of continuous-control environments together with reference
+implementations of PPO, TRPO, their Lagrangian forms, and CPO. Two of its findings bear directly on
+the design of this study. The first is the specification itself: the constrained agent studied here
+is PPO-Lagrangian as defined in \cite{ray2019benchmarking}, in which an adaptive penalty on the
+safety cost is maintained by dual ascent on a Lagrange multiplier. The second is empirical, and is
+the reason PPO-Lagrangian was preferred to CPO --- \cite{ray2019benchmarking} reports that CPO
+performs poorly on the Safety Gym environments by comparison with the considerably simpler
+Lagrangian methods. Given that result, adopting CPO would have required a justification this work
+does not have; the Lagrangian form is both easier to implement correctly and better supported by
+the published comparison.
+
+Lagrangian methods carry a characteristic weakness, and this thesis encounters it directly in
+Chapter~\ref{ch:results}. Because the multiplier is updated by plain dual ascent, its trajectory
+oscillates: it rises while the cost exceeds the budget, overshoots, and decays once the cost has
+been driven under. Stooke \emph{et al.} \cite{stooke2020pid} analyse this behaviour and propose
+treating the multiplier update as a control problem, adding proportional and derivative terms to
+damp the oscillation. Their analysis is used in Section~\ref{sec:r-variance} to interpret the
+multiplier values observed at the end of training, and the PID form itself is identified in
+Chapter~\ref{ch:conclusion} as the natural extension of this work.
+
+The benchmarking landscape has since consolidated. Safety Gymnasium \cite{ji2023safetygymnasium}
+supersedes the original Safety Gym environments and ships alongside a library of safe reinforcement
+learning algorithms under a common evaluation protocol. Its reporting conventions --- episodic cost
+against a stated budget, and violation rates measured per episode --- are those adopted in
+Chapter~\ref{ch:results}.
+
+\section{Safety in robot learning}\label{sec:b-roboticsafety}
+
+The literature reviewed so far approaches safety from the machine-learning side. Robotics
+approaches it from the control side, with a vocabulary of invariant sets, barrier certificates and
+stability guarantees that developed independently. Brunke \emph{et al.} \cite{brunke2022safe}
+survey the intersection and, more usefully for the present purpose, reconcile the two vocabularies
+into a common framework spanning learning-based control through to safe reinforcement learning.
+
+That reconciliation is necessary here because this thesis sits across the boundary. The quantities
+constrained in this work --- the manipulability measure, the distance to a joint limit, the
+clearance above the work surface --- are control-theoretic constructs describing the kinematic
+state of the arm. The mechanism enforcing them is a learning-theoretic one: a cost critic and a
+dual variable. Neither literature alone supplies the language for that combination.
+
+The survey also draws a distinction that constrains what may be claimed from the results of this
+work. Methods enforcing a constraint in expectation, as a Lagrangian method does, bound
+\emph{expected} exposure to unsafe configurations; they do not bound the severity of any individual
+excursion. Methods supplying a safety certificate, such as a control barrier function acting as a
+filter on the commanded action, offer the latter guarantee but require a model. This distinction is
+returned to in Section~\ref{sec:r-safety}, where a counter-result of exactly this shape is
+reported, and in Chapter~\ref{ch:conclusion}, where the two mechanisms are argued to address
+different halves of the problem.
+
+Within manufacturing specifically, Elguea-Aguinaco \emph{et al.} \cite{elguea2023review} review
+reinforcement learning for contact-rich manipulation from 2017 onward, covering reward design,
+sim-to-real transfer and the treatment of safety. Their survey is used in Chapter~\ref{ch:methods}
+to establish which of the design choices made in this work follow established practice.
+
+\section{Deep reinforcement learning for robotic manipulation}\label{sec:b-manipulation}
+
+Applications of deep reinforcement learning to manipulation divide broadly by algorithm family.
+Shahid \emph{et al.} \cite{shahid2022continuous_grasping} compare an on-policy method (PPO) against
+an off-policy method (soft actor-critic) on a grasping task with a Franka Emika Panda, using a
+dense reward and a fine-tuning procedure that adapts a trained policy to a modified task. The study
+is relevant here in three ways: it is the methodological template for an on-policy versus
+off-policy comparison on a manipulation task; it demonstrates transfer of the learned behaviour
+from simulation to a physical robot, which supports the position taken in
+Chapter~\ref{ch:conclusion} that results of this kind are transferable in principle; and it is the
+precedent for the off-policy arm that was planned for this study and ultimately not trained, as
+recorded in Section~\ref{sec:r-limits}.
+
+Work specific to the UR5 platform is less common. Ferreira and Barbosa \cite{ferreira2025grasping}
+train a UR5 fitted with a Robotiq 2F-85 gripper to grasp randomly positioned objects in a PyBullet
+environment, comparing soft actor-critic against PPO under a reward combining distance penalties
+with grasp and pose terms. They report grasp success rates of 87\,\% for SAC and 82\,\% for PPO.
+These are the closest published figures for a learned UR5 grasping policy, and they are quoted here
+with one qualification that must be carried into any comparison: their task requires a full
+physical grasp, in which the fingers close on the object and the resulting contact must be stable,
+whereas the task studied in this thesis abstracts the grasp as a weld for the reasons given in
+Section~\ref{sec:m-env}. The success rates of Chapter~\ref{ch:results} are therefore not directly
+comparable to theirs, and are not presented as though they were.
+
+On the safety side, Xia \emph{et al.} \cite{xia2024proactive} apply deep reinforcement learning to
+proactive obstacle avoidance for a UR5e in a human-robot collaborative assembly setting, with depth
+sensing for environmental perception and a wrist force-torque sensor. Their work establishes that
+safe operation of this specific manipulator is an active industrial concern rather than an academic
+construction, which is the premise on which the practical relevance of this thesis rests.
+
+\section{Manipulability and singularity avoidance}\label{sec:b-manip}
+
+The operative safety constraint in this thesis is a floor on manipulability. The measure is due to
+Yoshikawa \cite{yoshikawa1985manipulability}, who proposed \(w = \sqrt{\det(JJ^{\top})}\), computed
+from the manipulator Jacobian J, as a scalar index of a configuration's capacity to generate
+end-effector motion in arbitrary directions. The index falls towards zero as the arm approaches a
+kinematic singularity, at which it loses the ability to move instantaneously along some Cartesian
+direction and at which small commanded end-effector velocities map to large joint velocities. It is
+the standard measure of this property and is used throughout this work; Chapter~\ref{ch:methods}
+defines the cost term built from it.
+
+Singularity avoidance has been treated within learning frameworks before, and the manner of that
+treatment is precisely where this thesis differs. Shen \emph{et al.} \cite{shen2022reactive}
+address reactive obstacle avoidance for redundant manipulators by learning motion in the null space
+of the Jacobian, and introduce the manipulability index \emph{into the reward function} so that the
+arm maintains a well-conditioned posture while executing its task. The approach is sound and the
+objective is the same as the one pursued here. The mechanism is not. Placing manipulability in the
+reward requires a weight relating a unit of manipulability to a unit of task progress, and that
+weight is a design choice with no principled setting. Placing it in a constraint, as this thesis
+does, requires instead a budget --- a statement of how much cumulative proximity to singularity an
+episode may incur --- which can be measured from a baseline policy and audited against the trained
+one.
+
+The comparison is worth stating plainly, because it is the sharpest available expression of what
+this thesis does differently. Both approaches seek the same behaviour. One obtains it by tuning a
+trade-off; the other by declaring a limit.
+
+\section{Reproducibility and seed variance}\label{sec:b-repro}
+
+A final strand of the literature is methodological rather than algorithmic, and it bears on the
+central experimental finding of this work. Henderson \emph{et al.} \cite{henderson2018matters}
+examine the reproducibility of results in deep reinforcement learning and demonstrate that outcomes
+for a single algorithm on a single task can differ substantially according to the random seed
+alone, independently of any change to the algorithm, its hyperparameters or the environment. Their
+recommendation is that results be reported over multiple independent seeds with a measure of
+dispersion, and that comparisons between methods be treated with corresponding caution.
+
+Two consequences follow for this thesis. The first is procedural: the protocol of
+Chapter~\ref{ch:methods} trains every arm on ten independent seeds and reports dispersion across
+them rather than a single figure, and that protocol is justified by reference to
+\cite{henderson2018matters} rather than by assertion. The second is interpretive: the seed-to-seed
+spread reported in Section~\ref{sec:r-variance} is not an anomaly of this environment but an
+instance of a documented property of the method, which is why it is presented there as a measured
+quantity rather than as a surprising discovery.
+
+\section{Research gap and positioning}\label{sec:b-gap}
+
+The nearest published analogue to the present study is that of Khan \emph{et al.}
+\cite{khan2026rl_precision_grasping}, which compares a model-free PPO baseline against its
+constrained variant for precision grasping and safety-critical coordination on a robotic arm, using
+the Safety Gym framework extended with a Panda manipulator, and introduces a tactile feedback
+scheme to accelerate learning under safety compliance. It is the closest match in method, in
+framing and in intent, and this thesis should be read as continuing that line of work rather than
+as departing from it.
+
+Two gaps are nonetheless visible in that line, and it is these the present study addresses.
+
+The first is a matter of experimental control. A constrained agent of this family differs from its
+unconstrained baseline in more than the constraint: it constructs and trains an additional cost
+critic, whose presence can perturb the optimiser through shared machinery even when the constraint
+itself is inactive. Unless a third arm is trained that carries the cost critic but pins the
+multiplier to zero, any measured difference between the constrained agent and the baseline sums two
+effects of different kinds, and cannot be attributed to the constraint alone. Published comparisons
+in this area, including \cite{khan2026rl_precision_grasping}, do not report such a control arm.
+Chapter~\ref{ch:results} shows this is not a hypothetical concern: an earlier version of the
+present work reported a large advantage for the constrained agent that was subsequently traced to
+exactly this class of implementation artifact and withdrawn in full.
+
+The second is a matter of dispersion. Comparisons in this literature are typically reported as
+means, without an account of how much the outcome varies across training runs differing only in
+their random seed. Given the finding of \cite{henderson2018matters} discussed in
+Section~\ref{sec:b-repro}, a mean taken over few seeds is a weak basis for a safety claim: an
+integrator deploying such a policy does not obtain the mean over training runs they will never
+perform, but the single policy they happened to train. Whether a safety constraint changes the
+\emph{predictability} of the outcome, and not merely its average, is therefore a question of
+practical consequence, and it is not one the existing literature answers.
+
+This thesis addresses both. It trains a three-arm comparison --- an unconstrained baseline, a
+control arm carrying the cost critic with the multiplier pinned to zero, and the constrained agent
+--- on ten independent seeds each, and reports the decomposition of the constrained-versus-baseline
+difference into an implementation term and a constraint term, together with the dispersion of every
+reported quantity across seeds.
+
+The work is also positioned locally. It continues a line of manipulator research in the same
+laboratory, of which the immediately preceding study \cite{khan2025csrt_ibvs} implemented classical
+image-based visual servoing with CSRT tracking on a five-degree-of-freedom manipulator. Where that
+work addressed the perception and servoing loop with classical methods, the present work addresses
+the control policy with learned ones, and adds the safety constraint that classical visual servoing
+does not itself provide.
+
+\section{Summary}\label{sec:b-summary}
+
+Safety requirements on a learned manipulation policy are poorly served by reward shaping, which
+obliges the designer to fix a trade-off weight in advance, and are better expressed as constraints
+with stated budgets \cite{achiam2017cpo}. The constrained Markov decision process
+\cite{altman1999cmdp} is the formalism for this, and is the prevailing one in contemporary safe
+reinforcement learning \cite{gu2024review}. Among the deep algorithms implementing it, the
+Lagrangian variant of PPO \cite{schulman2017ppo, ray2019benchmarking} is both simpler than the
+trust-region alternative \cite{achiam2017cpo} and better supported by the published benchmark
+comparison, and is the algorithm adopted here.
+
+Applied to manipulators, this machinery has been used for obstacle avoidance and for grasping, on
+the UR5 among other platforms \cite{ferreira2025grasping, xia2024proactive}, and singularity
+avoidance in particular has been pursued by placing the manipulability measure
+\cite{yoshikawa1985manipulability} inside the reward \cite{shen2022reactive}. This thesis places it
+inside a constraint instead. Two gaps in the nearest published comparison
+\cite{khan2026rl_precision_grasping} define the contribution: the absence of a control arm
+isolating the effect of the cost critic from the effect of the constraint, and the absence of any
+account of seed-to-seed dispersion. Chapter~\ref{ch:methods} sets out the method by which both are
+addressed.

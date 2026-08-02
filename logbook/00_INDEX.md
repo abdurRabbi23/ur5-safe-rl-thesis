@@ -98,6 +98,7 @@ reproduce commands: `Thesis_Documentation/06_Results_and_Experiments.md`.
 | `06_writing.md` | Thesis chapters, figures, defense prep | ◻ ongoing |
 | `07_documentation.md` | Beginner replicate-from-scratch guide (`Thesis_Documentation/`) | ▶ ongoing, parallel |
 | `08_project_context.md` | KUET admin details, supervisor, references, role/working-principles (imported from the old Claude Project) | ◻ reference — read once, revisit if a row changes |
+| `10_references.md` | Bibliography + **claim map** (which source licenses which claim, and where it goes) | ▶ ACTIVE — read before writing Ch. 1, 2, 5 or 7 |
 
 ## Key pointers
 - Beginner docs: `Thesis_Documentation/` (start at `00_START_HERE.md`) — the cleaned-up,

@@ -1,21 +1,30 @@
 \chapter{Research Methodology}\label{ch:methods}
 
 \begin{draftnote}
-MODULE 4 --- needs restructuring, not just revising.
+MODULE 4 --- reorganise, then extend.
 
-Ported from \texttt{Thesis\_Documentation/Methods\_Chapter\_Layer1.md} (draft 2026-07-19), which
-is now a frozen dated record; this \texttt{.tex} is the source of truth. Numbers verified against
-\texttt{ur5\_grasp/} source on 2026-07-19.
+Ported from \texttt{Thesis\_Documentation/Methods\_Chapter\_Layer1.md} (draft 2026-07-19), now a
+frozen dated record; this \texttt{.tex} is the source of truth. Numbers verified against
+\texttt{ur5\_grasp/} on 2026-07-19.
 
-\textbf{This chapter is currently too big for its slot.} Under the KUET seven-chapter structure
-it should hold only the method: the CMDP formulation, the design of the safety cost, and the
-constrained optimisation algorithm. The environment, robot model, observation/action/reward,
-threshold calibration and the training and evaluation protocol all belong in
-Chapter~\ref{ch:setup}, and the software realisation belongs in Chapter~\ref{ch:implementation}.
-Split before writing anything new.
+Under the six-chapter structure this chapter carries everything the earlier seven-chapter plan
+was going to split across Chapters 3, 4 and 5, so nothing has to move out --- but it does need
+regrouping under the three headings the accepted book uses, and the implementation material is
+currently missing:
+
+\begin{itemize}
+\item \textbf{3.1 Simulation Platform and Robot Model} --- Isaac Sim / Isaac Lab, the UR5e and
+      gripper model, the weld abstraction and why it exists. Mostly present.
+\item \textbf{3.2 Software Framework} --- \texttt{ur5\_grasp/} architecture, the cost computer,
+      the Lagrangian runner, the training and evaluation pipeline, and the gradient-clip audit
+      and its fix. \textbf{Largely absent}; the audit story is currently squeezed into
+      Section~\ref{sec:r-validity} of the results chapter and deserves room here.
+\item \textbf{3.3 Mathematical Modelling} --- the CMDP, the cost function, the Lagrangian
+      formulation, calibration. Present.
+\end{itemize}
 
 \textbf{Also open:} this draft predates the Day-23 audit. Check whether it narrates the
-withdrawal, since Section~\ref{sec:r-validity} of the results chapter assumes it does.
+withdrawal, since Section~\ref{sec:r-validity} assumes it does.
 \end{draftnote}
 
 \section{Problem formulation}\label{sec:m-cmdp}
@@ -126,7 +135,7 @@ joints, with a margin of 0.10 rad (about 5.7\textdegree{}). The penalty is zero 
 margin band and rises linearly to one at the limit.
 
 The third term, and the operative constraint of this thesis, is a \textbf{singularity floor}. The Yoshikawa
-manipulability measure w = \(\sqrt{\det(JJ^{\top})}\) is computed from the \(6\times6\) end-effector Jacobian J of the arm,
+manipulability measure w = \(\sqrt{\det(JJ^{\top})}\) \cite{yoshikawa1985manipulability} is computed from the \(6\times6\) end-effector Jacobian J of the arm,
 where a small w indicates a near-singular configuration in which the arm momentarily loses the ability
 to move in some Cartesian direction and commands can produce large, jerky joint velocities. The
 penalty clamp(1 \(-\) w / w\_floor, 0, 1) activates as w falls below a floor of 0.045 and reaches one as w

@@ -1,6 +1,23 @@
 # HANDOFF — paste this into a new session
 
-Updated 2026-08-02 (Day 25, evening). Overwrite whenever the next action changes.
+Updated 2026-08-02 (Day 25, late evening). Overwrite whenever the next action changes.
+
+> **READ FIRST — bibliography is DONE, Chapter 2 is UNBLOCKED (2026-08-02 evening).**
+> `Thesis_LaTeX/references.bib` holds 21 verified entries. `[TODO-A]` and `[TODO-B]` are
+> RESOLVED and deleted from the prose; `\nocite{*}` is gone; both `[draft]` and `[final]`
+> build clean (0 errors, 0 undefined citations). **Read `logbook/10_references.md` — the claim
+> map — before writing any chapter.** It says which source licenses which claim and where it
+> goes, and holds the agreed Chapter 2 spine. Rule: don't cite anything not in the claim map.
+>
+> The Chapter 2 stub still says "BLOCKED: no reference PDFs are in this repo." **That is
+> superseded — ignore it.** A background chapter needs verified metadata and an argument, not
+> twenty PDFs, and with the deadline this close reading them all is the wrong trade.
+>
+> **The only remaining hard-error blocker in the whole book** is six `\todo{}` markers in
+> `frontmatter/approval.tex` — name/designation/department for Board of Examiners members 2
+> and 3. `[final]` fails on exactly those and nothing else.
+>
+> SUBMISSION IS 06 AUGUST. Chapters 3 and 6 are written. 1, 2, 4, 5, 7 are stubs.
 
 ```
 Read logbook/00_INDEX.md first for project background, but note its "Current status" section is
@@ -95,10 +112,12 @@ Then, in rough order:
   are WITHDRAWN (Day-19 single-seed data) and must not be used.
 - Convert the ported tables. They came through pandoc as uncaptioned `longtable`s, so the List of
   Tables is empty and "Table 4.1" is bold body text rather than a real float reference.
-- Source [TODO-A] (Yoshikawa manipulability) and [TODO-B] (PPO-Lagrangian). Two commented
-  skeletons are already waiting in `references.bib` with notes on what to verify. After filling
-  them: replace `\todocite{A}`/`\todocite{B}` with `\cite`, delete `\nocite{*}` from main.tex,
-  and switch the package option to `[final]` to confirm the build is clean.
+- ~~Source [TODO-A] and [TODO-B].~~ **DONE 2026-08-02 evening.** Both resolved and verified;
+  four further citations added (`stooke2020pid` and `henderson2018matters` at §4.6,
+  `yoshikawa1985manipulability` into Chapter 3's cost function, plus the two literal bracketed
+  numerals pandoc left as body text). `\nocite{*}` deleted. Reference list now shows 7 entries
+  because 7 are cited — that is correct, not a fault; it grows as chapters land.
+- Get the Board of Examiners details (members 2 and 3) into `frontmatter/approval.tex`.
 - Write Chapters 1, 2, 5, 6 and the front-matter pages — all stubbed in `Thesis_LaTeX/`, all
   currently printing a red "not written yet" box. Chapter 5 (Relation with a Real-World Problem
   + SDG mapping) is the KUET-specific one that is easy to forget.
@@ -107,4 +126,18 @@ Then, in rough order:
 
 Update run_log.md with a dated entry and refresh logbook/06_writing.md's "Next steps" whenever
 any of the above lands.
+
+=============================================================================
+CRITICAL PATH TO 06 AUGUST — agreed 2026-08-02 evening
+=============================================================================
+02 Aug (done)  bibliography merged, TODO-A/B resolved, claim map written.
+03 Aug         Chapter 2 (~8-10 pp, spine in 10_references.md), then Chapter 1.
+04 Aug         split Chapter 3 -> 3/4/5; per-seed cost figure; longtables -> captioned floats.
+05 Aug         Chapter 7, Chapter 5 SDG section, front matter, full build, proofread.
+06 Aug         submit.
+
+Needs Touhid, not the assistant — chase these first, they have lead time:
+  - Board of Examiners members 2 and 3 (last hard-error blocker).
+  - Font size 12 vs 14, open since Day 7. One line in main.tex, but if it lands on the 5th
+    you are reflowing a finished book.
 ```

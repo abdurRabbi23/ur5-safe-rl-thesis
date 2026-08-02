@@ -1,7 +1,8 @@
-% LIST OF NOMENCLATURE -- KUET_FORMAT_SPEC.md section 5.
-% The template calls this "List of Nomenclature", not "List of Abbreviations",
-% and its sample mixes symbols, units and acronyms in one two-column table.
-\kuetfrontheading{List of Nomenclature}
+% LIST OF ABBREVIATIONS -- KUET_FORMAT_SPEC.md section 5.
+% The generic template calls this "List of Nomenclature"; the accepted book
+% calls it "List of Abbreviations" and that is what the department passed.
+% Symbols are kept in a clearly separated second block below the acronyms.
+\kuetfrontheading{List of Abbreviations}
 
 \begin{longtable}{@{}p{0.22\textwidth}p{0.72\textwidth}@{}}
 CMDP        & Constrained Markov Decision Process \\
@@ -15,7 +16,8 @@ RL          & Reinforcement Learning \\
 SAC         & Soft Actor--Critic \\
 TCP         & Tool Centre Point \\
 TD3         & Twin Delayed Deep Deterministic Policy Gradient \\
-USD         & Universal Scene Description \\
+USD         & Universal Scene Description \\[6pt]
+\multicolumn{2}{@{}l}{\textbf{Symbols}}\\[2pt]
 $c$         & Per-step safety cost \\
 $d$         & Episodic cost budget \\
 $J$         & End-effector Jacobian \\
@@ -29,7 +31,7 @@ rad         & Radian \\
 
 \begin{draftnote}
 Seeded from the symbols and acronyms actually used in Chapters~\ref{ch:methods}
-and~\ref{ch:results}. It must be re-checked once Chapters 1, 2, 4, 5 and 7 are written --- every
+and~\ref{ch:results}. Re-check once Chapters 1, 5 and 6 are written --- every
 symbol that appears in the book belongs here, and nothing that does not appear should.
 \end{draftnote}
 

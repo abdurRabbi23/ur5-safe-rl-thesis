@@ -14,12 +14,12 @@ alongside it. The withdrawn Day-19 single-seed results
 (\texttt{results/LAYER1\_RESULTS\_3seed.md}, \texttt{LAYER1\_FINDINGS.md}, and the draft prose section in
 \texttt{06\_Results\_and\_Experiments.md}) are not used anywhere in this chapter.
 
-\textbf{Citation placeholders.} \todocite{A}, \todocite{B} mark positions where a reference is required
-but no sourced entry yet exists in the project bibliography (\texttt{logbook/08\_project\_context.md}).
-They must be replaced with real IEEE-numbered entries before submission; they are not
-placeholders for text, only for citation numbers. Bracketed numerals \texttt{{[}1{]}}--\texttt{{[}3{]}} refer to the
-provisional local list at the end of this chapter and will be renumbered against the thesis-wide
-reference list.
+\textbf{Citations.} The two placeholders that stood in this chapter until 2026-08-02 are now
+resolved against \texttt{references.bib}: the manipulability measure is cited to Yoshikawa
+\cite{yoshikawa1985manipulability}, and the constrained agent to the PPO-Lagrangian specification
+\cite{ray2019benchmarking} together with the constrained-policy-optimisation paper it derives from
+\cite{achiam2017cpo}. All citations in this chapter are thesis-wide IEEE numbers drawn from the
+single reference list; no local numbering survives.
 \end{draftnote}
 
 \section{Experimental design and provenance}\label{sec:r-design}
@@ -32,7 +32,7 @@ to a result that has already been seen. All runs use the frozen weld environment
 \texttt{Isaac-Lift-Cube-UR5e-v0} described in Chapter~\ref{ch:methods}.
 
 Three experimental arms were trained. The \texttt{ppo} arm is an unconstrained Proximal Policy
-Optimisation baseline. The \texttt{cppo} arm is the constrained PPO-Lagrangian agent \todocite{B} with an
+Optimisation baseline. The \texttt{cppo} arm is the constrained PPO-Lagrangian agent \cite{ray2019benchmarking, achiam2017cpo} with an
 episodic cost budget of 25. Between them sits \texttt{ctrl}, a control arm that is identical to \texttt{cppo} in
 every respect --- it constructs and trains the same additional cost critic, and logs the same cost
 quantities --- except that its Lagrange multiplier is pinned to zero, so the constraint can exert no
@@ -255,7 +255,7 @@ treating them as an artifact of one arm.
 
 Table 4.4 reports safety on the frozen policy, pooled over the 30,000 evaluation episodes per arm.
 Following the audit's reporting rule, the section leads with episodes that reached an actual
-kinematic singularity --- a manipulability measure \todocite{A} below \(10^{-4}\), which is a statement about
+kinematic singularity --- a manipulability measure \cite{yoshikawa1985manipulability} below \(10^{-4}\), which is a statement about
 the arm's genuine loss of a degree of freedom rather than about a calibrated soft margin --- and with
 the mean episode-minimum manipulability.
 
@@ -312,7 +312,11 @@ in expected exposure rather than in worst-case severity.
 \section{The principal finding of this batch: collapse of seed-to-seed safety variance}\label{sec:r-variance}
 
 The most substantial effect measured in this batch is not visible in any mean. It appears only
-when the ten seeds are examined individually, which Table 4.5 does.
+when the ten seeds are examined individually, which Table 4.5 does. That seed-to-seed spread is
+itself a documented property of deep reinforcement learning rather than a peculiarity of this
+environment: Henderson \emph{et al.} \cite{henderson2018matters} show that random seed alone can
+produce substantially different outcomes for the same algorithm in the same task, and it is on
+that basis that this study reports dispersion across ten seeds rather than a single mean.
 
 \textbf{Table 4.5 --- Per-seed natural episodic cost (training, tail mean) and the constrained agent's
 final multiplier.}
@@ -389,6 +393,11 @@ seed 1 ends at a natural cost of 18.0 against its control counterpart's 102.1. T
 therefore have engaged substantially on that seed and then relaxed to zero once the cost was
 driven under budget --- which is the intended behaviour of dual ascent, and the same qualitative
 pattern of engagement-and-relaxation observed in the earlier single-seed study of this project.
+That pattern is not peculiar to this setting: plain dual ascent on the Lagrange multiplier is
+known to oscillate and overshoot, engaging sharply and then decaying once the cost falls back
+under budget, which is precisely the mechanism proposed and analysed by Stooke \emph{et al.}
+\cite{stooke2020pid}. The reading below is therefore the one the optimiser's documented dynamics
+predict, rather than an interpretation invented to fit these numbers.
 The full \(\lambda\) trajectories were not extracted for this batch, so this is stated as the reading the
 data requires rather than as a directly measured curve, and pulling those trajectories from the
 training logs is recorded in Section~\ref{sec:r-limits} as outstanding work.
@@ -414,7 +423,7 @@ were trained. The \texttt{cppo10} arm, which sets the budget below the natural o
 observed seed, is absent, and with it the comparison that this project registered in advance as
 ``the safe-RL claim'' --- the effect of a constraint that is actively binding on every seed rather
 than on some. The \texttt{sac} arm is likewise absent, so no off-policy comparison is offered here, and
-the algorithm-family question examined in comparable work on manipulation tasks {[}2{]} remains open in
+the algorithm-family question examined in comparable work on manipulation tasks \cite{shahid2022continuous_grasping} remains open in
 this setting. Everything reported above concerns a budget of 25 that binds on part of the seed
 population. It would be a misreading of Section~\ref{sec:r-variance} to conclude that a tighter budget would tighten
 the band further; that is a plausible hypothesis and it is untested.
@@ -472,36 +481,33 @@ previously reported effect of this kind was an implementation artifact, that the
 removed and its removal verified as strongly as such a thing can be verified, and that the
 corrected comparison still shows a substantial and differently-shaped safety benefit. Reporting
 that sequence honestly is a more defensible contribution than the original headline it replaces
-{[}1{]}.
+\cite{khan2026rl_precision_grasping}.
 
 %--- (md section break)
 
 \begin{draftonly}
-\section*{Provisional references cited in this chapter}\label{provisional-references-cited-in-this-chapter}
+\section*{Citation status --- resolved 2026-08-02}\label{provisional-references-cited-in-this-chapter}
 
-To be merged into the thesis-wide IEEE numbered list; numbering here is local to this draft.
+The provisional local list that stood here is withdrawn. All references in this chapter now
+resolve through \texttt{references.bib} into the single thesis-wide IEEE numbered list.
 
-{[}1{]} F. Khan \emph{et al.}, ``Reinforcement learning for precision grasping and safety-critical
-coordination in a robotic arm,'' \emph{Intelligent Service Robotics}, vol.~19, no. 16, 2026,
-doi: 10.1007/s11370-025-00668-0.
+\textbf{TODO-A --- RESOLVED.} Yoshikawa's manipulability measure
+\cite{yoshikawa1985manipulability}, cited at Section~\ref{sec:r-safety} where
+w = \(\sqrt{\det(JJ^{\top})}\) is first used as a safety quantity. Author initial, volume,
+number, page range and year verified against the publisher record. Note that the Methods
+chapter must cite the same entry at the cost-function definition, which is the earlier
+first use in the book.
 
-{[}2{]} A. A. Shahid \emph{et al.}, ``Learning continuous control actions for robotic grasping with
-reinforcement learning,'' \emph{Autonomous Robots}, vol.~46, pp.~483--498, 2022,
-doi: 10.1007/s10514-022-10034-z. \emph{(Verify exact title against the PDF before submission --- the
-entry in \texttt{08\_project\_context.md} records the venue and DOI but abbreviates the title.)}
+\textbf{TODO-B --- RESOLVED.} The constrained agent is PPO-Lagrangian as specified in the
+Safety Gym benchmark report \cite{ray2019benchmarking}, which derives from the
+constrained-policy-optimisation line opened by \cite{achiam2017cpo}. Both are cited at
+Section~\ref{sec:r-design}. \cite{khan2026rl_precision_grasping} uses the method but is not
+its origin and must not be cited as such.
 
-{[}3{]} M. M. Khan, ``CSRT tracking and classical image-based visual servoing on a 5-DOF manipulator,''
-BSc thesis, Dept. of Mechatronics Engineering, KUET, Khulna, Bangladesh, Dec.~2025. \emph{(Not cited in
-this chapter; listed because Chapter 4 of the final book may reference it for baseline
-positioning.)}
-
-\textbf{\todocite{A}} --- Yoshikawa's manipulability measure. Required at Section~\ref{sec:r-safety} where w = \(\sqrt{\det(JJ^{\top})}\)
-is first used as a safety quantity in this chapter. Not currently in the project bibliography;
-must be sourced.
-
-\textbf{\todocite{B}} --- PPO-Lagrangian / constrained policy optimisation. Required at Section~\ref{sec:r-design} where
-the constrained agent is named. Not currently in the project bibliography; must be sourced. Note
-that reference {[}1{]} uses the method but is not its origin.
+\textbf{Title correction carried out.} \cite{shahid2022continuous_grasping} is
+``Continuous control actions learning and adaptation for robotic manipulation through
+reinforcement learning'' --- verified against the publisher record. The abbreviated form
+previously recorded in \texttt{08\_project\_context.md} was wrong and is superseded.
 
 %--- (md section break)
 

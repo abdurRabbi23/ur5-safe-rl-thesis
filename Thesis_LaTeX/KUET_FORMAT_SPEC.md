@@ -79,7 +79,47 @@ Notes:
 - List of Tables / List of Figures use a three-column layout: number, description, page, with a
   bold header row.
 
-## 6. Chapter structure in the official template
+## 6. Chapter structure — THE BOOK GOVERNS, NOT THE TEMPLATE
+
+Two sources disagree. `kuet_thesis_style/Thesis_book_draft_3.pdf` is the accepted BSc book of
+Md Masrul Khan (roll 1931011, December 2025, 85 pp), same department, same supervisor. The
+generic template lists a different, hardware-shaped structure that the department evidently does
+not enforce.
+
+**Decision 2026-08-02: follow the accepted book for structure, the template for formatting.**
+The book is US Letter with a 38 mm left margin, so it is not a formatting precedent — page setup,
+type and captions all still come from the template as measured in sections 1–4 above.
+
+```
+CHAPTER 1  Introduction
+           1.1 Background  1.2 Problem Description  1.3 Objectives  1.4 Scope
+CHAPTER 2  Literature Review
+           2.1 Historical Background  2.2 Related works
+CHAPTER 3  Research Methodology
+           3.1 Hardware Setup  3.2 Software Framework  3.3 Mathematical Modeling
+CHAPTER 4  Results and Discussion
+CHAPTER 5  Relation with a Real-World Problem      <- includes explicit SDG mapping
+CHAPTER 6  Conclusions and Future Works
+           6.1 Conclusion  6.2 Future Works
+References
+```
+
+Differences from the generic template, all resolved in favour of the book:
+
+- **Six chapters, not seven.** The template's "Design procedure / Experimental set-up / Circuit
+  Diagram" and "Implementation" chapters do not exist in the accepted book; their content folds
+  into Chapter 3.
+- **Chapter 5 is the SDG chapter.** The template has no equivalent. The book devotes ~2 pages to
+  it with no sub-sections and names SDG 4, 8, 9 and 12 explicitly. Easy to forget; it has no
+  counterpart in a generic ML thesis.
+- **"List of Abbreviations"**, not "List of Nomenclature".
+- **Chapter headings set the title in UPPERCASE** below the `CHAPTER n` line — measured off the
+  book, which settles what the template left ambiguous.
+
+Section names within chapters are not mandated. Chapter 3's are adapted to a simulation study
+(platform and robot model / software framework / mathematical modelling).
+
+### The generic template's structure, for the record
 
 ```
 CHAPTER 1  Introduction
@@ -152,18 +192,16 @@ Resolved 2026-08-02 unless marked OPEN.
 |---|---|---|
 | C1 | **Line spacing** | **1.5 (template wins).** `logbook/06_writing.md`'s "1.25" was almost certainly the LaTeX *stretch factor* for the same thing: LaTeX's baseline is already 1.2×, so Word 1.5 = stretch 1.25 = `\onehalfspacing`. Implemented as `\onehalfspacing`. Do not "fix" this to `\setstretch{1.5}` — that gives Word 1.8. |
 | C2 | **Body font size** | **12 pt body, 14 pt chapter headings.** Closes the Day-7 "12 vs 14" question: 14 pt is the heading size, which is where the personal note came from. |
-| C3 | **Chapter structure** | **Seven chapters, template order.** Chapter 4 ("Design procedure / Experimental set-up") and Chapter 5 ("Implementation") are mapped to their simulation equivalents and kept as separate chapters, not merged. **OPEN:** whether the SDG / "Relation with a Real-World Problem" chapter recorded in `08_project_context.md` is still required — the official template has no such chapter. |
+| C3 | **Chapter structure** | **Six chapters, following the accepted book — see section 6.** Reversed 2026-08-02 from the seven-chapter template order, once `Thesis_book_draft_3.pdf` was found in the repo. The SDG chapter IS required: it is Chapter 5 of the accepted book. |
 | C4 | **Table body font** | **12 pt** (the template's prose), overriding the 10 pt in its own `MTE_Thesis_Table` style. |
 | C5 | **Paragraph separation** | **Block paragraphs: no first-line indent, 6 pt between.** |
 | C6 | **Date of Defense** | 08 August, 2026. Submission 06 August, 2026. |
-| C7 | **Appendices** | **OPEN.** |
+| C7 | **Appendices** | **OPEN.** Note the accepted book has none. |
 | C8 | **Roll number** | 2031023. Student name: Md. Abdur Rabbi. |
 
-### Inferred, not measured — verify against a real KUET book
+### Inferred, not measured
 
-- **Chapter heading layout.** Rendered as two centred 14 pt bold lines, `CHAPTER 1` then the
-  title, which matches the `CHAPTER 1  Introduction` form in the template's own table of
-  contents. The body template's Heading 1 paragraph was empty, so the exact arrangement could
-  not be measured.
+- **Chapter heading layout** — RESOLVED against the accepted book: two centred 14 pt bold lines,
+  `CHAPTER n` then the title in uppercase.
 - **Section heading alignment.** The template says "Left Indent", which is ambiguous. Read as
-  left-aligned with no indent, since the style sets `ind left=0`.
+  left-aligned with no indent, since the style sets `ind left=0`. Still inferred.

@@ -2,91 +2,354 @@
 %  references.bib -- UR5e safe-RL thesis
 %  IEEE numeric style ([n] in text, numbered list) per KUET requirement.
 %
-%  Seeded 2026-08-02 from the provisional list at the end of
-%  Thesis_Documentation/Results_Chapter_Layer1.md, plus the cross-checks in
-%  logbook/08-project-context.md.
+%  Seeded 2026-08-02 from Thesis_Documentation/Results_Chapter_Layer1.md.
+%  EXPANDED 2026-08-02 (Day 25, evening) to 21 entries. Every DOI, venue,
+%  volume and page range below was verified against the publisher record;
+%  none is reconstructed from memory. [TODO-A] and [TODO-B] are RESOLVED --
+%  see the Foundations and Manipulability groups.
+%
+%  Which claim each entry licenses: logbook/10_references.md (claim map).
+%  Full annotations, quartiles and access notes: the annotated bibliography
+%  document delivered alongside this file.
+%
+%  Groups:  A foundations of constrained RL   B safe-RL surveys
+%           C manipulation DRL                D manipulability and safety
+%           E methodology                     F simulation tooling
+%           G local / predecessor work
 % =====================================================================
 
+
 % ---------------------------------------------------------------------
-%  Verified entries
+%  A. FOUNDATIONS OF CONSTRAINED POLICY OPTIMISATION   -- resolves TODO-B
+% ---------------------------------------------------------------------
+
+@book{altman1999cmdp,
+  author    = {Altman, Eitan},
+  title     = {Constrained {Markov} Decision Processes},
+  publisher = {Chapman and Hall/CRC},
+  address   = {Boca Raton, FL, USA},
+  year      = {1999},
+  isbn      = {9780849303821},
+  annote      = {CMDP formalism; source of the duality result behind the
+               Lagrangian relaxation.}
+}
+
+@article{schulman2017ppo,
+  author  = {Schulman, John and Wolski, Filip and Dhariwal, Prafulla and
+             Radford, Alec and Klimov, Oleg},
+  title   = {Proximal Policy Optimization Algorithms},
+  journal = {arXiv preprint arXiv:1707.06347},
+  year    = {2017},
+  doi     = {10.48550/arXiv.1707.06347},
+  annote    = {The unconstrained baseline arm. Clipped surrogate objective, GAE,
+             multi-epoch minibatch update.}
+}
+
+@inproceedings{achiam2017cpo,
+  author    = {Achiam, Joshua and Held, David and Tamar, Aviv and Abbeel, Pieter},
+  title     = {Constrained Policy Optimization},
+  booktitle = {Proc. 34th Int. Conf. Machine Learning (ICML)},
+  volume    = {70},
+  series    = {Proceedings of Machine Learning Research},
+  pages     = {22--31},
+  year      = {2017},
+  publisher = {PMLR},
+  annote      = {TODO-B part 1. Founds deep constrained RL; argues that reward
+               shaping is the wrong vehicle for a safety requirement.}
+}
+
+@techreport{ray2019benchmarking,
+  author      = {Ray, Alex and Achiam, Joshua and Amodei, Dario},
+  title       = {Benchmarking Safe Exploration in Deep Reinforcement Learning},
+  institution = {OpenAI},
+  year        = {2019},
+  annote        = {TODO-B part 2 -- THE citation for the cppo arm. Specifies
+                 PPO-Lagrangian; reports CPO underperforming Lagrangian methods
+                 on Safety Gym, which justifies our choice of PPO-Lagrangian.}
+}
+
+@inproceedings{stooke2020pid,
+  author    = {Stooke, Adam and Achiam, Joshua and Abbeel, Pieter},
+  title     = {Responsive Safety in Reinforcement Learning by {PID} {Lagrangian} Methods},
+  booktitle = {Proc. 37th Int. Conf. Machine Learning (ICML)},
+  volume    = {119},
+  series    = {Proceedings of Machine Learning Research},
+  pages     = {9133--9143},
+  year      = {2020},
+  publisher = {PMLR},
+  annote      = {Dual ascent oscillates and overshoots -- engages hard, then decays
+               once cost falls under budget. This is the documented mechanism
+               behind the lambda reading in the per-seed results section.}
+}
+
+
+% ---------------------------------------------------------------------
+%  B. SAFE REINFORCEMENT LEARNING -- SURVEYS AND BENCHMARKS
+% ---------------------------------------------------------------------
+
+@article{gu2024review,
+  author  = {Gu, Shangding and Yang, Long and Du, Yali and Chen, Guang and
+             Walter, Florian and Wang, Jun and Knoll, Alois},
+  title   = {A Review of Safe Reinforcement Learning: Methods, Theories, and Applications},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume  = {46},
+  number  = {12},
+  pages   = {11216--11235},
+  year    = {2024},
+  doi     = {10.1109/TPAMI.2024.3457538},
+  annote    = {Q1, IF approx. 20.8. Confirms CMDP as the prevailing safe-RL
+             formalism. Backbone of the Chapter 2 review.}
+}
+
+@article{brunke2022safe,
+  author  = {Brunke, Lukas and Greeff, Melissa and Hall, Adam W. and Yuan, Zhaocong and
+             Zhou, Siqi and Panerati, Jacopo and Schoellig, Angela P.},
+  title   = {Safe Learning in Robotics: From Learning-Based Control to Safe
+             Reinforcement Learning},
+  journal = {Annual Review of Control, Robotics, and Autonomous Systems},
+  volume  = {5},
+  pages   = {411--444},
+  year    = {2022},
+  doi     = {10.1146/annurev-control-042920-020211},
+  annote    = {Q1. Reconciles control-theoretic and learning-theoretic safety
+             vocabularies -- needed because our safety quantities are
+             control constructs enforced by a learning mechanism.}
+}
+
+@article{garcia2015survey,
+  author  = {Garc\'{i}a, Javier and Fern\'{a}ndez, Fernando},
+  title   = {A Comprehensive Survey on Safe Reinforcement Learning},
+  journal = {Journal of Machine Learning Research},
+  volume  = {16},
+  number  = {42},
+  pages   = {1437--1480},
+  year    = {2015},
+  annote    = {Q1, open access. The two-branch taxonomy: modify the optimisation
+             criterion vs modify the exploration process. This thesis is
+             squarely in the first branch.}
+}
+
+@inproceedings{ji2023safetygymnasium,
+  author    = {Ji, Jiaming and Zhang, Borong and Zhou, Jiayi and Pan, Xuehai and
+               Huang, Weidong and Sun, Ruiyang and Geng, Yiran and Zhong, Yifan and
+               Dai, Juntao and Yang, Yaodong},
+  title     = {Safety Gymnasium: A Unified Safe Reinforcement Learning Benchmark},
+  booktitle = {Advances in Neural Information Processing Systems 36 (NeurIPS),
+               Datasets and Benchmarks Track},
+  year      = {2023},
+  doi       = {10.48550/arXiv.2310.12567},
+  annote      = {Successor to Safety Gym. Companion SafePO library standardises
+               cost-budget and violation-rate reporting.}
+}
+
+
+% ---------------------------------------------------------------------
+%  C. DEEP RL FOR ROBOTIC MANIPULATION -- UR5, PPO AND SAC
 % ---------------------------------------------------------------------
 
 @article{khan2026rl_precision_grasping,
-  author  = {Khan, Fawad and others},
-  title   = {Reinforcement learning for precision grasping and safety-critical
-             coordination in a robotic arm},
+  author  = {Khan, Fawad and Feng, Wei and Huang, Tianlun and Wang, Zhiyong and
+             Liu, Xiao and Ali, Shahid Asad and Wang, Weijun},
+  title   = {Reinforcement Learning for Precision Grasping and Safety-Critical
+             Coordination in a Robotic Arm},
   journal = {Intelligent Service Robotics},
   volume  = {19},
   number  = {16},
   year    = {2026},
   doi     = {10.1007/s11370-025-00668-0},
-  note    = {Safety Gym + Panda arm, PPO vs cPPO. Uses PPO-Lagrangian but is not
-             its origin -- see TODO-B below.}
+  annote    = {NEAREST NEIGHBOUR. Safety Gym + Panda, PPO vs cPPO. Two gaps this
+             thesis fills: no control arm isolating the cost-critic
+             implementation effect, and no seed-to-seed dispersion reported.
+             Uses PPO-Lagrangian but is not its origin -- cite ray2019 for that.}
 }
 
 @article{shahid2022continuous_grasping,
-  author  = {Shahid, Asad Ali and others},
-  title   = {Learning continuous control actions for robotic grasping with
-             reinforcement learning},
+  author  = {Shahid, Asad Ali and Piga, Dario and Braghin, Francesco and Roveda, Loris},
+  title   = {Continuous Control Actions Learning and Adaptation for Robotic
+             Manipulation through Reinforcement Learning},
   journal = {Autonomous Robots},
   volume  = {46},
   pages   = {483--498},
   year    = {2022},
   doi     = {10.1007/s10514-022-10034-z},
-  note    = {VERIFY exact title against the PDF before submission -- the entry in
-             \texttt{08\_project\_context.md} abbreviates it.}
+  annote    = {Q1, open access. Title VERIFIED 2026-08-02 against the publisher
+             record -- the earlier abbreviated form in 08_project_context.md was
+             wrong and is superseded by this entry. PPO vs SAC template; the
+             precedent for the cut sac arm.}
 }
+
+@article{ferreira2025grasping,
+  author  = {Ferreira, Henrique C. and Barbosa, Ramiro S.},
+  title   = {Deep Reinforcement Learning for Adaptive Robotic Grasping and
+             Post-Grasp Manipulation in Simulated Dynamic Environments},
+  journal = {Future Internet},
+  volume  = {17},
+  number  = {10},
+  pages   = {437},
+  year    = {2025},
+  doi     = {10.3390/fi17100437},
+  annote    = {UR5 + Robotiq 2F-85, PPO vs SAC, 82 percent vs 87 percent grasp
+             success. Published UR5 baseline -- but a FULL PHYSICAL GRASP, not a
+             weld abstraction. State that difference when comparing.}
+}
+
+@article{elguea2023review,
+  author  = {Elguea-Aguinaco, \'{I}\~{n}igo and Serrano-Mu\~{n}oz, Antonio and
+             Chrysostomou, Dimitrios and Inziarte-Hidalgo, Ibai and
+             B{\o}gh, Simon and Arana-Arexolaleiba, Nestor},
+  title   = {A Review on Reinforcement Learning for Contact-Rich Robotic
+             Manipulation Tasks},
+  journal = {Robotics and Computer-Integrated Manufacturing},
+  volume  = {81},
+  pages   = {102517},
+  year    = {2023},
+  doi     = {10.1016/j.rcim.2022.102517},
+  annote    = {Q1, IF approx. 9.1 -- highest-IF venue in this bibliography.
+             Establishes what is standard practice in reward design and
+             sim-to-real for contact-rich manipulation.}
+}
+
+
+% ---------------------------------------------------------------------
+%  D. MANIPULABILITY, SINGULARITY AND OPERATIONAL SAFETY  -- resolves TODO-A
+% ---------------------------------------------------------------------
+
+@article{yoshikawa1985manipulability,
+  author  = {Yoshikawa, Tsuneo},
+  title   = {Manipulability of Robotic Mechanisms},
+  journal = {The International Journal of Robotics Research},
+  volume  = {4},
+  number  = {2},
+  pages   = {3--9},
+  year    = {1985},
+  doi     = {10.1177/027836498500400201},
+  annote    = {TODO-A RESOLVED. Author initial, volume, number, pages and year all
+             verified against the publisher record 2026-08-02. Origin of
+             w = sqrt(det(J J^T)). MANDATORY at first use of w -- Methods cost
+             function AND Results safety section.}
+}
+
+@article{shen2022reactive,
+  author  = {Shen, Yue and Jia, Qingxuan and Huang, Zeyuan and Wang, Ruiquan and
+             Fei, Junting and Chen, Gang},
+  title   = {Reinforcement Learning-Based Reactive Obstacle Avoidance Method
+             for Redundant Manipulators},
+  journal = {Entropy},
+  volume  = {24},
+  number  = {2},
+  pages   = {279},
+  year    = {2022},
+  doi     = {10.3390/e24020279},
+  annote    = {THE CONTRAST CASE. Puts manipulability in the REWARD; this thesis
+             puts it in a CONSTRAINT. Shaped reward guesses a weight, a
+             constraint states a budget. Strong framing for Chapter 1.}
+}
+
+@article{xia2024proactive,
+  author  = {Xia, Weidong and Lu, Yuqian and Xu, Wenjun and Xu, Xun},
+  title   = {Deep Reinforcement Learning Based Proactive Dynamic Obstacle
+             Avoidance for Safe Human-Robot Collaboration},
+  journal = {Manufacturing Letters},
+  volume  = {41},
+  pages   = {1246--1256},
+  year    = {2024},
+  doi     = {10.1016/j.mfglet.2024.09.151},
+  annote    = {UR5e platform match on the safety side. Closes the long-open
+             "missing Xia 2024" gap flagged in 08_project_context.md.}
+}
+
+
+% ---------------------------------------------------------------------
+%  E. EXPERIMENTAL METHODOLOGY AND SEED VARIANCE
+% ---------------------------------------------------------------------
+
+@article{henderson2018matters,
+  author  = {Henderson, Peter and Islam, Riashat and Bachman, Philip and
+             Pineau, Joelle and Precup, Doina and Meger, David},
+  title   = {Deep Reinforcement Learning That Matters},
+  journal = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume  = {32},
+  number  = {1},
+  pages   = {3207--3214},
+  year    = {2018},
+  doi     = {10.1609/aaai.v32i1.11694},
+  annote    = {LOAD-BEARING. Published precedent that random seed alone produces
+             dramatically different outcomes for one algorithm in one
+             environment. Justifies n = 10 and dispersion reporting, and makes
+             the variance finding a measured known failure mode rather than a
+             surprising claim.}
+}
+
+
+% ---------------------------------------------------------------------
+%  F. SIMULATION AND TRAINING INFRASTRUCTURE
+% ---------------------------------------------------------------------
+
+@article{makoviychuk2021isaacgym,
+  author  = {Makoviychuk, Viktor and Wawrzyniak, Lukasz and Guo, Yunrong and
+             Lu, Michelle and Storey, Kier and Macklin, Miles and Hoeller, David and
+             Rudin, Nikita and Allshire, Arthur and Handa, Ankur and State, Gavriel},
+  title   = {Isaac Gym: High Performance {GPU}-Based Physics Simulation for
+             Robot Learning},
+  journal = {arXiv preprint arXiv:2108.10470},
+  year    = {2021},
+  doi     = {10.48550/arXiv.2108.10470},
+  annote    = {NeurIPS 2021 Datasets and Benchmarks Track. Justifies
+             num_envs = 4096 -- 2 to 3 orders of magnitude speed-up from keeping
+             physics and training on GPU.}
+}
+
+@article{mittal2023orbit,
+  author  = {Mittal, Mayank and Yu, Calvin and Yu, Qinxi and Liu, Jingzhou and
+             Rudin, Nikita and Hoeller, David and Yuan, Jia Lin and Singh, Ritvik and
+             Guo, Yunrong and Mazhar, Hammad and Mandlekar, Ajay and Babich, Buck and
+             State, Gavriel and Hutter, Marco and Garg, Animesh},
+  title   = {Orbit: A Unified Simulation Framework for Interactive Robot
+             Learning Environments},
+  journal = {IEEE Robotics and Automation Letters},
+  volume  = {8},
+  number  = {6},
+  pages   = {3740--3747},
+  year    = {2023},
+  doi     = {10.1109/LRA.2023.3270034},
+  annote    = {Q1. Isaac Lab has no paper of its own; Orbit is its direct
+             predecessor and is the citable reference for it. Cite alongside
+             the task name Isaac-Lift-Cube-UR5e-v0.}
+}
+
+@inproceedings{rudin2022walk,
+  author    = {Rudin, Nikita and Hoeller, David and Reist, Philipp and Hutter, Marco},
+  title     = {Learning to Walk in Minutes Using Massively Parallel Deep
+               Reinforcement Learning},
+  booktitle = {Proc. 5th Conf. Robot Learning (CoRL)},
+  volume    = {164},
+  series    = {Proceedings of Machine Learning Research},
+  pages     = {91--100},
+  year      = {2022},
+  publisher = {PMLR},
+  annote      = {Origin of rsl\_rl -- the library used here at version 3.0.1, and
+               the upstream against which the gradient-clip audit was run.}
+}
+
+
+% ---------------------------------------------------------------------
+%  G. LOCAL AND PREDECESSOR WORK
+% ---------------------------------------------------------------------
 
 @phdthesis{khan2025csrt_ibvs,
   author  = {Khan, Md Masrul},
-  title   = {{CSRT} tracking and classical image-based visual servoing on a
-             5-{DOF} manipulator},
+  title   = {Enhancing Manipulator Control Through Image-Based Visual Servoing
+             Techniques Using {ROS2}},
   school  = {Dept. of Mechatronics Engineering, Khulna University of Engineering
              \& Technology},
   address = {Khulna, Bangladesh},
   type    = {{BSc} thesis},
   month   = dec,
   year    = {2025},
-  note    = {Predecessor work, same lab and supervisor. Classical-IBVS baseline
-             for lit-review positioning.}
+  annote    = {Predecessor work, same lab and supervisor. Classical-IBVS baseline
+             for lit-review positioning. TITLE CORRECTED 2026-08-02 against the
+             primary document, kuet_thesis_style/Thesis_book_draft_3.pdf -- the
+             earlier "CSRT tracking and classical image-based visual servoing on
+             a 5-DOF manipulator" was a paraphrase, not the real title. Roll
+             1931011. 85 pp.}
 }
-
-% ---------------------------------------------------------------------
-%  UNSOURCED -- structurally ready, do not \cite until verified.
-%  These correspond to \todocite{A} and \todocite{B} in the Results chapter.
-%  Building main.tex with the [final] option turns any remaining \todocite
-%  into a hard error, so these cannot be forgotten.
-% ---------------------------------------------------------------------
-
-% [TODO-A] -- Yoshikawa's manipulability measure.
-%   Needed where w = sqrt(det(J J^T)) is first used as a safety quantity
-%   (Results chapter, Safety section; also the Methods cost function).
-%   Likely canonical source, NOT YET CHECKED AGAINST THE PAPER:
-%     T. Yoshikawa, "Manipulability of robotic mechanisms,"
-%     Int. J. Robotics Research, vol. 4, no. 2, 1985.
-%   Confirm author initial, volume/number, page range and year, then uncomment.
-%
-%   article{yoshikawa1985manipulability,   <-- prefix an at-sign once filled in
-%   author  = {},
-%   title   = {},
-%   journal = {},
-%   volume  = {},
-%   number  = {},
-%   pages   = {},
-%   year    = {}
-% }
-
-% [TODO-B] -- PPO-Lagrangian / constrained policy optimisation.
-%   Needed where the constrained agent is first named (Results, Experimental
-%   design; and throughout the Methods cPPO section).
-%   Candidate lines to check: the Lagrangian-PPO baseline as defined in the
-%   Safety Gym benchmark paper, and/or the constrained policy optimisation
-%   paper it is contrasted with. Pick whichever the Methods chapter actually
-%   describes, then uncomment.
-%
-%   article{ppo_lagrangian,   <-- prefix an at-sign once filled in
-%   author  = {},
-%   title   = {},
-%   journal = {},
-%   year    = {}
-% }

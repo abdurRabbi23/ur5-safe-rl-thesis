@@ -23,7 +23,7 @@
 % ============================ FRONT MATTER ===========================
 % Order is mandated: cover, title, declaration, approval (board of
 % examiners is a table inside it), acknowledgement, abstract, contents,
-% list of tables, list of figures, list of nomenclature.
+% list of tables, list of figures, list of abbreviations.
 % KUET_FORMAT_SPEC.md section 5.
 
 \pagestyle{empty}
@@ -45,19 +45,18 @@
 \clearpage
 \listoffigures
 \clearpage
-\input{frontmatter/nomenclature}
+\input{frontmatter/abbreviations}
 
 % =============================== BODY ================================
 \mainmatter
 \kuetbodystyle                  % arabic numerals, footer RIGHT-ALIGNED
 
 \input{chapters/01_introduction}
-\input{chapters/02_background}
+\input{chapters/02_literature_review}
 \input{chapters/03_methodology}
-\input{chapters/04_simulation_setup}
-\input{chapters/05_implementation}
-\input{chapters/06_results}
-\input{chapters/07_conclusion}
+\input{chapters/04_results}
+\input{chapters/05_real_world}
+\input{chapters/06_conclusion}
 
 % ============================ BACK MATTER ============================
 \backmatter
@@ -67,10 +66,12 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{References}
 \IfFileExists{IEEEtran.bst}{\bibliographystyle{IEEEtran}}{\bibliographystyle{unsrt}}
-% No \cite commands exist yet -- the ported chapters still carry bracketed
-% numerals as literal text. \nocite{*} makes the seeded entries visible in
-% the draft build; DELETE it once real \cite commands are in the prose.
-\nocite{*}
+% Real \cite commands are now in the prose (Chapter 6, 2026-08-02), so the
+% \nocite{*} that made the seeded entries visible has been removed.
+% Chapters 1, 2, 4, 5 and 7 are still stubs; entries in references.bib that
+% they will cite therefore do not yet appear in the reference list. That is
+% correct behaviour, not a fault -- re-check the list length once those
+% chapters are written.
 \bibliography{references}
 
 % Appendices -- not yet decided whether this thesis has any.

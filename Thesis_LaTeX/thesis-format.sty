@@ -97,14 +97,13 @@
 % ---------- headings (spec 3) -----------------------------------------
 \RequirePackage{titlesec}
 
-% Chapter: 14 pt bold centred, rendered as two centred lines --
+% Chapter: 14 pt bold centred, two centred lines with the title in caps --
 %   CHAPTER 1
-%   Introduction
-% matching the "CHAPTER 1  Introduction" form used in the template's
-% table of contents. INFERRED, not measured -- see KUET_FORMAT_SPEC.md.
+%   INTRODUCTION
+% Measured off the accepted book, kuet_thesis_style/Thesis_book_draft_3.pdf.
 \titleformat{\chapter}[display]
   {\centering\normalfont\fontsize{14}{18}\bfseries}
-  {CHAPTER \thechapter}{6pt}{}
+  {CHAPTER \thechapter}{6pt}{\MakeUppercase}
 \titlespacing*{\chapter}{0pt}{0pt}{18pt}
 
 % Section: 12 pt bold, left, 6 pt before and after.

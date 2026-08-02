@@ -2114,3 +2114,146 @@ references. Cover, title, declaration and a chapter opening inspected as rendere
 
 **Schedule risk, stated plainly.** Submission is 06 August, four days out, for a 60–100 page
 book of which two chapters exist and Chapter 2 is blocked until the reference PDFs are uploaded.
+
+---
+
+## 2026-08-02 (Day 25, evening) — bibliography verified and merged; both citation blockers cleared
+
+**Chapter 2 is no longer blocked.** The stub's claim that "nothing here can be written until the
+papers are uploaded" was wrong in kind, not just in degree: what a background chapter needs is
+verified metadata plus an argument, not twenty PDFs. With four days to submission, reading twenty
+papers was the wrong use of the remaining time and was explicitly rejected.
+
+**21 verified entries now in `Thesis_LaTeX/references.bib`** (was 3). Every DOI, venue, volume and
+page range checked against the publisher record. Grouped A–G: constrained-RL foundations, safe-RL
+surveys, manipulation DRL, manipulability/safety, methodology, simulation tooling, local work.
+Internal annotations live in `annote` fields — BibTeX styles ignore `annote` but typeset `note`,
+and the annotations contain maths characters, so **do not rename them back** (this was caught by a
+failing build, not by inspection).
+
+**`[TODO-A]` and `[TODO-B]` are RESOLVED and the placeholders are gone from the prose.**
+- TODO-A → Yoshikawa, *Manipulability of Robotic Mechanisms*, IJRR 4(2):3–9, 1985,
+  doi 10.1177/027836498500400201. Author initial, volume, number, pages and year all verified.
+- TODO-B → Ray, Achiam & Amodei, *Benchmarking Safe Exploration in Deep RL*, OpenAI 2019 — the
+  specification of the PPO-Lagrangian algorithm actually implemented — cited together with
+  Achiam et al., CPO, ICML 2017 for the family it derives from. Recorded explicitly: Khan 2026
+  uses the method but is **not** its origin and must never be cited as such.
+
+**Four citations added beyond the two placeholders**, each closing a gap the claim map surfaced:
+- `stooke2020pid` at §4.6 — dual ascent is *known* to oscillate and overshoot, engaging then
+  decaying once cost falls under budget. This converts the λ reading from a deduction the data
+  forced into documented expected optimiser behaviour. Highest-value addition in the chapter.
+- `henderson2018matters` at the head of §4.6 — published precedent that random seed alone
+  produces substantially different outcomes for one algorithm in one task. The variance finding
+  now lands as measurement of a known failure mode rather than as a surprising claim, and it
+  independently justifies n = 10 and dispersion reporting.
+- `yoshikawa1985manipulability` added to **Chapter 3** at the cost-function definition — that is
+  the book's *first* use of w, earlier than the Results chapter, and it was missing there.
+- `shahid2022continuous_grasping` and `khan2026rl_precision_grasping` replacing the literal
+  bracketed numerals `[1]`/`[2]` that pandoc had carried through as body text.
+
+**`\nocite{*}` deleted from `main.tex`.** The reference list is now driven by real `\cite` calls
+and shows **7 entries** — the seven actually cited. It will grow as Chapters 1, 2, 4, 5 and 7 are
+written. A short list is correct behaviour right now, not a fault; noted in `main.tex` so it is
+not "fixed" by mistake.
+
+**Builds verified, both options.** `[draft]`: exit 0, 38 pages, 0 LaTeX errors, 0 undefined
+citations, 7 bibitems. `[final]`: exit 0, 34 pages, 0 errors, 0 undefined citations — **but only
+once the Board of Examiners placeholders are filled.** The `[final]` build no longer fails on
+`\todocite`; it now fails on six `\todo{}` markers in `frontmatter/approval.tex` (name,
+designation, department for examiners 2 and 3). **Those six are the only remaining hard-error
+blockers in the book.** The repo is left on `[draft]` with the real `\todo{}` markers intact —
+they were stubbed only in a scratch copy to prove the citation side is clean.
+
+**New module: `logbook/10_references.md` — the claim map.** Wired into `00_INDEX.md`. It binds
+each source to the specific claim it licenses and the chapter that should carry it, per chapter,
+including the agreed Chapter 2 spine (chronological: García 2015 taxonomy → Gu 2024 state of the
+art → Altman CMDP → CPO/PPO-Lagrangian → Brunke control-side → manipulator RL narrowing to UR5 →
+Yoshikawa/Shen singularity → Khan 2026 as the gap). Rule recorded: **do not cite anything that
+does not appear in the claim map** — add the row first, then write the sentence. Reading status
+is recorded honestly per entry so nothing gets over-claimed in the viva.
+
+**Also corrected:** `shahid2022continuous_grasping`'s title. The abbreviated form in
+`08_project_context.md` was wrong; the verified title is *"Continuous control actions learning and
+adaptation for robotic manipulation through reinforcement learning"*. The long-flagged "missing
+Xia 2024" gap is closed too — `xia2024proactive`, doi 10.1016/j.mfglet.2024.09.151.
+
+**Deliverable:** annotated bibliography (21 entries with quartile, impact factor, approximate
+citation count, access status and a per-entry note on what it does for this thesis) plus a
+standalone `.bib`. PDFs were **not** downloaded — no outbound network in the assistant's sandbox.
+12 of 21 are open access and one-click; 8 need KUET library access; arXiv preprints noted where
+they exist.
+
+---
+
+## 2026-08-02 (Day 25, late evening) — Chapter 2 drafted
+
+**`Thesis_LaTeX/chapters/02_background.tex` written in full**, ten sections, against the spine
+agreed in `logbook/10_references.md`. The stub's "BLOCKED: no reference PDFs are in this repo"
+note is deleted — it was wrong in kind. A background chapter needs verified metadata and an
+argument, not twenty PDFs, and with four days to submission reading them all was the wrong trade.
+
+Build verified: `latexmk -pdf` exit 0, **47 pages** (was 38), **0 LaTeX errors, 0 undefined
+citations, 0 undefined references**, **18 bibitems** (was 7). Chapter 2 occupies pp. 14–22 of the
+draft build — 9 pages including the draft-note box, which does not print in `[final]`. Target was
+8–10, so length is on spec. Two pages inspected as rendered images; IEEE numbering and
+cross-chapter references resolve correctly.
+
+Structure: 2.1 the safety requirement (the shaped-reward-versus-constraint premise) · 2.2 safe RL
+and the García two-branch taxonomy, with Table 2.1 — **the book's first real captioned float, so
+the List of Tables is no longer empty** · 2.3 the CMDP and the Lagrangian relaxation · 2.4 PPO,
+CPO, PPO-Lagrangian and the PID variant · 2.5 safety in robot learning, control-side versus
+ML-side vocabulary · 2.6 manipulation RL narrowing to the UR5 · 2.7 manipulability and singularity
+avoidance · 2.8 seed variance · 2.9 the gap · 2.10 summary.
+
+**Three arguments the chapter commits to, each of which Chapter 6 must be able to honour:**
+- §2.1 and §2.7 set up the thesis's sharpest framing — Shen et al. put manipulability in the
+  *reward*, this work puts it in a *constraint*; a shaped reward makes the designer guess a
+  weight, a constraint lets them state a limit. §2.7 states it as a difference in mechanism and
+  deliberately does **not** claim the constraint wins; that is left to the results.
+- §2.4 records the justification for PPO-Lagrangian over CPO as a *published* result, not a
+  preference: Ray et al. report CPO underperforming the simpler Lagrangian methods on Safety Gym.
+- §2.9 promises the reader exactly two things — the decomposition of the
+  constrained-versus-baseline difference into implementation and constraint terms, and dispersion
+  across seeds. It promises **predictability**, not uniform improvement. **This wording is
+  load-bearing and must not be upgraded**: §6.6 shows the cost band is entered from both
+  directions, with six of ten seeds ending higher than their control counterpart and the mean
+  improvement carried by the four catastrophic seeds. A stronger promise in Chapter 2 would be
+  contradicted by the results chapter.
+
+Three entries remain uncited — `makoviychuk2021isaacgym`, `mittal2023orbit`, `rudin2022walk`.
+All three are tooling references belonging to Chapters 3–4, so this is expected.
+
+**`logbook/NEXT_SESSION_ch2.md` written** — paste-block handoff for continuing Chapter 2 in a
+separate Cowork session, carrying the claim-map rules, the reading-status discipline, the §2.9
+nuance warning, and the critical path to 06 August.
+
+---
+
+## 2026-08-02 (Day 25, late) — structure reversed to six chapters against the accepted book
+
+`Thesis_LaTeX/kuet_thesis_style/` gained the template PDFs and, more importantly,
+`Thesis_book_draft_3.pdf` — the accepted BSc book of Md Masrul Khan (roll 1931011, December
+2025, 85 pp), same department and supervisor. It contradicts the generic MTE template on
+structure, and the template loses: six chapters, not seven; Chapter 5 is "Relation with a
+Real-World Problem" with explicit SDG 4/8/9/12 mapping, which the template does not contain at
+all; the final front-matter page is "List of Abbreviations", not "List of Nomenclature"; and
+chapter headings set the title in uppercase under the `CHAPTER n` line.
+
+The book is US Letter with a 38 mm left margin, so it is a **structural** precedent only —
+page setup, type and captions stay as measured from the template. Recorded in
+`Thesis_LaTeX/KUET_FORMAT_SPEC.md` section 6, which now opens with which source governs what.
+
+Restructured accordingly. `02_background.tex` → `02_literature_review.tex` retitled *Literature
+Review*; `06_results.tex` → `04_results.tex`; `07_conclusion.tex` → `06_conclusion.tex` retitled
+*Conclusions and Future Works*; `04_simulation_setup.tex` and `05_implementation.tex` deleted,
+their briefs folded into Chapter 3, which now has to carry the software-framework material
+itself; new `05_real_world.tex` for the SDG chapter. `frontmatter/nomenclature.tex` →
+`abbreviations.tex`, retitled, with the maths symbols kept in a separated second block.
+
+Also corrected `khan2025csrt_ibvs` in `references.bib`. Its title was a paraphrase; the real one,
+read off the primary document now in the repo, is *Enhancing Manipulator Control Through
+Image-Based Visual Servoing Techniques Using ROS2*.
+
+Verified: `latexmk -pdf` exits 0 from a clean copy — 46 pages, zero errors, zero undefined
+references or citations. Chapter 2's nine sections number correctly as 2.1–2.9.
