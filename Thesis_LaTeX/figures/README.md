@@ -28,9 +28,69 @@ doesn't need to be professional.
   framebox if neither exists, so simply dropping a vector `kuet_monogram.pdf` in here would take
   precedence with no code change. Not used on the cover page, which the KUET spec has as
   text only.
-- `per_seed_cost.pdf` / `.png` — Chapter 4, Figure 4.1. Regenerated from
-  `Comparison_test/final_results/` by `Comparison_test/results/scripts/make_per_seed_cost_fig.py`.
-  Do not hand-edit; regenerate from that script if the underlying data changes.
+### Chapter 4 — all eleven figures (regenerated 2026-08-04)
+
+**One script produces all of them:** `Comparison_test/results/scripts/make_final_results_figs.py`,
+which consumes `final_results_summary.json` written by `build_final_results_data.py`. Both read
+`Comparison_test/final_results/` and nothing else. Do not hand-edit any of these; edit the script
+and re-run it.
+
+| File | Fig. | Content |
+|---|---|---|
+| `fig_mean_reward.pdf` | 4.1 | Mean episodic reward, 3 arms |
+| `fig_reaching_object.pdf` | 4.2 | Reaching-object reward |
+| `fig_lifting_object.pdf` | 4.3 | Lifting-object reward |
+| `fig_eval_task_performance.pdf` | 4.4 | Success rates zoomed + failure rate on log axis |
+| `fig_eval_safety_violations.pdf` | 4.5 | Four safety outcomes, 2×2, independently scaled |
+| `fig_constraints_components.pdf` | 4.6 | Cost split into singularity / joint limit / collision |
+| `fig_manipulability.pdf` | 4.7 | Mean episode-minimum manipulability |
+| `fig_mean_episode_cost.pdf` | 4.8 | Episodic cost vs budgets, log axis |
+| `per_seed_cost.pdf` | 4.9 | Per-seed cost, vertical segment per seed |
+| `fig_seed_variance.pdf` | 4.10 | Per-seed cost over training, one panel per arm |
+| `lambda_traj.pdf` | 4.11 | Lagrange multiplier, per seed, both constrained arms |
+
+**Superseded scripts, do not use:** `make_ch4_figs.py` (produced the black-line-art `per_seed_cost`
+and `lambda_traj`) and `make_per_seed_cost_fig.py` (two arms, reads the flat `results/tb_csv/`
+tree). Both are kept only as a record.
+
+Two layout constraints are load-bearing and are documented in the script:
+
+- `per_seed_cost` puts **seeds on the x-axis** with one vertical segment per seed. Section 4.6
+  says "each seed contributes one vertical segment joining its three arm values" and argues for
+  it over sorted bands. Transposing the figure would contradict the prose.
+- `lambda_traj` is **per seed, not the across-seed mean**. Section 4.7 quotes individual peak
+  values (15.84 to 48.05 at d=25) and the caption says "all five seeds".
+
+Curve figures are EMA-smoothed (weight 0.88) for legibility, and **every caption says so**. No
+number in the chapter comes from a smoothed curve. `fig_mean_episode_cost` additionally clips its
+vertical axis below 1; the caption states that too.
+
+## Colour convention (set 2026-08-04, supersedes the earlier "black line art only" rule)
+
+The rule from 2026-08-03 was *"black line art, no colour and no fill; arms distinguished by
+marker and line style, never by colour."* **That rule is withdrawn**, on Touhid's instruction of
+2026-08-04, and replaced by a fixed palette applied book-wide:
+
+| Arm | Colour | Hex |
+|---|---|---|
+| `ctrl`, reported as PPO (baseline) | red | `#D11A1A` |
+| `cppo`, d = 25 | blue | `#1257A8` |
+| `cppo15`, d = 15 | green | `#17803D` |
+
+An arm is the same colour in every figure in the book, including Chapter 2's design diagram
+(`lit_arms.pdf`), so the key a reader learns in Chapter 2 carries into every results plot. Text
+is near-black `#1A1A1A`, never grey. Body font is Times New Roman, loaded from
+`Thesis_LaTeX/fonts/` (see the README there).
+
+**Two consequences worth knowing.** Red and green are the common colour-blind confusion pair, and
+they converge to near-identical greys in a black-and-white print. Where more than three series
+share a panel (`lambda_traj`, five seeds) line style is used *in addition to* colour, which keeps
+those panels readable either way. If the department requires a monochrome submission, the palette
+is one dictionary at the top of `make_final_results_figs.py`, and the two Chapter 2 tools carry
+the same constants.
+
+  Both are black line art with no colour and no fill; arms are distinguished by marker and line
+  style. Do not hand-edit either; regenerate from the script if the data changes.
 - `ur5e_platform_interim.png` — Chapter 1, Figure 1.1 (see "Pending" above).
 
 ### Chapter 2 figures, reproduced from the source papers (added 2026-08-03)

@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """Figure 2.5 for Chapter 2: the three trained arms and the difference they decompose.
 
-Black line art only, no colour and no fill, to match the chapter's formatting rule.
+Colour convention (revised 2026-08-04, superseding the earlier "black line art only" rule --
+see Thesis_LaTeX/figures/README.md). Each arm's box is drawn in that arm's book-wide colour:
+ctrl red, cppo blue, cppo15 green, identical to the Chapter 4 plots. This is the point of
+recolouring rather than decoration -- a reader who meets the three arms here carries the same
+colour key into every results figure.
+
 Output: Thesis_LaTeX/figures/lit_arms.pdf (vector, so it stays sharp at any size).
 
 The arm names and settings here MUST match Chapter 3, Table 3.11 (sec:m-arms):
@@ -21,13 +26,28 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib import font_manager as fm
 from matplotlib.patches import FancyArrowPatch, Rectangle
+
+# Book-wide palette, identical to Comparison_test/results/scripts/make_final_results_figs.py.
+RED, BLUE, GREEN, INK = "#D11A1A", "#1257A8", "#17803D", "#1A1A1A"
+ARM_COLOR = [RED, BLUE, GREEN]          # ctrl, cppo, cppo15 -- order matches `arms` below
+
+_FONTDIR = Path(__file__).resolve().parents[1] / "fonts"
+for _f in sorted(_FONTDIR.glob("*.ttf")):
+    try:
+        fm.fontManager.addfont(str(_f))
+    except Exception:
+        pass
+_HAVE_TNR = "Times New Roman" in {f.name for f in fm.fontManager.ttflist}
+print("Font:", "Times New Roman" if _HAVE_TNR else "Liberation Serif (TNR not in fonts/)")
 
 plt.rcParams.update({
     "font.family": "serif",
-    "font.serif": ["Nimbus Roman No9 L", "Liberation Serif", "DejaVu Serif"],
-    "text.color": "black",
-    "axes.edgecolor": "black",
+    "font.serif": (["Times New Roman"] if _HAVE_TNR else [])
+                  + ["Liberation Serif", "Nimbus Roman", "DejaVu Serif"],
+    "text.color": INK,
+    "axes.edgecolor": INK,
 })
 
 OUT = Path(__file__).resolve().parents[1] / "figures" / "lit_arms.pdf"
@@ -47,28 +67,29 @@ arms = [
     (r"$\bf{cppo15}$", ["cost critic present", r"$\lambda$ free", r"budget $d=15$"]),
 ]
 
-for x, (title, lines) in zip(xs, arms):
+for x, (title, lines), col in zip(xs, arms, ARM_COLOR):
     ax.add_patch(Rectangle((x, BOX_Y), BOX_W, BOX_H, fill=False,
-                           edgecolor="black", linewidth=0.9))
+                           edgecolor=col, linewidth=1.8))
     ax.text(x + BOX_W / 2, BOX_Y + BOX_H - 3.4, title, ha="center", va="center",
-            fontsize=11.0)
+            fontsize=11.5, color=col)
     for i, ln in enumerate(lines):
         ax.text(x + BOX_W / 2, BOX_Y + BOX_H - 7.8 - 3.4 * i, ln,
-                ha="center", va="center", fontsize=8.6)
+                ha="center", va="center", fontsize=9.0, color=INK)
 
-# The separately trained plain-PPO arm, sitting above ctrl.
+# The separately trained plain-PPO arm, sitting above ctrl. Drawn in ctrl's red because the
+# whole point of the box is that the two are the same policy.
 PX, PY, PW, PH = xs[0], BOX_Y + BOX_H + 8.0, BOX_W, 8.0
-ax.add_patch(Rectangle((PX, PY), PW, PH, fill=False, edgecolor="black",
-                       linewidth=0.9, linestyle=(0, (4, 2))))
+ax.add_patch(Rectangle((PX, PY), PW, PH, fill=False, edgecolor=ARM_COLOR[0],
+                       linewidth=1.4, linestyle=(0, (4, 2))))
 ax.text(PX + PW / 2, PY + PH / 2 + 1.6, r"$\bf{ppo}$ (plain)", ha="center",
-        va="center", fontsize=10.0)
+        va="center", fontsize=10.4, color=ARM_COLOR[0])
 ax.text(PX + PW / 2, PY + PH / 2 - 2.4, "trained, not reported separately",
-        ha="center", va="center", fontsize=8.2)
+        ha="center", va="center", fontsize=8.6, color=INK)
 
 # Double line marking the verified identity between ppo and ctrl.
 for dx in (-0.55, 0.55):
     ax.plot([PX + PW / 2 + dx, PX + PW / 2 + dx], [PY, BOX_Y + BOX_H],
-            color="black", linewidth=0.8)
+            color=ARM_COLOR[0], linewidth=1.1)
 ax.text(PX + PW + 2.5, PY + PH + 0.5,
         "stored weights byte-identical,\n"
         "so the implementation term is\n"

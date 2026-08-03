@@ -3176,3 +3176,122 @@ pp. 21--39 (19 pp. in `[draft]`, about 18 in `[final]` once the draftnote drops)
 superseded `MATRIX_V2_PARTIAL_3ARM.md`, and its principal §4.6 finding names seeds 2, 5, 50 and 51,
 all of which are excluded under the locked scope. Chapters 2 and 3 now both say five. That needs
 re-derivation from `Comparison_test/final_results/`, not a wording pass.
+
+## Day 26 (2026-08-03), night — Chapter 4 re-derived from scratch
+Touhid asked for this to be done now rather than in a later session. The chapter was not edited;
+it was rebuilt from the CSVs.
+
+**Method.** Two new scripts under `Comparison_test/results/scripts/`, both reading
+`final_results/` and nothing else:
+- `summarize_final.py` — emits every table in the chapter (training tail means, lambda
+  statistics, pooled and per-seed evaluation, and the ppo-vs-ctrl identity check). No number in
+  Chapter 4 is typed by hand; re-run this to reproduce any of them.
+- `make_ch4_figs.py` — regenerates `per_seed_cost.pdf` for three arms and five seeds, and
+  produces the new `lambda_traj.pdf`. Black line art, arms separated by marker and line style.
+
+**What the recomputation changed.**
+- Seeds 10 -> 5 (1, 3, 4, 52, 54); policies 30 -> 15; evaluation episodes 30,000 -> 15,000 per
+  arm, 45,000 total.
+- **`cppo15` is now reported for the first time.** It was a whole arm missing from the results
+  chapter. New Section 4.8 treats the d=25 vs d=15 comparison directly, which is what answers
+  the budget-sensitivity gap Chapter 2 Section 2.11 promises as Gap 3.
+- **The principal finding survives but the qualification shrinks.** The old text said "on six of
+  the ten seeds the constrained agent's cost is HIGHER". On the retained five it is one seed,
+  54, whose unconstrained policy was already under budget at 7.95. The other four fall sharply.
+  Spread: baseline 20.4x (7.95 to 162.30), cPPO d=25 2.1x, d=15 3.8x. Evaluation cost sd across
+  seeds 62.75 -> 5.38 -> 5.01, an 11.7x and 12.5x tightening.
+- **New finding, not anticipated: the variance collapse shows up in TASK performance too.** The
+  seed-to-seed sd of sub-centimetre goal-reach falls from 7.52 points to 1.04 and 0.95. One
+  baseline seed lands at 80.0 % where the others are 94 to 99 %. No constrained seed is below
+  96.97 %.
+- Safety: true singularity crossings 2.66 % (399/15,000) -> 0.38 % (57) -> 0.07 % (10), factors
+  of 7.0 and 39.9. Joint-limit contact 10.70 % -> 0.00 % -> 0.00 %. The baseline's 10.70 % is
+  itself a lottery: per-seed 47.83, 0, 0, 0, 5.67 %.
+- Task: reward 133.06 / 132.18 / 134.09. The tighter constrained arm has the HIGHEST reward and
+  the smallest spread, so the "no task cost" claim is now stated as an upper bound in both
+  directions.
+- Counter-result retained and re-verified: worst single-episode manipulability is 0.000001 on
+  all three arms. Tightening the budget does not change it.
+
+**Limitation 2 is discharged.** `cost_lambda.csv` exists for every constrained seed, so the
+"lambda engaged then relaxed" reading is now measured, not deduced. New Section 4.7 and
+Figure 4.2. Every run shows one sharp peak between iterations 47 and 58 (peaks 15.84 to 48.05 at
+d=25, 17.62 to 40.83 at d=15) decaying to zero, with lambda above 0.01 for 36 to 120 iterations
+of 1500. Nine of ten runs end at exactly zero, which is why the old table of final values was
+close to uninformative. This is the integral-control overshoot Stooke et al. describe, and
+Chapter 2 Section 2.5 sets it up.
+
+**Identity check strengthened.** ppo vs ctrl now verified three ways: training scalars identical
+to every logged decimal on all five seeds; the historical checkpoint tensor comparison (68 of
+100 tensors byte-identical); and NEW, all 15,000 evaluation episodes compared episode by episode
+on goal distance, minimum manipulability and episodic cost, all identical.
+
+**Also cleaned up.** The 33.7 % joint-limit figure is now sourced to Chapter 3's calibration
+section rather than a logbook entry, so the "Draft notes for revision" draftonly block and the
+"Citation status" block were both deleted. Limitation 1 rewritten: the binding-budget arm is no
+longer missing, only the off-policy SAC arm is.
+
+Humanizer pass done: 44 em dashes -> 0, no unicode dashes, no AI vocabulary, two negative
+parallelisms rewritten. Build: latexmk exit 0, 78 pages, 0 errors, 0 undefined citations or
+references. Chapter 4 spans pp. 61-73 (13 pp.). All Chapter 2 and Chapter 3 forward references
+into Chapter 4 resolve.
+
+**Still open after tonight:** the SAC arm (never trained, correctly a limitation); Chapter 3
+Section 3.8 still calls the singularity term "the operative constraint" against its own
+Table 3.9; Chapter 2 Section 2.2 still overlaps Chapter 1 Section 1.2; Chapters 5 and 6 are
+stubs; the six examiner-name TODOs in frontmatter/approval.tex still block the [final] build.
+
+## Day 27 (2026-08-04) — Chapter 4 figures: eleven, in colour, in true Times New Roman
+Chapter 4's prose was NOT touched. It was re-derived the previous night and is correct. This
+session was figures only, plus the documentation needed to stop a later session undoing them.
+
+**Two sessions collided and it was caught before damage.** This session had been asked to write
+Chapter 4 and had independently recomputed every number from `final_results/` before discovering
+the chapter had already been rebuilt at 01:03. The two computations agree (reward 133.06 /
+132.18 / 134.09; true singularity 2.66 / 0.38 / 0.067 %; joint limit 10.70 / 0 / 0), which is a
+free cross-check on both. The rewrite was abandoned rather than duplicated.
+
+**Colour convention changed, deliberately.** The 2026-08-03 rule was "black line art, no colour,
+arms separated by marker and line style". Touhid asked for red/blue/green. Rather than split the
+book, Chapter 2's two original figures were recoloured to the same palette, so an arm is one
+colour everywhere: `ctrl` red `#D11A1A`, `cppo` blue `#1257A8`, `cppo15` green `#17803D`.
+Recorded in `Thesis_LaTeX/figures/README.md` and in the banner of `logbook/NEXT_SESSION_ch4.md`.
+`make_ch4_figs.py` now refuses to run without an explicit override, because re-running it would
+silently revert two figures.
+
+**Fonts.** Figures now render in genuine Times New Roman, installed on the Ubuntu 22.04 machine
+via `ttf-mscorefonts-installer` and copied into `Thesis_LaTeX/fonts/`. That folder is gitignored
+(Monotype licence permits use, not redistribution, and the repo has a public remote); its README
+is tracked and carries the install steps. The figure script detects the font by family name read
+from inside the file, so Windows `times.ttf` and Ubuntu `Times_New_Roman.ttf` both work, and it
+prints which font it actually used. Without the files it falls back to Liberation Serif and says
+so loudly.
+
+**Figures: 2 -> 11** (4.1 to 4.11), all from one script,
+`Comparison_test/results/scripts/make_final_results_figs.py`, fed by `build_final_results_data.py`.
+Design decisions worth not re-litigating:
+- **No shaded +/- std bands.** Three translucent bands over each other were unreadable. The seed
+  spread moved into two dedicated figures instead, `fig_seed_variance` (per-seed training cost,
+  one panel per arm) and the existing `per_seed_cost`. The variance-collapse claim of Section 4.6
+  now rests on those.
+- **Curves are EMA-smoothed (weight 0.88) and every caption says so.** No number in the chapter
+  comes from a smoothed curve; all values trace to the unsmoothed JSON.
+- `fig_mean_episode_cost` clips its log axis below 1. The full range spans six decades and
+  compresses the converged region to a sliver. Caption states the clipping.
+- `fig_eval_task_performance` shows success rates twice: zoomed to 90--100 % with the suppressed
+  region hatched, and as failure rate on a log axis where 0.09 vs 6.97 % separates by 70x.
+- `fig_eval_safety_violations` is a 2x2 grid, each panel independently scaled, because the four
+  metrics span three orders of magnitude.
+- **`per_seed_cost` keeps seeds on the x-axis** and `lambda_traj` stays per-seed rather than
+  averaged. Both are dictated by prose that already quotes them ("one vertical segment joining
+  its three arm values"; "peaks 15.84 to 48.05"). Transposing or averaging either would
+  contradict the text. Verified the lambda peaks reproduce exactly.
+
+**Verified:** latexmk exit 0 on a forced full rebuild, 86 pages, 0 errors, 0 undefined references
+or citations, all 11 figures resolve into the List of Figures as 4.1--4.11, em-dash count in
+Chapter 4 still 0. The 9 remaining overfull boxes were traced and none are new: they sit in
+draftnote blocks and in the Chapter 5/6 stub boxes, all of which drop in `[final]`.
+
+**One factual fix inside the chapter:** the draftnote's sourcing rule said "both figures are
+produced by make_ch4_figs.py". Updated to name the current script and to disclose the smoothing.
+No other prose was altered.

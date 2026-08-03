@@ -85,6 +85,13 @@ __pycache__/
 *.xdv
 Thesis_LaTeX/main.pdf
 
+# Proprietary fonts used for figure rendering (2026-08-04). Times New Roman is a Monotype
+# typeface licensed with Windows: using it to typeset the thesis is fine, redistributing the
+# .ttf files via a public repo is not. The files are copied onto each machine by hand.
+# Thesis_LaTeX/fonts/README.md is tracked and explains how to obtain them.
+Thesis_LaTeX/fonts/*.ttf
+Thesis_LaTeX/fonts/*.TTF
+
 # Editor / OS
 .vscode/*
 !.vscode/settings.json
