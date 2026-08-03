@@ -1,0 +1,53 @@
+% =====================================================================
+%  Supervisor hand-out: Chapters 1-3 only, notes suppressed.
+%  Generated from main.tex -- do not edit chapter files from here.
+%  Build: latexmk -pdf main_ch1to3.tex
+% =====================================================================
+\documentclass[12pt,a4paper,oneside]{book}
+
+\usepackage[final]{thesis-format}   % [final] hides draftnote blocks
+
+\input{frontmatter/_thesis_details}
+
+% Forward references into Chapters 4-6, which are not in this extract.
+% Numbers imported from the full build (main.aux) so nothing prints as ??.
+\makeatletter
+\newlabel{ch:conclusion}{{6}{64}{Conclusions and Future Works}{chapter.6}{}}
+\newlabel{ch:results}{{4}{50}{Results and Discussion}{chapter.4}{}}
+\newlabel{sec:r-design}{{4.1}{50}{Experimental design and provenance}{section.4.1}{}}
+\newlabel{sec:r-limits}{{4.7}{60}{Limitations}{section.4.7}{}}
+\newlabel{sec:r-safety}{{4.5}{55}{Safety}{section.4.5}{}}
+\newlabel{sec:r-validity}{{4.2}{51}{Validity check: the control arm reproduces the baseline exactly}{section.4.2}{}}
+\newlabel{sec:r-variance}{{4.6}{57}{The principal finding of this batch: collapse of seed-to-seed safety variance}{section.4.6}{}}
+\makeatother
+
+\begin{document}
+
+\pagestyle{empty}
+\frontmatter
+\input{frontmatter/titlepage}
+\kuetfrontmatterstyle
+\setcounter{page}{2}
+
+\tableofcontents
+\clearpage
+\listoftables
+\clearpage
+\listoffigures
+\clearpage
+\input{frontmatter/abbreviations}
+
+\mainmatter
+\kuetbodystyle
+
+\input{chapters/01_introduction}
+\input{chapters/02_literature_review}
+\input{chapters/03_methodology}
+
+\backmatter
+\phantomsection
+\addcontentsline{toc}{chapter}{References}
+\IfFileExists{IEEEtran.bst}{\bibliographystyle{IEEEtran}}{\bibliographystyle{unsrt}}
+\bibliography{references}
+
+\end{document}

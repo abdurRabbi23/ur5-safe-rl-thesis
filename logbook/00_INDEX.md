@@ -18,6 +18,16 @@ Two layers of memory:
 Rule of thumb: work happens in a module → update that module file + add a dated line to
 `run_log.md`.
 
+## 🔒 Update 2026-08-02 — results scope locked to final_results/, 5 seeds, 3 arms
+**All thesis results now come from `Comparison_test/final_results/{training,evaluation}/`
+only.** Seeds: **1, 3, 4, 52, 54** (2, 5, 50, 51, 53 trained/evaluated but excluded — treat as
+never run). Arms: **`ctrl`, `cppo`, `cppo15`** — `ppo` dropped as redundant (bitwise-identical
+to `ctrl`; `ctrl` is labeled "PPO (baseline)" in the thesis, see
+`Comparison_test/ppo_redundant/README.md`). The 2026-07-30 pilot batch is retracted as invalid
+(gradient-clip confound), quarantined in `Comparison_test/withdrawn_runs/`, separate from the
+seed-exclusion folder `Comparison_test/excluded_seeds/`. Full detail: CLAUDE.md "Results
+scope" section, and `Comparison_test/final_results/README.md`.
+
 ## Project one-liner
 Safe Adaptive IBVS with constrained RL (cPPO) for precision grasping on a UR5e, sim →
 real. Three layers: L1 safe-RL grasping in sim (must-pass), L2 IBVS visual loop
@@ -98,7 +108,8 @@ reproduce commands: `Thesis_Documentation/06_Results_and_Experiments.md`.
 | `06_writing.md` | Thesis chapters, figures, defense prep | ◻ ongoing |
 | `07_documentation.md` | Beginner replicate-from-scratch guide (`Thesis_Documentation/`) | ▶ ongoing, parallel |
 | `08_project_context.md` | KUET admin details, supervisor, references, role/working-principles (imported from the old Claude Project) | ◻ reference — read once, revisit if a row changes |
-| `10_references.md` | Bibliography + **claim map** (which source licenses which claim, and where it goes) | ▶ ACTIVE — read before writing Ch. 1, 2, 5 or 7 |
+| `10_references.md` | Bibliography + **claim map** (which source licenses which claim, and where it goes) | ▶ ACTIVE — read before writing any chapter |
+| `11_writing_style.md` | **Humanizer rule** (mandatory on all thesis prose) + the per-chapter em-dash backlog | ▶ ACTIVE — read before writing any chapter |
 
 ## Key pointers
 - Beginner docs: `Thesis_Documentation/` (start at `00_START_HERE.md`) — the cleaned-up,

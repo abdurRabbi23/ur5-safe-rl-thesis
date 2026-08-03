@@ -2257,3 +2257,922 @@ Image-Based Visual Servoing Techniques Using ROS2*.
 
 Verified: `latexmk -pdf` exits 0 from a clean copy — 46 pages, zero errors, zero undefined
 references or citations. Chapter 2's nine sections number correctly as 2.1–2.9.
+
+---
+
+## 2026-08-02 (Day 25, evening) — humanizer made a standing rule; Chapter 2 pass done
+
+Touhid's instruction: **every piece of thesis prose goes through the `humanizer` skill before it
+is written to a file.** Not offered, not conditional. Recorded in three places so no future
+session can miss it: `CLAUDE.md` (top of file, above the Role section), `logbook/00_INDEX.md`
+(module table), and `logbook/HANDOFF.md` (the paste block). New module
+`logbook/11_writing_style.md` holds the rule, the calibrations and the per-chapter backlog.
+
+**Two calibrations recorded, both of which matter.** First, the skill's PERSONALITY AND SOUL
+section does **not** apply here. It tells the writer to add stance, opinion and first person, and
+it explicitly exempts technical and reference writing. A thesis is exactly that, and plain neutral
+prose is the correct human voice for it. Injecting voice would make the book worse, not more
+human. Second, the em-dash rule needs a LaTeX-specific exception: `---` is cut everywhere, but
+`--` between numerals is the correct en dash for a numeric range (`pp.~483--498`, `8--10`) and
+must survive. A blind substitution would have corrupted every page range in the bibliography.
+
+**Book-wide audit.** The prose turned out to be clean on almost every axis: zero hits for AI
+vocabulary (crucial, pivotal, underscore, showcase, testament, vibrant, delve, intricate,
+fostering, tapestry, interplay), zero copula avoidance (serves as, stands as, boasts), zero curly
+quotes, zero emoji. The tell is concentrated in a single pattern: **81 prose em dashes**, spread
+1 / 17 / 9 / 50 / 2 / 2 across Chapters 1 to 6.
+
+**Chapter 2 pass completed** (`02_literature_review.tex`): 17 em dashes to 0, plus one "not
+merely" (negative parallelism). Verified afterwards that the two legitimate numeric ranges
+survived and that the book still builds: exit 0, 46 pages, 0 errors, 0 undefined citations,
+0 undefined references, 18 bibitems.
+
+Replacement was done by hand, one sentence at a time, and the move varied by what the dash was
+doing: full stop, colon, parentheses, or a full restructure. The last case is the reason `sed` is
+banned for this in `11_writing_style.md` — a paired em dash wrapping a long list cannot become a
+comma pair without the sentence collapsing, so §2.9's three-arm sentence had to be rebuilt into
+two. Worked before/after examples are recorded in the module file.
+
+**Chapter 4 deliberately left for a supervised pass.** It holds 50 of the 81 and is the chapter an
+examiner reads hardest. Its prose is also the most carefully hedged in the book: the withdrawal
+narrative, the decomposition rule, the §4.5 counter-result and the "band entered from both
+directions" qualification all turn on exact wording. Rebuilding 50 sentences there without
+re-reading each in context risks silently changing a claim, which is a worse outcome than an em
+dash. Flagged as a deliberate pass, not a cleanup sweep.
+
+Note for anyone reading the earlier Day-25 entries: the repo was restructured after they were
+written. The book is now **six** chapters, not seven (Introduction / Literature Review /
+Methodology / Results and Discussion / Relation with a Real-World Problem / Conclusions and Future
+Works), rebuilt against the official KUET template, and the Chapter 2 draft now lives at
+`chapters/02_literature_review.tex`. Earlier entries referring to `02_background.tex`,
+`06_results.tex` or a seven-chapter structure describe the superseded layout.
+
+---
+
+## 2026-08-02 (Day 25, evening) — Chapter 2 realigned to the six-chapter structure
+
+Answering "is Chapter 2 done": it was drafted, humanizer-clean and building, but **not** done,
+because it had been written against the seven-chapter layout and the restructure invalidated part
+of it. Chapter 2 was retitled from "Motivation and Background Study" to "Literature Review", and
+the new Chapter 1 carries mandated sections 1.1 Background, 1.2 Problem Description, 1.3
+Objectives and 1.4 Scope. That produced two collisions: §2.1 was pure motivation and overlapped
+1.1 and 1.2, and §2.9 is a problem statement overlapping 1.2.
+
+**Two decisions taken by Touhid.**
+1. Motivation moves to Chapter 1; the literature gap stays in Chapter 2 §2.9, and 1.2 will point
+   to it rather than repeat it. Division of labour: Chapter 1 says what the problem is, Chapter 2
+   says what the literature missed.
+2. Keep the ten named sections. The accepted KUET book uses only 2.1 Historical Background and
+   2.2 Related works, but the chapter *title* is what the department checks, and ten sections read
+   better in the contents list. Recorded in the chapter's draft note so it is not re-litigated.
+
+**Applied.** §2.1 is now "Scope of this review", a short forward-pointing scope statement instead
+of a motivation section. The cut prose was not discarded: it sits in a `draftonly` block in
+`01_introduction.tex`, already humanizer-clean and ready to become 1.1 and 1.2. Verified that
+`draftonly` is excluded from `[final]`, so the reserved text cannot leak into the submitted book.
+§2.4 previously leaned on §2.1 for the Achiam argument, so that argument is now restated locally
+and the section no longer depends on text that has moved.
+
+**Humanizer gate run on both touched files, per the rule set earlier today.** Chapters 1 and 2 are
+now at zero em dashes, with no AI-vocabulary, copula-avoidance or negative-parallelism hits. Both
+legitimate numeric ranges (`2--6`, `8--10`) survived. Book-wide the count is now 0 / 0 / 9 / 50 /
+2 / 2; Chapter 4 remains the outstanding job at 50.
+
+Builds verified after the change: `[draft]` exit 0, 47 pages, 0 errors, 0 undefined citations or
+references. `[final]` exit 0, 41 pages, Chapter 2 spanning pp. 13–20, which is 8 pages against the
+8–10 target.
+
+**Chapter 2 status: content and style complete, pending Touhid's own read.** The one open question
+left inside it is whether §2.8 (seed variance) belongs in Chapter 2 or Chapter 3. It is flagged in
+the chapter's draft note and is a judgement call, not a defect.
+
+---
+
+## 2026-08-02 (Day 25, evening) — Chapter 4 tables converted to floats; the book's first figure
+
+**Stale instruction killed first.** `HANDOFF.md` and `NEXT_SESSION_ch2.md` both still told the
+next session to "split Chapter 3 into 3/4/5". That belonged to the seven-chapter layout. Under the
+six-chapter book there is no separate setup or implementation chapter, so Chapter 3 correctly holds
+the whole methodology (problem formulation, environment, cost function, cPPO, calibration, training
+and evaluation protocol) and is right as it stands. Both files now carry an explicit DO NOT SPLIT
+warning. Following the old instruction would have broken the book.
+
+**Chapter 4's five tables are now real floats.** They were pandoc `longtable`s with "Table 4.1" set
+as bold body text, so the List of Tables showed only Chapter 2's table. All five are now
+`kuettable` environments with captions above, per the KUET spec. The List of Tables now lists
+Tables 2.1 and 4.1 through 4.5. Two incidental gains: the caption text no longer needs its `---`,
+which removed 5 em dashes from Chapter 4 without touching the prose, and Table 4.5 is now a real
+`\ref` target.
+
+One defect caught during the conversion and fixed: the regex that stripped the old `longtable`
+column specification stopped early on the braces inside `{@{}ll@{}}`, leaving a stray `ll@{}}`
+fragment as visible text in all five tables. Found by reading the output rather than by trusting
+the script.
+
+Table 4.5 (eleven columns) overflowed the text block by roughly 48 pt. Fixed with `\small`,
+`\tabcolsep` at 3.6 pt, and by shortening one row label from "cppo λ (final iteration)" to
+"cppo λ (final)". It now sits inside the margins. The remaining overfull boxes in the log are in
+prose and in `draftonly` blocks that do not print in `[final]`.
+
+**Figure 4.1 — the book's first figure.** Generated by the new, reproducible
+`Comparison_test/results/scripts/make_per_seed_cost_fig.py` into `Thesis_LaTeX/figures/`
+as vector PDF plus PNG.
+
+Design decision, taken deliberately and recorded in the script's docstring: this is a **paired
+(dumbbell) plot, not a sorted-band plot**. A band plot would make the variance collapse look
+stronger, but it would hide the direction each seed moved in. Section 4.6 states plainly that the
+band is entered from both directions, so a band plot would have made the figure overstate what the
+text claims. Each seed contributes one vertical segment from its control value to its constrained
+value, coloured by direction, on a log scale, with the budget of 25 drawn as a dashed line. Six of
+the ten segments point upward and the figure says so, in the caption as well as the geometry.
+
+**The script verifies before it draws.** It recomputes all twenty tail means from the raw
+TensorBoard exports and aborts if any disagrees with Table 4.5 by more than 0.15. All twenty match
+exactly. It globs `2026-08-01_*` only, so the superseded 2026-07-30 pre-audit cppo runs can never
+be picked up by accident. This makes the figure independently checkable rather than a drawing that
+happens to sit next to a table.
+
+Builds verified after every step: `[draft]` exit 0, 47 pages, 0 errors, 0 undefined citations or
+references. Table 4.5 and Figure 4.1 both inspected as rendered pages; captions sit above tables
+and below figures as the spec requires.
+
+Chapter 4 em-dash count is now 45, down from 50. The supervised prose pass on that chapter is
+still outstanding and is the largest remaining style job.
+
+## 2026-08-02 (Day 25) — Results scope locked: final_results/, 5 seeds, 3 arms (Cowork)
+- Created `Comparison_test/final_results/{training,evaluation}/` as the single folder all
+  thesis results are generated from going forward — copied from `results/tb_csv/` and
+  `ur5_grasp/tools/eval_episodes/`, filtered to seeds 1/3/4/52/54 only.
+- Split the working set into three separate quarantine folders, each for a different reason:
+  `excluded_seeds/` (seeds 2/5/50/51/53 + smoke runs, not selected), `withdrawn_runs/` (the
+  2026-07-30 pilot batch — retracted/confounded, not just unselected; was previously sitting
+  in `results/tb_csv/` under the same seed labels as the valid Aug-1 runs, a real collision
+  risk for any script filtering by seed number alone), and `ppo_redundant/` (`ppo`'s files for
+  the 5 selected seeds — dropped as an arm since `ppo`≡`ctrl` bitwise; `ctrl` now stands in for
+  it everywhere, labeled "PPO (baseline)" in the thesis).
+- `final_results/` rebuilt clean after catching that the first copy still had the withdrawn
+  batch + `ppo` in it (570 tb_csv + 45 eval_episodes files, verified: only `ctrl`/`cppo`/
+  `cppo15` × seeds 1,3,4,52,54, zero July-30 files).
+- Documented the new working rule in `CLAUDE.md` ("Results scope" section),
+  `logbook/00_INDEX.md`, and `logbook/09_comparison_test.md` (pick-up-here block).
+- Gotcha hit: files already written into the connected Cowork folder can't be deleted directly
+  (`rm` fails silently with `Operation not permitted`, and error output from many failed
+  deletes at once can blow past the tool's output limit rather than surfacing the real error).
+  Fix: `mcp__cowork__allow_cowork_file_delete` first, then retry.
+- NEXT (same session): pull the raw TensorBoard event files (not just tb_csv exports) for the
+  15 kept runs (`ctrl`/`cppo`/`cppo15` × 5 seeds) from the lab PC to the laptop, track them in
+  git (checkpoints stay gitignored), push to GitHub. Lab PC has no direct network path from the
+  Cowork sandbox — transfer command handed to Touhid to run himself.
+
+## 2026-08-02 (Day 25, cont.) — Algo/seed subfolders; second withdrawn-batch leak found + fixed
+- Reorganized `final_results/training/`, `ppo_redundant/`, and `excluded_seeds/` into
+  `<algo_folder>/seed_<N>/` subfolders (filenames unchanged, files moved not copied).
+  Algo folder names: `PPO_baseline` = `ctrl`, `CPPO_25` = `cppo`, `CPPO15` = `cppo15`, `PPO` =
+  the actual unmodified `ppo` (only in `ppo_redundant/` and `excluded_seeds/`, kept distinct
+  from `PPO_baseline` on purpose). `excluded_seeds/results/tb_csv/smoke_tests/` holds the
+  358 sanity-check runs that don't fit the algorithm×seed scheme.
+- **Bug found while doing this:** seed 2 in `excluded_seeds/results/tb_csv/` had roughly double
+  the file count of every other excluded seed for `ppo` (66 vs 33) and `cppo` (74 vs 38) —
+  the 2026-07-30 withdrawn pilot batch actually covered **seeds 1, 2, and 3** (`ppo_s1/s2/s3`,
+  `cppo_s1/s2/s3`, 6 runs), not just 1 and 3 as caught the first time. Seed 2's withdrawn pair
+  was missed during the earlier withdrawn-batch quarantine because it had already been swept
+  into `excluded_seeds/` by the seed-based filter before the batch-based filter ran against
+  `results/tb_csv/` — two filters applied in sequence, each only checking its own folder.
+  Moved the missing 69 files (33 `ppo_s2` + 36 `cppo_s2`) into `withdrawn_runs/`, which now
+  holds 207 files (6 runs) instead of 138 (4 runs). `final_results/` and `results/tb_csv/` were
+  never affected (seed 2 isn't a selected seed), so nothing that reaches the thesis was wrong —
+  but this is now the second time a filter-by-one-axis approach let withdrawn data through, so
+  the general rule (`withdrawn_runs/README.md`) is: filter out the withdrawn batch by run
+  timestamp FIRST, before any other split, everywhere, not just in the one folder being worked
+  on at the time.
+- All counts verified after every move (per-seed file counts now even within each algo folder).
+  READMEs updated in all three folders + this correction logged here.
+- Extended the same `<algo_folder>/seed_<N>/` reorganization to the evaluation side:
+  `final_results/evaluation/` (45 files) and, on request, the source
+  `ur5_grasp/tools/eval_episodes/` (45 files, selected seeds only) — both now match `training/`'s
+  structure. Left the training source (`results/tb_csv/`) flat, unchanged from before, so there's
+  now a deliberate asymmetry (eval source organized, training source flat) — noted in
+  `final_results/README.md` in case it needs revisiting later. All counts verified (3 files per
+  algo/seed folder, 15 folders, 45 total, both places).
+
+## 2026-08-02 (Day 25, night) — Chapter 1 (Introduction) drafted (Cowork)
+- Read `logbook/HANDOFF.md`, `00_INDEX.md`, `CLAUDE.md`, `06_writing.md`, `11_writing_style.md`
+  in full before touching anything, per the project's own onboarding convention. Verified the
+  Day-25 scope lock (5 seeds, 3 arms, `ctrl` = "PPO (baseline)") against
+  `Comparison_test/final_results/README.md` directly — matches HANDOFF.
+- Cross-checked chapter status against the actual files rather than trusting the logbook
+  summaries: em-dash counts in `11_writing_style.md` were off by one on Ch3 (8, not 9) and Ch4
+  (44, not 45) — minor drift, not fixed here. `04_results.tex` confirmed to carry "ten seeds" /
+  "n = 10 seeds" language at 10+ locations, matching the HANDOFF warning that it needs
+  substantive re-derivation, not a wording pass.
+- Asked Touhid which chapter to start on rather than assuming Chapter 4. He picked Chapter 1.
+- **Wrote Chapter 1 in full** (`Thesis_LaTeX/chapters/01_introduction.tex`, 124 lines): 1.1
+  Background, 1.2 Problem Description, 1.3 Objectives, 1.4 Scope. Citations against the Chapter 1
+  claim map in `logbook/10_references.md`: `xia2024proactive`, `achiam2017cpo`,
+  `henderson2018matters`, `khan2026rl_precision_grasping`, `khan2025csrt_ibvs`. Deliberately did
+  not pull `shen2022reactive` or `altman1999cmdp` forward into Chapter 1 even though the claim
+  map licenses them there, since both are already argued in full in Chapter 2 (§2.3, §2.6) and
+  duplicating them looked worse than leaving a pointer. Flagged as an open call for Touhid in the
+  chapter's own draftnote.
+- **Finding, not fixed:** Chapter 2 §2.1 turned out to be near-verbatim the same "reserved prose"
+  Chapter 1 was supposed to be drafted from, not a forward-pointer to it as
+  `01_introduction.tex`'s old draftnote claimed. The two chapters now overlap in their opening
+  framing paragraphs. Left as-is (surgical scope: only Chapter 1 was in scope for this session);
+  flagged in Chapter 1's draftnote and here for Touhid to decide whether §2.1 gets trimmed.
+- Ran the mandatory humanizer draft to audit to final loop on all new prose before saving (no
+  PERSONALITY AND SOUL section per the thesis calibration; checked for AI vocabulary, boldface
+  overuse, negative parallelism, vague attribution — none found). Verified
+  `grep -c '\-\-\-' chapters/01_introduction.tex` = 0.
+- Verified with a full `latexmk -pdf` build: 3 passes, bibtex ran twice, 0 warnings survive into
+  the final pass, 48 pages (up from 47), all five new citations and all cross-references resolve
+  clean.
+- Updated `logbook/06_writing.md` and `logbook/11_writing_style.md` to mark Chapter 1 done.
+
+## 2026-08-03 (Day 26) — Data migration check, font/examiner settled, Chapter 2 audit (Cowork, new account)
+- First session in the new Cowork account/project. Touhid uploaded a Claude.ai data export
+  (`claude_data.zip`) from the old account expecting to need to merge thesis files across
+  accounts. Checked it: the zip is only `conversations.json` + `projects/*.json` (a chat/project
+  export), not thesis files. Its one relevant project ("THESIS UR5e comparison") held two docs,
+  `Results_Chapter_Layer1.md` and `SUMMARY_BANGLA.md` — both already present in this connected
+  folder, and the local copies are *more current* than the zip's (10-seed draft vs. the local
+  5-seed-aware version). Nothing imported; this folder was already ahead. Confirmed the
+  connected folder (`ur5-safe-rl-thesis`) is the live, current workspace.
+- Font size: confirmed 12pt by Touhid. Checked `Thesis_LaTeX/main.tex` — already
+  `\documentclass[12pt,a4paper,oneside]{book}`, not the "commented, undecided" state HANDOFF
+  described. No change needed; `book` class is correct for 12pt (only `extbook` would have been
+  needed for 14pt).
+- Board of Examiners: Touhid confirmed 2 members total (Chairman/Supervisor + one Member), not
+  3. Removed the `\examiner{3}{...}` line from `frontmatter/approval.tex` and updated its
+  draftnote. Examiner 2's name/designation/department are still `\todo{}` — still needed from
+  Touhid, still the only hard-error blocker for a `[final]` build.
+- Audited Chapter 2 against HANDOFF's claim of "done, 0 em dashes." Found that claim was wrong:
+  14 em dashes in real body prose (not draftnotes) at 12 distinct lines, and the stale "ten
+  independent seeds" language (pre-scope-lock) at two locations (near line 271, line 312) that
+  the Day-25 scope-lock audit caught in Chapter 4 but missed in Chapter 2. Flagged to Touhid
+  rather than silently fixed. Chapters 1 and 3 spot-checked clean/as-logged (Ch1: 0 em dashes,
+  no stale seed language; Ch3: 8 em dashes as HANDOFF logged, no stale seed language).
+- Touhid's next requests, in order: (1) guide him through downloading the cited papers so
+  Chapter 2 can use real figures/data instead of metadata-only claims, (2) fix Chapter 2 (em
+  dashes + seed count) and expand it — add a page before the per-source review section
+  summarizing the thesis and how the reviewed papers relate to it, add more technical detail/
+  data to each paper review, use figures from the papers where useful. Paper download guide
+  delivered this session; Chapter 2 rewrite not yet started.
+- Touhid downloaded 12 of the 20 needed papers into `Thesis_LaTeX/source_papers/` (all 3 Tier-1
+  "read in full" papers plus 9 of 11 Tier-2 foundational ones). Verified each: title/authors
+  match the citation, page counts sane, real figures inside (checked via `pdfinfo` +
+  `pdftotext` + `pdfimages -list`), none are landing pages or corrupted downloads.
+- Priorities changed: Touhid asked to fix Chapter 1 before Chapter 2. Chapter 1 requests: expand
+  to at least 5 pages; add a new ~2-page section on robotic manipulators and the UR5e
+  specifically (specs + a real photo, placeholder until Touhid supplies his own, logged
+  somewhere trackable); expand Background into a more narrative, storytelling style while
+  staying technical; leave Problem Description and Objectives untouched; enlarge Scope with
+  concrete, briefly-explained sub-scopes; suggest figures from source papers but ask before
+  inserting any.
+- Found a strong candidate for the interim UR5e photo while scanning source papers for figures:
+  `xia2024proactive` Fig. 1 is a genuine photograph (not a diagram) of a UR5e working next to a
+  person in a real lab, open access under CC BY-NC-ND 4.0. Asked Touhid before using it; he
+  approved using it as an interim placeholder. Extracted the embedded image directly via
+  `pdfimages` (975x650, 300 dpi, not a page rasterisation) and saved it as
+  `Thesis_LaTeX/figures/ur5e_platform_interim.png`.
+- Verified the UR5e hardware specs before writing anything, rather than pulling them from
+  memory: web search against the official Universal Robots UR5e datasheet. Payload 5 kg, reach
+  850 mm, 6 revolute joints, repeatability +/- 0.03 mm, arm weight 20.6 kg, max joint speed
+  180 deg/s on every joint (a second search specifically confirmed all six joints share the same
+  180 deg/s ceiling, not just some). That number, 180 deg/s = pi rad/s, exactly matches this
+  project's own `velocity_limit_sim = 3.14 rad/s` training ceiling (see `03c` and `09` — that
+  ceiling was chosen without this cross-check at the time). Added a new bib entry
+  `universalrobots2023ur5e` (Group H, new) and a claim-map row in `logbook/10_references.md` for
+  both the spec claims and the interim photo, rather than citing anything outside the claim map.
+- **Rewrote `chapters/01_introduction.tex`.** New §1.1 "The UR5e Manipulator and This Thesis"
+  (manipulators in general, narrowing to the UR5e's specs and why this platform was chosen, the
+  interim photo as a `kuetfigure`). §1.2 Background (renamed from the old §1.1) expanded with a
+  concrete worked example, the UR5e's own joint-speed limit used as the illustration of the
+  reward-weight-vs-constraint-budget problem, rather than staying fully abstract. Problem
+  Description and Objectives copied through unchanged. Scope gained two new bullets, Algorithms
+  (established methods only, no new optimiser proposed) and Hardware validation (simulation
+  only, explicitly no physical-UR5e run in this deliverable). Ran the mandatory humanizer draft
+  → audit → final loop before saving (audit found two minor smoothing edits, no AI-vocabulary or
+  rule-of-three issues; PERSONALITY AND SOUL section correctly not applied per the thesis
+  calibration). Verified `grep -c -- '---' 01_introduction.tex` = 0 and no `—`/`–` characters.
+- Full `latexmk -pdf` rebuild: exit 0, 50 pages total (was 48), 0 undefined citations/refs, new
+  figure renders correctly, captioned and centred per the `kuetfigure` convention. Chapter 1 now
+  spans 6 pages (was 3; Chapter 2 now starts on page 7, was page 4). Visually inspected the
+  rendered pages (title page, chapter opening, the photo page) to confirm layout, not just a
+  clean exit code.
+- Logged the photo-pending status in two places per Touhid's request: a draftnote at the top of
+  `01_introduction.tex`, and a new `Thesis_LaTeX/figures/README.md` with swap-in instructions
+  for when he supplies his own UR5e photograph.
+- Updated `logbook/06_writing.md`'s Chapter 1 line and `logbook/10_references.md`'s claim map
+  (two new rows) to match.
+- Not yet started: Chapter 2 (em dashes, stale seed count, the new pre-review summary page,
+  expanded per-paper reviews with figures from `source_papers/`).
+
+## 2026-08-03 (Day 26, cont.) — Chapter 1 second pass: heading removed, wider Scope, bulleted problems
+- Touhid asked for four changes before Chapter 2: drop the "§1.1" heading from the new platform
+  section (unheaded opening paragraphs instead), add a paragraph on where UR5e-class arms are
+  actually used, make Problem Description's two core issues more scannable, and make Scope
+  "wider" using the original three-layer proposal, with a nod to IBVS and to cPPO-safety as a
+  broader robotics practice, not just this thesis's own boundary statement.
+- Asked before writing per his request. Two questions: (1) convert Problem Description to a
+  bullet list or keep prose and add a bullet summary on top — he chose convert; (2) how far
+  Scope should reach into IBVS/cPPO-in-robotics territory, given it risks duplicating Chapter 2
+  (Lit Review) and Chapter 6 (Future Works, which already owns "IBVS and sim-to-real are future
+  work") — he chose scope-appropriate depth, no new citations, reusing sources already in
+  `references.bib` (`khan2025csrt_ibvs`, `xia2024proactive`, `khan2026rl_precision_grasping`)
+  rather than sourcing Shi 2020 / Zhang 2023 from the original proposal.
+- Removed the `\section{...}` line for the platform material; it now reads as unheaded opening
+  paragraphs directly under `\chapter{Introduction}`. Sections renumber automatically in LaTeX
+  (Background 1.1, Problem Description 1.2, Objectives 1.3, Scope 1.4), no manual renumbering
+  needed, and nothing else in the document referenced the old numbers directly (checked before
+  editing).
+- Added a paragraph on real-world UR-class deployment (pick-and-place, machine tending,
+  small-parts assembly/packaging, inspection) and why the same collaborative certification makes
+  it a common research platform too, grounded in the two already-cited papers that use UR5-class
+  hardware (`ferreira2025grasping`, `xia2024proactive`) rather than inventing statistics.
+- Converted Problem Description's "First.../Second..." prose into a two-item bulleted list, "The
+  cost-critic confound" and "Seed variance," keeping the surrounding framing and closing
+  paragraphs as prose per Touhid's chosen option.
+- Rewrote Scope's opening: states the full originally registered title for the first time in the
+  book, describes concretely what Layer 2 (RL-tuned image Jacobian visual servoing, replacing
+  privileged pose with eye-in-hand RGB-D) and Layer 3 (ROS 2 transfer, RH-P12-RN gripper gap)
+  would have covered, and adds one positioning sentence on constrained RL as existing robotics
+  practice, not just this thesis's approach, citing only sources already in the bibliography.
+- Self-audited the draft against the humanizer checklist before the formal pass: found the new
+  material had piled up five "is not X" / "not X but Y" contrastive constructions in close
+  proximity (a negative-parallelism tell), concentrated in the new UR5e-usability paragraph.
+  Rewrote two of them to plain positive statements before finalizing; left two earlier,
+  already-approved instances alone since they weren't part of the new cluster and read fine in
+  isolation.
+- Ran the humanizer draft → audit → final loop, verified `grep -c -- '---' 01_introduction.tex`
+  = 0 and no `—`/`–` characters, before saving.
+- Rebuilt (`latexmk -pdf`): exit 0, 50 pages total (unchanged net, heading removal offset the
+  added prose), 0 undefined citations/refs. Chapter 1 still spans 6 pages (1–6, Chapter 2 starts
+  page 7, same as the previous pass). Visually inspected the opening page (heading gone, flows
+  straight into paragraphs), the Problem Description bullets, and the renumbered Objectives/Scope
+  headings (1.3, 1.4) to confirm the auto-renumbering landed correctly, not just a clean exit
+  code.
+- Chapter 2 still not started.
+
+## 2026-08-03 (Day 26, cont.) — Chapter 1 figure placement fixed (Cowork)
+- Touhid asked for the UR5e photo to sit at the bottom-middle of the page instead of inline
+  right after the paragraph it follows.
+- Parameterised `thesis-format.sty`'s `kuetfigure` environment with an optional placement
+  argument, default `htbp` (backward compatible, every other `kuetfigure` call in the book is
+  unaffected). First attempt used `[b]` alone; rebuilt and the figure drifted to the very last
+  page of the chapter (physical page 19, chapter-page 7) instead of near where it's written,
+  because the image plus caption is taller than LaTeX's default `\bottomfraction` (30% of text
+  height), so a plain `[b]` float can never satisfy the fit check on the page it's meant for and
+  gets deferred until the `\clearpage` at the next chapter forces it out. Fixed by using `[!b]`
+  instead, the `!` overrides the fraction restriction for this one float. Rebuilt: the figure now
+  lands at the bottom of chapter-page 3 (physical page 15), directly under the paragraph that
+  precedes it, caption below, centred, not drifted.
+- Note for later, not acted on: `Thesis_LaTeX/chapters/02_literature_review.tex` and
+  `Thesis_LaTeX/figures/README.md` grew substantially during this window (Chapter 2 now 991
+  lines with real figures pulled from `source_papers/` and several `kuettable`s), which is not
+  work done in this session. Total book page count is now in the 60s. Not investigated further
+  since it isn't part of the current task; flagging only so the next session doesn't mistake it
+  for drift.
+
+## 2026-08-03 (Day 26, cont.) — Figure drift into §1.1 fixed
+- The `[!b]` fix from the previous entry let the figure land bottom-of-page, but LaTeX's normal
+  float queue let it drift past the paragraph it was written after: it ended up on the same page
+  as, and visually below, the "1.1 Background" heading, reading as if the photo belonged to
+  §1.1. Touhid caught this and also wanted it moved earlier, roughly 2 paragraphs up from where
+  it was (it was sitting after the third of four opening paragraphs).
+- Fixed by switching to `[H]` (the `float` package's exact-position specifier, already loaded in
+  `thesis-format.sty`) instead of `[!b]`, and moving the `kuetfigure` block to right after the
+  first opening paragraph instead of the third. `[H]` cannot drift, the float package inserts it
+  exactly at that point in the source, so it is now provably inside the unheaded starting
+  section and nowhere near §1.1 regardless of how the rest of the chapter reflows.
+- Trade-off, not yet re-confirmed with Touhid: `[H]` renders at the top of chapter-page 2 rather
+  than the bottom of a page, because there was not quite enough remaining room on page 1 after
+  the first paragraph for LaTeX's page-breaker to fit the figure there too, so it starts the next
+  page instead. This satisfies "inside the starting section, moved up," the more urgent fix, but
+  does not exactly reproduce the earlier "bottom of the page" framing. Flagged to Touhid rather
+  than iterating further blind.
+- Rebuilt: exit 0, 0 em dashes, Chapter 1 back to 6 pages (1-6, Chapter 2 starts page 7).
+  Verified by rendering the actual pages, not just checking the exit code: page 1 ends mid-page
+  after the first paragraph with nothing below it, page 2 opens with the figure at the top,
+  captioned, centred, followed immediately by the specs paragraph.
+
+## 2026-08-03 (Day 26, cont.) — Chapter 1 audit and correction pass
+- Touhid asked for a full read of Chapter 1 with opinions before any further edits. Read the whole
+  chapter, checked every factual claim against `CLAUDE.md`'s locked results scope, and
+  cross-checked against Chapters 2 and 4. Reported findings ranked by severity; he approved
+  fixing items 1, 2 and 4.
+- **Item 1, the significant one: Chapter 1 contradicted itself about its own experiment.** §1.2
+  Problem Description described the three arms as {unconstrained baseline, control arm with
+  multiplier at zero, fully constrained agent}. §1.4 Scope described them as {unconstrained PPO
+  baseline, two PPO-Lagrangian variants at different budgets}. Two different sets of three, four
+  pages apart. §1.4 matched the scope lock (`ctrl` / `cppo` d=25 / `cppo15` d=15, 5 seeds); §1.2
+  was carrying the older pre-lock design. Neither §1.2 nor the Objectives mentioned the second
+  cost budget at all, which is a third of the delivered experiment.
+- Rewrote §1.2's closing so it explains *why* the control arm exists without committing to an arm
+  count, names both budgets (25 and 15), states five seeds, and then records that the control arm
+  reproduced the unconstrained baseline exactly at the level of stored weights, so the two collapse
+  into one reported arm. That last point matters editorially: the collapse is a *result*, not a
+  design choice, and the previous text hid it. Added forward pointers to
+  `Chapter~\ref{ch:results}` and `Section~\ref{sec:r-validity}`.
+- **Item 2: Objectives did not match the delivered scope.** Replaced "multiple independent random
+  seeds" with five, added an objective covering the two cost budgets, and added a final
+  outcome-framed objective ("whether the constraint changes the average safety outcome, the spread
+  across runs, or both") since all four originals were activity-framed ("To implement, To isolate,
+  To train, To evaluate") and none said what would count as an answer.
+- **Item 4, cleanup:** `pi` written as a word is now `\(\pi\)` rad/s (renders correctly, and
+  matches the `180 deg/s (π rad/s)` row that Chapter 3's UR5e spec table independently uses);
+  added a clause in §1.4 explaining that the book's title is narrower than the registered title
+  because the delivered work is narrower; rewrote four low-value "not X" constructions positively
+  (negative-construction count 24 to 21, leaving the load-bearing contrasts alone).
+- **Consistency verified against Chapter 3**, which was written in a separate session while this
+  audit was running. Its Table 3.11 and footnote give the same three arms, same budgets, same five
+  seeds, same "plain PPO trained but byte-identical to `ctrl`, so not reported separately" story,
+  and point at the same `sec:r-validity`. Chapter 1 and Chapter 3 now agree.
+- Humanizer draft → audit → final loop run on all new prose. The audit caught two ornate spots in
+  my own draft ("how hard a budget binds is itself a variable worth separating from whether a
+  budget exists at all", an aphorism-shaped restatement, and "returns a measured value of zero",
+  contorted) and both were simplified before saving.
+- Builds verified in **both** modes, not just draft: `[draft]` exit 0, 78 pages; `[final]` exit 0,
+  Chapter 1 = 6 pages (physical 14-19), figure on chapter page 1. 0 undefined citations or
+  references in either. Rendered pages inspected to confirm the new §1.2 prose, the renumbered
+  Objectives and the π glyph all typeset correctly.
+- **Reported but NOT fixed, per surgical-scope rule:** (1) Chapter 2 §2.2 still duplicates
+  Chapter 1 §1.1's opening argument almost beat for beat (classical controller inspectable, RL
+  policy not, rare configurations are the condition deployment depends on). Needs a decision about
+  which chapter keeps it. (2) Chapter 4 still says ten seeds and names a `ppo` arm, so it now
+  disagrees with both Chapter 1 and Chapter 3; fixing Ch1 alone just moved the contradiction
+  downstream. (3) Flagged `approval.tex`'s examiner 2 as blank-and-silently-passing the `[final]`
+  build; `logbook/06_writing.md` shows this is a deliberate hand-completion decision, so no action
+  needed.
+
+## Day 26 (2026-08-03) — Chapter 2 rewritten from the source PDFs
+- Read all 12 PDFs in `Thesis_LaTeX/source_papers/` properly (pdftotext + page renders), rather
+  than working from metadata. That is what unlocked real numbers and real figures for Chapter 2,
+  and the reading-status table in `logbook/10_references.md` was updated to match: 12 entries move
+  from "metadata only" to "PDF held and read".
+- **Rewrote `chapters/02_literature_review.tex`.** Ten sections became twelve. New §2.1 "How to
+  read this chapter" (argument in one paragraph, four-movement structure, three reading routes,
+  §-to-source map table, and a boxed seven-point key-findings preview). New §2.8 "Experimental
+  methods of the reviewed studies" with a side-by-side apparatus table for all eight experimental
+  papers plus this thesis. §2.9 (manipulability) rebuilt around Yoshikawa's actual development:
+  the Jacobian velocity relation, rank deficiency as the definition of singularity, w = √det(JJᵀ),
+  the SVD form w = σ₁…σ_m, the manipulability ellipsoid, the m = n reduction to |det J|, and the
+  two-link worked example w = ℓ₁ℓ₂|sin θ₂| with best posture θ₂ = ±90°, then the joint-speed
+  normalisation and why a small w becomes a large joint rate on a real UR5e. §2.10 (seed variance)
+  rebuilt around Henderson's own 2×5-seed split (t = −9.0916, p = 0.0016) and his bootstrap CI
+  table, set against the seed counts actually reported by the reviewed papers. §2.11 gaps recast
+  as two coloured boxes with the decomposition identity written out. §2.12 summary rewritten as a
+  continuous narrative retracing the argument, then stating the scope boundaries explicitly.
+- **Four figures reproduced from the source PDFs** into `Thesis_LaTeX/figures/`, extracted at
+  400 dpi (or via `pdfimages` where the source was an embedded raster), each credited in its
+  caption: Stooke Fig. 1 (Lagrangian vs PID oscillation), Ferreira Fig. 1 (UR5 + 2F-85 PyBullet
+  scene, CC BY), Shen Fig. 12 (manipulability landscape with GPM vs RL paths, CC BY), Henderson
+  Fig. 5 (the two-groups-of-five-seeds plot). Licence audit and the two figures rejected on
+  licence grounds are recorded in `Thesis_LaTeX/figures/README.md`.
+- Eight tables and ten display equations added. The equations are PPO's clipped surrogate, the
+  CMDP problem, the Lagrangian relaxation, CPO's constrained trust-region step, Stooke's PID
+  multiplier rule, Yoshikawa's w in four forms, Shen's null-space and reward equations, and
+  Ferreira's shaped reward. Tables carry Ray's Safety Gym normalised metrics, Shen's GPM
+  comparison, Henderson's bootstrap intervals, Khan's PPO-vs-cPPO results, the cross-study
+  apparatus comparison, and a positioning matrix.
+- **Fixed the stale "ten independent seeds" language** at both places flagged on 2026-08-02.
+  Chapter 2 now says five seeds (1, 3, 4, 52, 54) per the locked scope. **Chapter 4 still says ten
+  and still has not been re-derived** — that gap is now visible between two chapters of the same
+  book, so it needs clearing before submission.
+- Mandatory humanizer loop run before saving. Audit found and fixed: 4 em dashes (all in comments
+  and the draftnote), 2 negative parallelisms ("not only its average"), one AI-coded abstract noun
+  ("the benchmarking landscape has since consolidated"), one broken sentence ("What none of those
+  results is a bound"), one staccato pair, and 11 of 28 uses of "rather than" thinned out.
+  Verified: `grep -c -- '---'` = 0, no unicode em/en dashes, no "not only/just/merely".
+- Build: `latexmk -pdf` exit 0, 65 pages total, 0 errors, 0 undefined citations or references,
+  19 bibitems. Chapter 2 spans pp. 20–41. Table overfulls fixed with `raggedright` p-columns and
+  tighter `tabcolsep`; the large remaining overfull boxes in the log all belong to other chapters'
+  draftnotes (long file paths) and vanish in `[final]`. Rendered and visually checked the
+  key-findings box, the gap boxes, the comparative table and all four figure pages.
+- **Open, for Touhid to decide:** Chapter 2 is 22 pages against the 14–16 he chose. Nothing is
+  padding, but §2.8 and the Henderson bootstrap table are the cheapest ~3 pages to cut if the
+  book total needs to come down.
+- **Later the same day, on Touhid's instruction: all colour and all framing removed from
+  Chapter 2.** The `keybox` mdframed environment (blue rule + 4 % tint) is now an empty
+  environment that only adds vertical space, `\gapmark` is plain bold instead of amber, and the
+  two `\definecolor` declarations are deleted. The key-findings block and the two gap statements
+  now read as plain black text with bold run-in headings. Verified with
+  `grep -n "color\|mdframed\|linecolor\|backgroundcolor\|fbox\|rule{"` on the chapter: zero hits.
+  Table `\hline` rules are kept, since they are the KUET table convention and not decoration.
+  Rebuild: exit 0, 65 pages, 0 errors, 0 undefined. Chapter 2 now spans pp. 19–41 of the PDF
+  (body pp. 7–29, 23 pp.) — one page more than the boxed version, because the frames had been
+  packing the text slightly tighter.
+- Still coloured and framed, but **only in the `[draft]` build**: the red `draftnote` boxes
+  defined in `thesis-format.sty`. They are excluded by `\excludecomment` under `[final]`, so they
+  never reach the printed book. Left alone rather than changed, since editing the `.sty` touches
+  every chapter.
+
+## Day 26 (2026-08-03, Cowork) — Chapter 3 written: §3.3 software framework, gradient-clip audit, frozen values, 8 citations
+
+- **New §3.3 "Software framework"** (the draftnote's "3.2", inserted after the environment section
+  so it numbers as 3.3; the chapter was NOT regrouped under three headings, that would have been a
+  restructure nobody asked for). Contents: the `ur5_grasp` package rationale (installed beside
+  Isaac Lab, so a run is reproducible against one tagged commit), Table 3.1 mapping all 13 modules
+  to their roles, the cost computer (cached index resolution, batched, no host sync at 4096 envs),
+  the four `safe_rl/` modules that extend `rsl_rl`, and the two-script train/eval pipeline with the
+  dumped-config comparison trick.
+- **New §3.3.1 "The gradient-clip audit"** — the Day-23 withdrawal now has its own room in the
+  Methods chapter instead of being squeezed into §4.2. Narrates: `Loss/cost_lambda` at 0.0 →
+  the update was algebraically stock PPO → one global `clip_grad_norm_` spanning the cost critic
+  shrank the actor's step on every update → cPPO was PPO with a quieter optimiser. Also the 100-slot
+  Jc buffer against 4096 simultaneous terminations, and the never-binding budget. Then the fix
+  (two-group clip, resized buffer, `test_grad_clip_fix.py`'s three checks) and why the `ctrl` arm
+  had to exist. §4.2's "assumes Chapter 3 sets this up" is now satisfied.
+- **Every stale Day-19 number replaced with the frozen `matrix-v2` values** (Touhid's call:
+  frozen values only, no two-stage narrative). Goal box (0.4/0.6…) → (0.22,0.60)/(-0.30,0.30)/
+  (0.10,0.50) with the 0.84 m reach-margin justification; reward weights 15/16 → 10/15 and the lift
+  gate now goal-relative; `JOINT_LIMIT_MARGIN` 0.10 → 0.175 rad; `COLLISION_Z_FLOOR` 0 → 0.05 m;
+  `MANIP_FLOOR` 0.045 → 0.06. §3.6 rewritten off `calib_probe_v2`: w distribution min .0171 /
+  mean .0750 / max .1109, p10 .0517 / p25 .0682, floor at ~p18; joint-limit now an ACTIVE
+  constraint at 33.7 % of steps and ~86 % of natural cost; collision inactive at 0.0896 m min
+  height; natural episodic cost ~105, so d = 25 is a ~76 % cut, not the ~⅔ the Day-9 text claimed.
+  §3.8 rewritten for `eval_policy.py`: frozen deterministic policy, corruption off, 1000 episodes ×
+  eval seeds 101/102/103 × 128 envs, distance distribution reported instead of a lone 1 cm
+  threshold (weld ceiling), per-episode safety counts.
+- **New §3.7.1 "Experimental arms and seeds"** — 3 arms, 5 seeds (1, 3, 4, 52, 54), and the
+  CLAUDE.md-mandated one-time footnote explaining that `ctrl` is reported as "PPO (baseline)",
+  pointing at §4.2 and `Comparison_test/ppo_redundant/README.md`.
+- **8 citations added per the claim map**: `altman1999cmdp` (§3.1 first sentence), `mittal2023orbit`
+  + `makoviychuk2021isaacgym` (§3.2 platform and the 4096-env justification), `rudin2022walk`
+  (§3.2, §3.3, and again at the audit), `elguea2023review` (reward design as conventional),
+  `schulman2017ppo` + `ray2019benchmarking` + `achiam2017cpo` (§3.5, with Ray's CPO-vs-Lagrangian
+  result as the stated reason for choosing PPO-Lagrangian), `henderson2018matters` (§3.7.1, at
+  n = 5). `yoshikawa1985manipulability` left exactly as it was. Those three tooling entries were
+  the last uncited entries in `references.bib`.
+- Table M1 (bold body text + uncaptioned `longtable`) → real `kuettable` float, now Table 3.2 in
+  the List of Tables alongside the new Table 3.1.
+- Humanizer pass on all new prose (draft → audit → final). Own-draft audit caught three "-ing"
+  tails, one copula avoidance, two filler phrases, one inherited "Crucially", and 11 em dashes.
+  Verified `grep -c -- '---' chapters/03_methodology.tex` = **0** (was 8).
+- Build: `latexmk -pdf` exit 0, **70 pages** (was 65), 0 errors, 0 undefined citations, 0 undefined
+  references, 0 overfull boxes in Chapter 3. Rendered pp. 42–52 of the PDF to PNG and read them
+  rather than trusting the exit code; caught and fixed two things that way (the §3.6 opener still
+  said "both" thresholds after the section had grown to three, and the module table needed
+  0.44/0.44 columns). Chapter 3 now spans body pp. 30–40.
+- Claim map corrected: `logbook/10_references.md`'s Chapter 3 `henderson2018matters` row said
+  "cite where n = 10 is set". Stale — the locked scope is 5 seeds. Row rewritten and dated.
+
+**Flagged, NOT fixed (out of the scope Touhid set for this session):**
+1. Chapter 2 §2.9.1 and Chapter 4 both refer to the manipulability floor being "recalibrated from
+   0.045 to 0.06". Chapter 3 now states 0.06 as the operative value and mentions the 0.045
+   predecessor in one clause of §3.6 so those two cross-references still land. If the two-stage
+   calibration story is wanted in full, it belongs in §3.6 and is a paragraph, not a clause.
+2. `04_results.tex` still says ten seeds, names the arms `ppo`/`ctrl`/`cppo`, and quotes 30,000
+   episodes per arm. Chapter 3 now says five seeds, `ctrl`/`cppo`/`cppo15`, 15,000 episodes.
+   The two chapters currently disagree. Chapter 4's re-derivation is the fix and is still open.
+3. Chapter 4 Table 4.1 lists `MANIP_FLOOR` 0.06 as "recalibrated from 0.045" and describes the
+   joint-limit margin as "reclassified active" — both now consistent with Chapter 3, so no change
+   needed there beyond the seed count.
+
+## Day 26 (2026-08-03, cont.) — supervisor corrected; Board of Examiners blocker CLOSED
+
+- **Supervisor corrected** in `Thesis_LaTeX/frontmatter/_thesis_details.tex`, which is the single
+  source all front-matter pages read from. Was `Dr.\ Md.\ Helal-An-Nahiyan`, Professor, Department
+  of Mechanical Engineering. Now **Priyo Nath Roy, Assistant Professor, Department of Mechatronics
+  Engineering.** Touhid's call on the honorific: plain name, no `Dr.`/`Mr.` prefix. Propagates
+  automatically to the title page, the declaration and Examiner 1 on the approval page.
+- **Board of Examiners: member 2 left deliberately blank.** Not announced yet, so
+  `\examiner{2}{\todo{name}}{\todo{designation}}{\todo{department}}{Member}` became
+  `\examiner{2}{}{}{}{Member}`. The block still prints its signature rule and the Name /
+  Designation / Department / KUET labels, so the examiner can complete it by hand.
+- **This closes the last hard-error blocker in the book.** `HANDOFF.md` and `06_writing.md` both
+  said the six `\todo{}` markers in `approval.tex` were the only thing failing the `[final]`
+  build. Verified by building a throwaway copy with `[final]` substituted for `[draft]`:
+  **exit 0, 68 pages, 0 errors, 0 undefined citations, 0 undefined references.** The scratch
+  `_finaltest.*` files were deleted afterwards; `main.tex` is untouched and still on `[draft]`.
+- Rendered and read the approval page and the title page from the `[final]` PDF rather than
+  trusting the exit code. Both correct.
+- `[draft]` build re-verified after the cleanup: exit 0, 70 pages, 0 undefined.
+
+**Flagged, not fixed:** the title page still shows an empty framed box labelled `monogram` where
+the KUET logo belongs. Pre-existing, unrelated to this change, and it will print as an empty
+rectangle if it reaches submission.
+
+## Day 26 (2026-08-03, cont.) — KUET crest added to the title page
+
+- Touhid supplied the KUET logo; saved as `Thesis_LaTeX/figures/kuet_monogram.png` (1762 × 2000 px,
+  transparent). No LaTeX change was needed: `frontmatter/titlepage.tex` already tried
+  `figures/kuet_monogram.pdf`, then `.png`, then fell back to an empty `monogram` framebox. The
+  file simply had never been supplied.
+- **Trap worth remembering:** the first rebuild after copying the file still printed the empty
+  placeholder. `latexmk` saw no changed source and skipped the run entirely, because a file
+  probed by `\IfFileExists` and NOT found leaves no trace in `.fls`/`.fdb_latexmk` for the
+  dependency tracker to invalidate. `latexmk -pdf -g` (force) fixed it. Anytime a file is added
+  that an `\IfFileExists` fallback was previously missing, force the rebuild or the PDF will
+  silently keep the old branch. Verified by rendering the page, not by the exit code, which was
+  0 in both cases.
+- Rebuilt and visually checked: crest renders at 28 mm, colours correct, Bengali text legible.
+  `[draft]` exit 0, 70 pages, 0 undefined. `[final]` re-tested on a throwaway copy: exit 0,
+  68 pages, 0 undefined, scratch files deleted.
+- Cover page deliberately left text-only, matching `KUET_FORMAT_SPEC.md` section 7 as measured
+  off the accepted book. `figures/README.md` updated with the crest's provenance and the note
+  that dropping in a vector `kuet_monogram.pdf` would take precedence with no code change.
+
+## Day 26 (2026-08-03, cont.) — Chapter 3 expanded: preliminaries, six tables, key-point blocks
+
+Chapter 3 goes from 11 pages to **20** (body pp. 30–49). Book is 80 pages `[draft]` / 78 `[final]`.
+
+- **New §3.1 Preliminaries**, four sub-sections, ~3 pages. Scoped as tools-and-platform on Touhid's
+  choice, NOT as a second literature review: §3.1.1 Isaac Sim and Isaac Lab (USD assets, PhysX,
+  GPU-resident stepping, the manager-based design that makes the Franka→UR5e retarget a config
+  swap); §3.1.2 reinforcement learning with the on-policy/off-policy distinction and **why this
+  study is on-policy** (samples are cheap at 4096 envs, so the sample efficiency an off-policy
+  method buys has nothing to pay for itself with); §3.1.3 PPO's three relevant mechanics and cPPO
+  stated as "PPO plus three additions and no other change"; §3.1.4 the UR5e with Table 3.1 tying
+  each spec to the modelling decision it drives. Each section points at Chapter 2 for the argument
+  and the evidence rather than restating them.
+- **§3.2 Problem formulation roughly tripled.** Full MDP tuple with every element named, then three
+  properties of Eq. 3.1 stated explicitly so the results are not over-read: the constraint binds an
+  **expectation not a maximum** (`brunke2022safe`, and Ch. 4 has the counter-result where the worst
+  single episode is no better under the constraint), the cost is **undiscounted and episodic** so d
+  is tied to the 5 s episode length, and the budget is **one scalar over three summed hazards** so
+  the agent may trade between them and no per-hazard guarantee is available.
+- **Six tables, all captioned floats, all in the List of Tables:** 3.1 UR5e specs, 3.2 simulation
+  environment summary (16 rows), 3.3 `ur5_grasp` package, 3.4 shared hyperparameters, 3.5 training
+  protocol, 3.6 evaluation protocol.
+- **Nine "Key points" blocks**, one closing each section. Plain bold run-in heading + itemize, no
+  frame and no colour, matching the de-coloured Chapter 2 style Touhid set on 2026-08-02.
+  Environment is named `keypoints`, deliberately **not** `keybox` — Chapter 2 already defines that
+  name locally and a second `\newenvironment` would have been a hard error, since both files are
+  input into one document.
+- **Sub-section headings are now bold italic** (`thesis-format.sty`, `\titleformat{\subsection}`
+  and `\subsubsection`). This is a **deliberate deviation** from the measured KUET template, which
+  has plain italic. Recorded as deviation **D1** in `KUET_FORMAT_SPEC.md` with the one-word revert
+  instruction. Applies book-wide; Chapter 2's two sub-sections are affected too. **Worth confirming
+  with Priyo Nath Roy before the submission build.**
+- **`kuettable` now takes an optional placement argument**, same as `kuetfigure`:
+  `\begin{kuettable}[H]{caption}{label}`, default `htbp`, existing two-brace calls unaffected.
+  Added because the training-protocol table floated INTO its key-points list and split it, leaving
+  an orphan bullet with no heading on the next page. Same float-drift class as the Chapter 1 figure
+  bug. Tables 3.2, 3.4, 3.5 and 3.6 now use `[H]`; 3.1 and 3.3 float fine and were left alone.
+- **Three claim-map rows added** to `logbook/10_references.md` before the sentences were written,
+  per the standing rule: `universalrobots2023ur5e` extended to Ch. 3 (specs table, numbers must
+  match Ch. 1 exactly), `shahid2022continuous_grasping` for the existence of both algorithm
+  families (**not** for any SAC number), `brunke2022safe` for the expectation-not-worst-case
+  caveat. All three were already licensed elsewhere in the book; these rows extend them.
+- Humanizer pass on all new prose. Verified `grep -c -- '---'` = 0, 0 overfull boxes in Chapter 3.
+- Builds: `[draft]` exit 0, 80 pp., 0 undefined. `[final]` exit 0, 78 pp., 0 undefined. Rendered
+  pp. 43–63 and read them; the split key-points list was caught that way, not by the exit code.
+
+## Day 26 (2026-08-03, cont.) — Chapter 3 restructured: platform section, RL taxonomy figure, PPO maths
+
+Chapter 3 is now **pp. 30–55 (26 pp.)**. Book 87 pp. `[draft]` / 85 `[final]`, both exit 0,
+0 undefined, 0 overfull boxes in Ch. 3, 0 em dashes.
+
+- **"3.1 Preliminaries" heading deleted** on Touhid's instruction. Its framing paragraph is now
+  unheaded plain text under the chapter title, and its four sub-sections were promoted to full
+  sections. New order: 3.1 Simulation environment: Isaac Sim and Isaac Lab · 3.2 Reinforcement
+  learning, on-policy and off-policy · 3.3 Proximal policy optimisation · 3.4 The UR5e manipulator ·
+  3.5 Problem formulation · 3.6 The grasping task · 3.7 Software framework · 3.8 Cost function ·
+  3.9 cPPO · 3.10 Calibration · 3.11 Training protocol · 3.12 Evaluation protocol.
+- **Renaming forced by the promotion, flagged rather than silent:** the old §"Simulation environment
+  and task" would have collided with the new §3.1. It is now **§3.6 "The grasping task"**, and its
+  opening paragraph was rewritten because it duplicated the platform description that has moved to
+  §3.1. Label `sec:m-env` unchanged, so no cross-reference broke.
+- **§3.1 now carries the exact stack and the clone commands.** New Table 3.1: Isaac Sim 5.0.0,
+  Isaac Lab 2.3.0 pinned to the **`v2.3.0` tag**, `rsl_rl` 3.0.1, `skrl` 2.1.0, Python 3.11,
+  PyTorch 2.7.0+cu128, CUDA 12.8, RTX 5090 (sm_120), driver 580, i9/64 GB. Prose explains that
+  PyTorch 2.7 and the 570+ driver are Blackwell *requirements*, and reproduces the Day-8 tag-vs-
+  branch bug (the `release/2.3.0` branch moved to 2.3.1, which exact-pins URDF importer 2.4.31
+  against the shipped 2.4.19, crashing start-up). Both clone commands given verbatim, plus the
+  `567e4c0` / `matrix-v2` provenance line.
+- **New Figure 3.1: RL taxonomy**, model-free vs model-based, policy optimisation vs Q-learning,
+  with the DDPG/TD3/SAC interpolation group and PPO set in bold. **Drawn in TikZ, not downloaded** —
+  image fetching is not available to this session, and redrawing a factual taxonomy avoids
+  reproducing OpenAI's artwork. The caption says explicitly that it is an original rendering.
+  `tikz` + `positioning` + `arrows.meta` added to `thesis-format.sty`. First attempt had the three
+  right-hand leaf boxes overlapping (DDPG box struck through TRPO and DQN); fixed by respacing the
+  y-coordinates, caught by rendering the page.
+- **New Table 3.2: on-policy vs off-policy**, eight rows, with algorithm examples both sides and a
+  final row stating which family this thesis uses.
+- **§3.3 PPO expanded from one paragraph to four sub-sections with the mathematics:** Eq. 3.1 the
+  policy-gradient estimator and why ascending it directly fails; Eq. 3.2 the probability ratio;
+  Eq. 3.3 the clipped surrogate with the asymmetric-behaviour explanation and why the min makes it a
+  pessimistic bound; Eqs. 3.4–3.5 the TD residual and GAE; Eq. 3.6 the full three-term objective with
+  this project's actual coefficients (eps 0.2, c1 1.0, c2 0.006, 5 epochs x 4 minibatches, adaptive
+  LR at target KL 0.01). Closes with §3.3.4 stating that cPPO changes exactly one quantity, the
+  advantage.
+- **Notation clash found by reading the rendered page and fixed:** the GAE parameter and the
+  Lagrange multiplier are both conventionally lambda, and Ch. 3 now uses both. GAE's is written
+  `\lambda_GAE` throughout §3.3 with an explicit sentence that an unsubscripted lambda always means
+  the multiplier from §3.9 onward.
+- **New source, entry 23: `achiam2018spinningup`** (OpenAI Spinning Up). Verified from the
+  publisher page: (c) 2018 OpenAI, author Joshua Achiam, the same author as `achiam2017cpo`. Claim-map
+  row added **before** the sentences were written, restricting it to the taxonomy and the
+  on-policy/off-policy framing, never a numerical claim and never as any algorithm's origin. PPO's
+  origin stays `schulman2017ppo`.
+
+## Day 26 (2026-08-03, cont.) — Chapter 3 shortened: 26 pp -> 24 pp
+
+Touhid asked for the chapter to be cut. Proposed the options with measurements rather than guesses;
+he approved cut D (gripper diagnosis + PPO preamble), "make tables rather than just descriptions",
+then in a second round single-spaced tables, removal of prose that repeats a table, and condensing
+the audit. **He declined to remove the 12 Key points blocks**, twice. They stay.
+
+**Round 1, prose -> tables. Honest result: page-neutral.** Converted \S3.6.1 state/action/reward
+into two tables (observation/action/episode, and reward terms), \S3.8's three cost terms into one
+table with a Status column naming which are active, \S3.10's calibration measurements into a
+measured/outcome table, and \S3.11.1's arms into a table with the "PPO (baseline)" footnote attached
+via `\footnotetext`. Measured before and after: 9,456 -> 9,576 words, 26 pp -> 26 pp. Prose outside
+tables fell from ~8,000 to 6,763 words but table markup and 1.5-spaced table rows gave it all back.
+Reported this to Touhid rather than claiming a saving.
+
+**Round 2, what actually worked:**
+- **Tables are now single-spaced at 11 pt**, not the body's 1.5 spacing (`\tablesize` in
+  `thesis-format.sty`). Standard thesis practice, zero content lost, applies book-wide, and it helps
+  Chapter 4 more than Chapter 3 because Ch. 4 is table-heavy.
+- **Prose that repeated a table was cut** in \S3.4 (UR5e), \S3.7 (the four `safe_rl` modules walk-
+  through, keeping only the two attachment details that matter later), \S3.11 (training settings) and
+  \S3.12 (the episode/seed enumeration). What survived in each case is the argument a table cannot
+  carry, e.g. why evaluation seeds are disjoint and why goal-reach needs a distribution.
+- **\S3.7.1 audit condensed** 696 -> ~290 words, pointing at \S4.2 for the full narrative.
+- **Cut D applied:** gripper-fault diagnosis reduced to one paragraph (the 84.4 mm and nine-body
+  detail is appendix material), \S3.3.1 "The problem PPO solves" folded into two sentences.
+
+**Net: Chapter 3 pp. 29–52 (24 pp, was 26). Book 84 pp `[draft]` / 82 `[final]`, was 87/85.
+9,025 words, was 9,576. 0 undefined, 0 em dashes, 0 overfull boxes in Ch. 3.**
+
+**Two layout traps hit and fixed, both caught by rendering not by the exit code:**
+1. `[H]` on nearly every table forced half-page whitespace gaps. Relaxed `tab:m-stack`, `tab:m-mdp`,
+   `tab:m-reward`, `tab:m-cost` and `tab:m-calib` back to floating; `[H]` kept only where a table
+   sits immediately before a Key points list, which is the case it was introduced for.
+2. Two overfull boxes (85 pt and 48 pt) from unbreakable `\texttt{}` script paths in the rewritten
+   paragraphs. Fixed by dropping the filenames, which the \S3.7 package table already lists.
+
+**Still available if more length has to come out, in order of value:**
+- The 12 Key points blocks: 1,284 words, ~3.5 pp, pure restatement of prose on the same page. Could
+  also become a single chapter-end summary instead of twelve per-section blocks.
+- Chapter 2 is 22 pp against the 14–16 Touhid chose; \S2.8 and the Henderson bootstrap table are the
+  cheapest 3 pp in the book.
+- **Third pass on Chapter 2, same day: cut from 23 pages to 18, and the research gap turned
+  visual.** All twelve sections kept. Prose tightened throughout (§2.5 and §2.7 hardest hit),
+  the Henderson bootstrap table dropped and replaced by one sentence carrying the HalfCheetah
+  interval, and the summary cut from eight paragraphs to five.
+- **New Figure 2.5, `figures/lit_arms.pdf`** — the first original figure in this chapter, black
+  line art only, no colour or fill. Three boxes (PPO baseline / ctrl / cPPO) with what changes
+  between each pair, a brace above spanning the difference prior work reports, and two braces
+  below splitting it into the implementation term and the constraint term. Generated by
+  `Thesis_LaTeX/tools/make_ch2_design_fig.py`, so it regenerates rather than being hand-drawn.
+- **New Table 2.5** replaces the two prose gap statements: Gap / what the literature does / why
+  it is a problem / what this thesis does, with the answering section referenced in each row.
+  The decomposition identity is now a numbered equation (2.14) instead of an inline display.
+- **All five figure captions shortened** to one or two lines. They previously ran to five or six
+  lines each and were doing the job of body text.
+- Humanizer re-run on the rewritten prose: 0 em dashes, 0 unicode dashes, 0 negative
+  parallelisms, 0 AI-vocabulary hits. One "not merely" caught and rewritten.
+- Build: exit 0, 0 errors, 0 undefined. **Chapter 2 now spans pp. 20–37 of the PDF, 18 pages.**
+- **Unrelated, noticed during this build:** Chapter 3 has been substantially expanded by another
+  session (§3.7 software framework, §3.9--3.11, "Key points" blocks, tables up to 3.13). It now
+  runs pp. 38--61, 24 pages, and the book total is 79 pages. Nothing here touched it; flagging
+  because the earlier 65-page figure in this log is superseded.
+
+## Day 26 (2026-08-03, cont.) — Chapter 3 cut again: 24 pp -> 22 pp, all git references removed
+
+**Book is now 77 pp `[draft]` / 75 `[final]`** (was 84/82), both exit 0, 0 undefined, 0 em dashes,
+0 overfull boxes in Ch. 3. Chapter 3 body pp. 25–46 (22 pp). 8,126 words, was 9,025.
+
+Done on Touhid's instruction:
+- **All repository, commit and tag references removed from Chapter 3.** Gone: both `git clone`
+  blocks, the `567e4c0` / `matrix-v2` provenance line, the `Frozen at` row of the training-protocol
+  table, the `v2.3.0` tag row in the stack table, and every "tagged commit" phrase in prose and key
+  points. The Isaac Lab 2.3.0-vs-2.3.1 problem is kept but restated as a version issue, not a git
+  one. **Chapter 4 still carries its own commit/tag row in Table 4.1** — deliberately not touched,
+  since Ch. 4 is out of scope, but it is now inconsistent with Ch. 3 and should be decided one way
+  or the other before submission.
+- **\S3.1 shortened**, mostly by deleting the tag-vs-branch narrative and the two clone blocks.
+- **\S3.2 descriptions cut** to a short lead-in each side of Fig. 3.1 and Table 3.2, since the
+  figure and table carry the content.
+- **\S3.4:** key points removed; new **Table 3.4** with the six joint names, working range and the
+  home configuration; new **Figure 3.2 placeholder** for an image Touhid will supply.
+- **\S3.6 prose tightened**, summary table already present (Table 3.6).
+- **Key points removed** from \S3.6.1, \S3.9, \S3.10, \S3.11.1 and \S3.12. Six blocks remain, in
+  \S3.1, \S3.2, \S3.3, \S3.5, \S3.7 and \S3.8, none of which Touhid asked to cut.
+- **\S3.7.1 "The gradient-clip audit" deleted as a subsection.** Touhid's instruction was
+  conditional ("if it is not important"), and my judgement was that it is load-bearing but not at
+  subsection length: \S4.2 tells the whole story, and Ch. 3 only needs enough to explain why the
+  control arm exists. It is now three sentences at the end of \S3.7, pointing at \S4.2. **Check that
+  \S4.2 still reads as self-contained**, since it was written assuming Ch. 3 set the scene.
+
+Two things flagged in the chapter's own draftnote so they cannot be lost:
+1. **The \(\pm\)360\textdegree{} joint working range in Table 3.4 is NOT verified.** The Universal
+   Robots product URL redirects to a general index, so it could not be checked against the publisher
+   record in this session. It is the widely quoted UR5e figure, but Touhid must confirm it against
+   the datasheet. The home-position columns ARE exact, read from `ur5e_robotiq.py`.
+2. **Figure 3.2 is a placeholder** that prints an empty labelled box until
+   `figures/ur5e_sim.png` (or `.pdf`) exists. Uses the same `\IfFileExists` idiom as the KUET
+   monogram, so no edit is needed when the image lands — **but the rebuild must be forced**
+   (`latexmk -pdf -g`), or the placeholder branch silently persists. That trap already cost time
+   once with the monogram.
+
+**Correction to an earlier entry today:** the "Chapter 2 is 22 pp" figure was stale. Single-spacing
+the tables shrank Chapter 2 to **18 pp** (body pp. 7–24), which is inside the 14–16 target Touhid
+picked, near enough. Verified against the PDF, not the TOC alone: body p. 1 is physical p. 14, and
+Chapter 3 opens on physical p. 38 = body p. 25.
+
+## Day 26 (2026-08-03, cont.) — Chapter 3 restructured: PPO and cPPO merged, duplication cut
+
+Touhid asked for a review of Chapter 3 and then approved the two items I ranked first.
+
+**The merge.** PPO (\S3.3) and cPPO (\S3.9) were ten pages apart. \S3.3's last subsection was
+literally "From PPO to cPPO" and then handed off six sections later, and \S3.9 opened by
+re-introducing PPO from scratch, re-citing `schulman2017ppo`, `ray2019benchmarking` and
+`achiam2017cpo` that \S3.3 had already cited. The equation run was also broken: 3.1–3.5 PPO,
+3.6 CMDP, 3.7–3.9 cPPO.
+
+Merged into one section, **\S3.8 "Policy optimisation: PPO and cPPO"**, placed where the cPPO
+section used to sit rather than where PPO did. That direction matters: the algorithm now comes
+*after* the CMDP (\S3.4) and the cost function (\S3.7), so it can use d and c meaningfully instead
+of forward-referencing them. Equations now read **3.1 = the CMDP, 3.2–3.9 = the algorithm in one
+continuous sequence.** The duplicated PPO re-introduction is gone; the two key-points blocks became
+one.
+
+**Also reordered:** \S3.4 (UR5e) was sitting between PPO and the CMDP, hardware wedged between two
+theory sections. Moved up to \S3.2, next to the platform. New order: 3.1 simulator · 3.2 UR5e ·
+3.3 RL and on/off-policy · 3.4 problem formulation · 3.5 grasping task · 3.6 software · 3.7 cost
+function · 3.8 PPO and cPPO · 3.9 calibration · 3.10 training · 3.11 evaluation.
+
+**Duplication cut:**
+- Table "Summary of the simulation environment" had 14 rows, 7 of which repeated the two tables on
+  the facing pages (action, observation, episode, goal box, reward terms, lift gate, safety-in-
+  reward). Now 9 rows and retitled "Scene and simulation settings", carrying only what nothing else
+  states.
+- \S3.5's opening paragraph repeated \S3.1 almost verbatim on GPU-resident physics. Cut.
+- \S3.5's third paragraph re-listed the six joints and the action scale that Tables 3.3 and 3.5
+  already give. Cut to one sentence on the cube.
+- The chapter's opening paragraph was rewritten, since "the first four sections describe the tools"
+  and "from Section 3.5 onward the chapter turns to what was built" were both false after the
+  reorder. It now states the reading order explicitly.
+- \S3.3 gained a forward pointer to \S3.8 so the algorithm hand-off is not left dangling.
+
+**Two consistency fixes found in the same review:**
+- Table 3.10 (hyperparameters) had two rows reading "GAE \(\lambda\)", contradicting \S3.8.2's own
+  stated convention that an unsubscripted lambda always means the Lagrange multiplier. Both now
+  `\lambda_GAE`.
+- The lambda-convention sentence pointed at the section it was already inside. Repointed at
+  \S3.8.3, where the multiplier actually appears.
+
+**Result: Chapter 3 pp. 25–45 (21 pp, was 22). Book 76 pp `[draft]` / 75 `[final]`. 7,938 words,
+was 8,126.** Both builds exit 0, 0 undefined, 0 em dashes, 0 overfull boxes in Ch. 3. Rendered the
+merged section and confirmed the equation sequence reads continuously.
+
+**Still open, raised in the review and NOT actioned (Touhid chose the merge and the cuts only):**
+1. Two repository paths survived the earlier sweep and should go: the \S3.10.1 footnote ends with
+   `Comparison_test/ppo_redundant/README.md`, and Table 3.12's last row is
+   `Source of all figures | Comparison_test/final_results/`.
+2. Table ordering in \S3.10: the section text points at the training-protocol table, but the arms
+   table appears first because it sits in the subsection.
+3. "Layer 1/2/3" is used three times in \S3.5 with no gloss. Defined in Ch. 1 \S1.5, so not wrong,
+   but 25 pages earlier.
+4. Three figures worth adding, all TikZ, no external files: a cPPO block diagram (highest value,
+   would let a paragraph of wiring prose be deleted), the cost-term penalty shape against w, and the
+   goal box against the reach envelope.
+
+## Day 26 (2026-08-03), later — Chapter 2 reconciled against the rewritten Chapter 3
+Re-read Chapter 2 end to end and cross-checked it against Chapters 1, 3 and 4. Chapter 3 had been
+substantially expanded by a separate session in the meantime, which invalidated several things in
+Chapter 2. Six fixes, all confined to Chapter 2.
+
+1. **Figure 2.6 (was 2.5) was factually wrong and is redrawn.** It showed the arms as
+   PPO / ctrl / cPPO. Chapter 3 Table 3.11 says the three trained arms are `ctrl` (reported as
+   "PPO (baseline)"), `cppo` at d=25 and `cppo15` at d=15, with a plain `ppo` arm trained but not
+   reported separately because its weights are byte-identical to `ctrl`. Two of the three boxes
+   were therefore the same arm and `cppo15` was missing entirely. The new figure shows `ppo` as a
+   dashed box tied to `ctrl` by a double line (the identity that makes the implementation term
+   zero by verification), then ctrl -> cppo -> cppo15 with braces for the constraint term and for
+   budget sensitivity. Script header now carries a "must match Table 3.11" note.
+2. **The second budget is no longer missing.** `cppo15` is 5 of the 15 trained policies and was
+   absent from the whole chapter. Added as Gap 3 in Table 2.5 ("one budget only": Ray fixes d=25,
+   Khan inherits it, neither varies it), as a new row in the positioning table, in key finding 7,
+   and in the summary's contribution statement, which now promises three contributions.
+3. **§2.9's opening claim hedged.** It called manipulability "the operative safety constraint".
+   Chapter 3's own calibration table measures joint-limit proximity at ~86 % of realised cost
+   against manipulability at ~14 % and collision at 0 %. It now reads as the *framing* constraint,
+   with the split stated up front. **Chapter 3 §3.8 still says "the operative constraint of this
+   thesis" of the singularity term and contradicts its own Table 3.9 — not fixed, out of scope,
+   flagged in the Chapter 2 draftnote.**
+4. **Duplication with Chapter 3 removed.** Both chapters stated the CMDP tuple and the PPO clipped
+   surrogate with equations, in near-identical prose about eight pages apart. Chapter 2 now cites
+   Equation (3.1) and Equation (3.3) instead, and states the division of labour explicitly: this
+   chapter carries the equations of the reviewed literature, Chapter 3 those of the method. The
+   Lagrangian relaxation is deliberately kept in both, because §2.4's argument turns on seeing it.
+5. **New Figure 2.3, `figures/lit_twolink_w.pdf`** — original, black line, generated by
+   `tools/make_ch2_manip_fig.py`. Plots w = l1*l2*|sin(theta2)| against the elbow angle, marking
+   the folded and extended zeros and the right-angle peak. §2.9 was the most abstract stretch in
+   the chapter and was carrying its central idea in prose alone.
+6. **Two small factual slips:** Table 2.4's "This thesis" row said "PPO, control arm, cPPO" and
+   now names the three arms properly; §2.5 claimed both UR5 studies use PPO, but Xia uses SAC
+   alone and is not a grasping study.
+
+Verified: `grep -c -- '---'` = 0, no unicode dashes, no colour or framing, no AI-vocabulary hits,
+one "not just" rewritten. Build exit 0, 78 pages, 0 errors, 0 undefined citations or references;
+cross-chapter references resolve correctly to Equation (3.1) and Equation (3.3). Chapter 2 spans
+pp. 21--39 (19 pp. in `[draft]`, about 18 in `[final]` once the draftnote drops).
+
+**Next, agreed with Touhid: Chapter 4 tonight.** It is still on ten seeds, still sourced from the
+superseded `MATRIX_V2_PARTIAL_3ARM.md`, and its principal §4.6 finding names seeds 2, 5, 50 and 51,
+all of which are excluded under the locked scope. Chapters 2 and 3 now both say five. That needs
+re-derivation from `Comparison_test/final_results/`, not a wording pass.

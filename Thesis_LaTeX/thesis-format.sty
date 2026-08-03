@@ -62,12 +62,18 @@
 \RequirePackage{array,booktabs,longtable,multirow,tabularx}
 \RequirePackage{graphicx}
 \RequirePackage{float}
+% TikZ, for the redrawn RL taxonomy in Chapter 3. Added 2026-08-03.
+\RequirePackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
 \renewcommand{\arraystretch}{1.2}
 \graphicspath{{figures/}}
 
 % Table body text is 12 pt (spec 4). The template contradicts itself here
 % -- the MTE_Thesis_Table style says 10 pt -- and 12 pt was confirmed.
-\newcommand{\tablesize}{\normalsize}
+% Tables are set single-spaced at 11 pt, not at the body's 1.5 spacing. Standard
+% thesis practice and the reason Chapter 3's table-heavy sections fit. Set
+% 2026-08-03. Revert to body setting with \newcommand{\tablesize}{\normalsize}.
+\newcommand{\tablesize}{\setstretch{1}\fontsize{11}{13}\selectfont}
 
 % ---------- captions (spec 4) -----------------------------------------
 % 10 pt, centred, NOT bold, 6 pt above and below, "Table 1.1. Title"
@@ -82,15 +88,24 @@
 
 % Table captions go ABOVE the table, figure captions BELOW the figure.
 % \kuettable and \kuetfigure enforce that so it cannot be got wrong.
-\newenvironment{kuettable}[2]% {caption}{label}
-  {\begin{table}[htbp]\centering\caption{#1}\label{#2}\tablesize}
+% Optional first argument overrides the float placement (default htbp), exactly as
+% for kuetfigure below, e.g. \begin{kuettable}[H]{caption}{label}. Existing
+% two-brace calls are unaffected. Use [H] when a table sits immediately before a
+% list or a summary block: at htbp the float can drift INTO the list and split it,
+% which is what happened to the Chapter 3 training-protocol block on 2026-08-03.
+\newenvironment{kuettable}[3][htbp]% [placement]{caption}{label}
+  {\begin{table}[#1]\centering\caption{#2}\label{#3}\tablesize}
   {\end{table}}
 % (the end-part of an environment cannot see #1/#2, so stash them first)
 \makeatletter
 \newcommand{\kf@cap}{}\newcommand{\kf@lab}{}
-\newenvironment{kuetfigure}[2]% {caption}{label}
-  {\renewcommand{\kf@cap}{#1}\renewcommand{\kf@lab}{#2}%
-   \begin{figure}[htbp]\centering}
+% Optional first argument overrides the float placement (default htbp), e.g.
+% \begin{kuetfigure}[b]{caption}{label} to force the figure to the bottom of
+% the page instead of floating inline where it is written. Existing two-brace
+% calls are unaffected, they still get the htbp default.
+\newenvironment{kuetfigure}[3][htbp]% [placement]{caption}{label}
+  {\renewcommand{\kf@cap}{#2}\renewcommand{\kf@lab}{#3}%
+   \begin{figure}[#1]\centering}
   {\caption{\kf@cap}\label{\kf@lab}\end{figure}}
 \makeatother
 
@@ -111,14 +126,18 @@
   {\normalfont\fontsize{12}{18}\bfseries}{\thesection}{1em}{}
 \titlespacing*{\section}{0pt}{6pt}{6pt}
 
-% Sub-section: 12 pt italic, left, 6 pt before and after.
+% Sub-section: 12 pt BOLD ITALIC, left, 6 pt before and after.
+% DELIBERATE DEVIATION from the measured template, set 2026-08-03 on Touhid's
+% instruction. KUET_FORMAT_SPEC.md row 50 records the accepted book as 12 pt
+% *italic* (not bold). Bold italic keeps the template's italic while giving the
+% sub-headings the weight he wanted. Revert by deleting \bfseries below.
 \titleformat{\subsection}
-  {\normalfont\fontsize{12}{18}\itshape}{\thesubsection}{1em}{}
+  {\normalfont\fontsize{12}{18}\bfseries\itshape}{\thesubsection}{1em}{}
 \titlespacing*{\subsection}{0pt}{6pt}{6pt}
 
-% Sub-sub-section: not specified by the template. Italic, one step down.
+% Sub-sub-section: not specified by the template. Matches the sub-section.
 \titleformat{\subsubsection}
-  {\normalfont\fontsize{12}{18}\itshape}{\thesubsubsection}{1em}{}
+  {\normalfont\fontsize{12}{18}\bfseries\itshape}{\thesubsubsection}{1em}{}
 \titlespacing*{\subsubsection}{0pt}{6pt}{6pt}
 
 % Front-matter page titles: 14 pt bold centred, same as a chapter head.

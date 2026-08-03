@@ -6,6 +6,34 @@ Opened: 2026-07-29 (Day 19, evening)
 
 ## ⚡ Pick-up-here (for a new session)
 
+> ## 🔒 Update 2026-08-02 (Day 25) — results scope locked: final_results/, 5 seeds, 3 arms
+>
+> **File reorganization done in Cowork.** `Comparison_test/final_results/{training,evaluation}/`
+> is now the only folder to read from when generating thesis tables/figures — 570 tb_csv files
+> + 45 eval_episodes files, exactly `ctrl` × `cppo` × `cppo15` × seeds {1,3,4,52,54}.
+>
+> Three things pulled out of the working set (`results/tb_csv/`, `ur5_grasp/tools/
+> eval_episodes/`), each into its own folder, each for a different reason — do not conflate:
+> - `excluded_seeds/` — seeds 2/5/50/51/53 (all 4 algos) + smoke runs. Not selected.
+> - `withdrawn_runs/` — the 2026-07-30 pilot batch. **Retracted as invalid** (Day-23 audit,
+>   gradient-clip confound), independent of seed selection — this was never valid data, and it
+>   was sitting in `results/tb_csv/` alongside the valid Aug-1 batch under the same seed labels
+>   (e.g. two different `ppo_s1` runs, distinguished only by timestamp) until today.
+> - `ppo_redundant/` — `ppo`'s files for the 5 *selected* seeds. `ppo` and `ctrl` are
+>   bitwise-identical (Step 7 above), so **`ppo` is dropped as a separate arm; `ctrl` is used in
+>   its place everywhere, labeled "PPO (baseline)" in thesis text**, including for
+>   `mean_episode_cost` which the plain PPO runner never logged.
+>
+> Aggregate docs (`PER_SEED_TRAINING_TABLES.*`, `MATRIX_V2_PARTIAL_3ARM.*`, `ALGORITHM_AUDIT.md`,
+> `EVAL_RESULTS_*.pdf`, `eval_policy_results.csv`) were left untouched — they still mix in all
+> 10 seeds and all 4 arms. Regenerate the equivalent table from `final_results/` rather than
+> quoting them directly. Full detail in each folder's `README.md`.
+>
+> **Also pending (same session): get the raw TensorBoard event files (not just the tb_csv
+> exports) for the 15 kept runs (`ctrl`/`cppo`/`cppo15` × 5 seeds) from the lab PC to the
+> laptop, and tracked in git/GitHub going forward (checkpoints excluded).** See `.gitignore`
+> and the transfer note in `run_log.md`, Day 25.
+
 > ## ▶ EXECUTION STATUS (2026-08-01, Day 24) — Steps 4-6+8 done for a 3-of-5-arm subset; Step 9 partial
 >
 > **Full results:** `Comparison_test/results/MATRIX_V2_PARTIAL_3ARM.md` (+ same content as

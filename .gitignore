@@ -8,6 +8,60 @@ outputs/
 *.pth
 *.ckpt
 
+# --- Exception (2026-08-02): track raw TensorBoard event files for the 15 matrix-v2 runs that
+# back the thesis (ctrl/cppo/cppo15 x seeds 1,3,4,52,54) once pulled from the lab PC. Order
+# matters here (git uses the LAST matching rule): first re-include the three algorithm dirs so
+# git descends into them at all, then blanket re-ignore everything directly under each one
+# (this is what stops the other 5 non-selected seeds from leaking back in), then re-include only
+# the 15 specific run directories by exact name, then re-exclude checkpoints even inside those.
+# Verified with `git add -A` against a throwaway seed dir before relying on this — see run_log.md
+# Day 25. See Comparison_test/sync_selected_runs.sh for the matching pull script and
+# Comparison_test/final_results/README.md for which runs and why.
+!Comparison_test/logs/
+!Comparison_test/logs/rsl_rl/
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/
+
+Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/*
+Comparison_test/logs/rsl_rl/ur5e_lift_cppo/*
+Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/*
+
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1/
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_00-58-26_ctrl_s1/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3/
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_01-21-49_ctrl_s3/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4/
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_01-33-16_ctrl_s4/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52/
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_05-30-34_ctrl_s52/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54/
+!Comparison_test/logs/rsl_rl/ur5e_lift_ctrl/2026-08-01_05-53-18_ctrl_s54/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_01-56-53_cppo_s1/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_02-19-58_cppo_s3/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_02-31-28_cppo_s4/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_06-28-07_cppo_s52/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo/2026-08-01_06-51-10_cppo_s54/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_17-41-46_cppo15_s1/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-05-05_cppo15_s3/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_18-18-01_cppo15_s4/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-04-15_cppo15_s52/**
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54/
+!Comparison_test/logs/rsl_rl/ur5e_lift_cppo15/2026-08-01_19-27-01_cppo15_s54/**
+
+Comparison_test/logs/rsl_rl/**/*.pt
+Comparison_test/logs/rsl_rl/**/*.pth
+Comparison_test/logs/rsl_rl/**/*.ckpt
+
 # Terminal capture logs (transient; decisions are summarized in run_log.md)
 logbook/*.log
 

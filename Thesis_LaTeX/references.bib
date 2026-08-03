@@ -333,6 +333,25 @@
 
 
 % ---------------------------------------------------------------------
+%  H. PLATFORM HARDWARE
+% ---------------------------------------------------------------------
+
+@misc{universalrobots2023ur5e,
+  author       = {{Universal Robots A/S}},
+  title        = {{UR5e} Technical Specifications},
+  howpublished = {Product datasheet},
+  year         = {2023},
+  month        = aug,
+  url          = {https://www.universal-robots.com/media/1807465/ur5e_e-series_datasheets_web.pdf},
+  annote         = {Added 2026-08-03 for Chapter 1's platform section. Payload 5 kg, reach
+               850 mm, 6 revolute joints, repeatability +/- 0.03 mm, arm weight 20.6 kg,
+               max joint speed +/- 180 deg/s (= pi rad/s) on every joint -- this is the source
+               of the 3.14 rad/s joint-speed ceiling used throughout training, so the
+               simulation never asks the arm to move faster than the physical hardware can.}
+}
+
+
+% ---------------------------------------------------------------------
 %  G. LOCAL AND PREDECESSOR WORK
 % ---------------------------------------------------------------------
 
@@ -352,4 +371,18 @@
              earlier "CSRT tracking and classical image-based visual servoing on
              a 5-DOF manipulator" was a paraphrase, not the real title. Roll
              1931011. 85 pp.}
+}
+
+@misc{achiam2018spinningup,
+  author       = {Achiam, Joshua},
+  title        = {Spinning Up in Deep Reinforcement Learning},
+  year         = {2018},
+  howpublished = {OpenAI},
+  url          = {https://spinningup.openai.com},
+  note         = {Accessed 3 August 2026},
+  annote       = {Educational resource maintained by OpenAI. Verified 2026-08-03 directly from
+                  the publisher page: copyright line reads (c) Copyright 2018, OpenAI; author
+                  page names Joshua Achiam, the same author as achiam2017cpo. Used in Ch. 3 for
+                  the model-free/model-based taxonomy of RL algorithms and for the standard
+                  on-policy/off-policy framing. NOT used for any numerical claim.}
 }

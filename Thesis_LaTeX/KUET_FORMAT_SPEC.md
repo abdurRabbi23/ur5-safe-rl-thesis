@@ -47,11 +47,28 @@ Everything is Times New Roman. Sizes below are the real ones (Word stores half-p
 | Body text | `Normal` | **12 pt** | regular | **justified** | line 1.5, space-after 0 |
 | Chapter heading | `Heading 1` / `Chapter_Heading_MTE_Thesis` | **14 pt** | **bold** | centred | keep-with-next |
 | Section (x.y) | `Heading 2` / `MTE_Thesis_section` | **12 pt** | **bold** | left | 6 pt before, 6 pt after |
-| Sub-section (x.y.z) | `Heading 3` / `Subsection_MTE_Thesis` | **12 pt** | *italic* | left | 6 pt before, 6 pt after |
+| Sub-section (x.y.z) | `Heading 3` / `Subsection_MTE_Thesis` | **12 pt** | *italic* — **implemented as bold italic, see deviation D1** | left | 6 pt before, 6 pt after |
 | Caption (fig + table) | `Caption` / `Caption_Table_MTE_Thesis` | **10 pt** | regular (not bold) | centred | 6 pt before, 6 pt after |
 | Front-matter page titles | — | **14 pt** | **bold** | centred | |
 
 **Line spacing is 1.5 throughout** (`w:line="360" w:lineRule="auto"` on `Normal`).
+
+### Deviations from the measured template
+
+**D2 — Tables are single-spaced at 11 pt.** Set 2026-08-03 in `thesis-format.sty` via `\tablesize`.
+The body is 1.5-spaced and tables would otherwise inherit that. Single-spaced tables are near-
+universal thesis practice and this is what makes the table-heavy chapters fit. Not believed to
+conflict with the template, which specifies caption formatting but not table body spacing. Revert
+with `\newcommand{\tablesize}{\normalsize}`.
+
+**D1 — Sub-section headings are bold italic, not plain italic.** Set 2026-08-03 on Touhid's
+instruction, implemented in `thesis-format.sty` at `\titleformat{\subsection}`. The accepted book
+(`kuet_thesis_style/Thesis_book_draft_3.pdf`) uses plain italic. Bold italic was chosen over plain
+bold so the template's italic is preserved and the deviation is as small as it can be while still
+giving the sub-headings visible weight. `\subsubsection` follows the same style; the template does
+not specify one. **Revert by deleting `\bfseries` from those two `\titleformat` lines.** Worth
+confirming with the supervisor before the submission build, since heading style is the kind of
+thing a departmental format check looks at.
 
 ## 4. Floats **[stated]**
 

@@ -1,38 +1,284 @@
 \chapter{Research Methodology}\label{ch:methods}
 
 \begin{draftnote}
-MODULE 4 --- reorganise, then extend.
-
 Ported from \texttt{Thesis\_Documentation/Methods\_Chapter\_Layer1.md} (draft 2026-07-19), now a
-frozen dated record; this \texttt{.tex} is the source of truth. Numbers verified against
-\texttt{ur5\_grasp/} on 2026-07-19.
+frozen dated record; this \texttt{.tex} is the source of truth.
 
-Under the six-chapter structure this chapter carries everything the earlier seven-chapter plan
-was going to split across Chapters 3, 4 and 5, so nothing has to move out --- but it does need
-regrouping under the three headings the accepted book uses, and the implementation material is
-currently missing:
+Revised 2026-08-03. Written against the frozen code tree; every environment threshold, reward
+weight, goal-sampling bound and evaluation setting is the value the reported runs actually used.
+Arms and seeds are in Section~\ref{sec:m-arms} with the required ``PPO (baseline)'' footnote.
 
-\begin{itemize}
-\item \textbf{3.1 Simulation Platform and Robot Model} --- Isaac Sim / Isaac Lab, the UR5e and
-      gripper model, the weld abstraction and why it exists. Mostly present.
-\item \textbf{3.2 Software Framework} --- \texttt{ur5\_grasp/} architecture, the cost computer,
-      the Lagrangian runner, the training and evaluation pipeline, and the gradient-clip audit
-      and its fix. \textbf{Largely absent}; the audit story is currently squeezed into
-      Section~\ref{sec:r-validity} of the results chapter and deserves room here.
-\item \textbf{3.3 Mathematical Modelling} --- the CMDP, the cost function, the Lagrangian
-      formulation, calibration. Present.
-\end{itemize}
+Shortened 2026-08-03 on Touhid's instruction. All repository, commit and tag references removed
+from this chapter. The gradient-clip audit lost its own subsection and is now three sentences in
+Section~\ref{sec:m-software}; Section~\ref{sec:r-validity} carries the full narrative, so nothing
+was lost, but check that \S4.2 still reads as self-contained.
 
-\textbf{Also open:} this draft predates the Day-23 audit. Check whether it narrates the
-withdrawal, since Section~\ref{sec:r-validity} assumes it does.
+\textbf{Unverified number:} the \(\pm\)360\textdegree{} working range in Table~\ref{tab:m-joints} could
+not be confirmed against the Universal Robots publisher page in this session (the product URL
+redirects to a general index). The home-position column IS exact, taken from the project's own robot
+configuration. Confirm the working range against the UR5e datasheet before submission.
+
+\textbf{Figure slot:} Figure~\ref{fig:m-ur5e-sim} prints an empty labelled box until
+\texttt{figures/ur5e\_sim.png} (or \texttt{.pdf}) exists. No edit needed when the image is supplied,
+but force the rebuild (\texttt{latexmk -pdf -g}), or the placeholder branch will silently persist.
 \end{draftnote}
+
+% Plain summary block. Deliberately unframed and uncoloured, matching the de-coloured
+% style Touhid set for Chapter 2 on 2026-08-02. Do NOT name this `keybox`: Chapter 2
+% already defines an environment by that name and a second \newenvironment would
+% error out, since both files are input into the same document.
+\newenvironment{keypoints}{\par\addvspace{10pt}\noindent\textbf{Key points}\par\nopagebreak}%
+  {\par\addvspace{10pt}}
+
+
+This chapter is ordered so that each part is defined before it is used. Sections~\ref{sec:m-isaac}
+to \ref{sec:m-onoff} describe the simulator, the robot and the vocabulary of reinforcement learning.
+Section~\ref{sec:m-cmdp} states the problem formally, Sections~\ref{sec:m-env} to \ref{sec:m-cost}
+build the task, the software and the safety cost that instantiate it, and
+Section~\ref{sec:m-cppo} develops the algorithm that solves it. The remaining sections cover
+calibration and the training and evaluation protocols. The opening sections are deliberately
+descriptive: the argument for expressing a safety requirement as a constraint rather than as a
+reward term, and the published evidence behind the algorithm chosen, belong to
+Chapter~\ref{ch:litreview} and are not restated here.
+
+\section{Simulation environment: Isaac Sim and Isaac Lab}\label{sec:m-isaac}
+
+NVIDIA Isaac Sim is a robotics simulator built on the Omniverse platform. Scenes are described in
+Universal Scene Description (USD) files, which carry a robot's link geometry, joint definitions,
+mass and inertia properties and collision meshes in one asset, and the physics is solved by PhysX.
+Rigid-body dynamics, contact resolution and articulation solving all execute on the GPU, so many
+independent copies of a scene advance together without their state returning to the CPU between
+steps. The asset that is simulated is also the asset that is rendered, which is how the gripper
+fault of Section~\ref{sec:m-env} was diagnosed.
+
+Isaac Lab is the reinforcement-learning framework layered on top. It is manager-based: an
+environment is assembled by declaring configuration objects for observations, actions, rewards,
+terminations, events and commands, rather than by writing a monolithic step function. A task defined
+this way is retargeted onto different hardware by replacing the robot articulation, the action term
+and the end-effector frame, leaving the reward and termination structure of a tested environment
+untouched. Isaac Lab has no publication of its own; its predecessor Orbit is the citable reference
+\cite{mittal2023orbit}, and the GPU-resident training design both inherit was introduced with Isaac
+Gym \cite{makoviychuk2021isaacgym}.
+
+Table~\ref{tab:m-stack} gives the software stack. Two of the versions are load-bearing rather than
+incidental: the RTX 5090 is a Blackwell GPU (compute capability sm\_120), which is not supported by
+PyTorch builds before 2.7 or by NVIDIA drivers before the 570 series, so the CUDA 12.8 wheels and
+the 580-series driver are requirements.
+
+\begin{kuettable}{Software stack, as pinned for every run reported in this thesis.}{tab:m-stack}
+\begin{tabular}{p{0.34\textwidth}p{0.54\textwidth}}
+\toprule
+Component & Version\\
+\midrule
+Simulator & NVIDIA Isaac Sim 5.0.0\\
+RL framework & Isaac Lab 2.3.0\\
+On-policy trainer & \texttt{rsl\_rl} 3.0.1 (installed by Isaac Lab)\\
+Alternate RL library & \texttt{skrl} 2.1.0 (used only for the off-policy smoke test)\\
+Python & 3.11, conda environment \texttt{isaaclab}\\
+Deep-learning framework & PyTorch 2.7.0+cu128\\
+CUDA toolkit & 12.8\\
+GPU & NVIDIA RTX 5090, Blackwell, sm\_120\\
+NVIDIA driver & 580 series\\
+Host & Intel i9, 64 GB RAM, Ubuntu\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+
+The Isaac Lab version is held at exactly 2.3.0 rather than at the 2.3 release line. The line
+advanced to 2.3.1 during this work, and 2.3.1 requires a URDF importer version that the installed
+Isaac Sim does not ship, which stopped training at start-up. Every run reported in
+Chapter~\ref{ch:results} was produced from one frozen version of the code, with no change to the
+environment, the algorithm or the configuration between arms.
+
+\begin{keypoints}
+\begin{itemize}\tightlist
+\item Isaac Sim solves the physics on the GPU and Isaac Lab declares the task through managers,
+which is what makes thousands of parallel environments and a hardware retarget practical.
+\item The stack is pinned, not merely recorded. PyTorch 2.7 with CUDA 12.8 and a 580-series driver
+are requirements of the Blackwell GPU, not preferences.
+\item Isaac Lab is held at 2.3.0 exactly. The 2.3 line moved to 2.3.1 mid-project and broke
+start-up through a URDF importer version it requires.
+\end{itemize}
+\end{keypoints}
+
+\section{The UR5e manipulator}\label{sec:m-ur5e}
+
+The platform is a Universal Robots UR5e, a six-degree-of-freedom collaborative arm.
+Table~\ref{tab:m-ur5e} gives its published specifications \cite{universalrobots2023ur5e} against the
+modelling decision each one drives, because several numbers appearing later in this chapter are
+datasheet limits carried into the simulator rather than values chosen for training convenience.
+
+\begin{kuettable}{UR5e specifications and where each one enters the method.}{tab:m-ur5e}
+\begin{tabular}{p{0.26\textwidth}p{0.24\textwidth}p{0.38\textwidth}}
+\toprule
+Property & Value & Where it is used here\\
+\midrule
+Degrees of freedom & 6 revolute & Six-dimensional action space (Section~\ref{sec:m-mdp})\\
+Payload & 5 kg & Not exercised; the grasp is a weld (Section~\ref{sec:m-env})\\
+Reach & 850 mm & Bounds the goal-sampling box, far corner 0.84 m\\
+Repeatability & \(\pm\)0.03 mm & Sets the scale at which a 1 cm goal tolerance is loose\\
+Mass & 20.6 kg & Not exercised; the arm is fixed-base in simulation\\
+Maximum joint speed & 180 deg/s (\(\pi\) rad/s) & Velocity limit in the simulated articulation\\
+Safety functions & 17, configurable & \textbf{Not used.} The learned constraint is what is under test\\
+Certification & ISO 13849-1 Cat.~3 PL~d; ISO 10218-1 & Context only; no certified function is simulated\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+
+The last two rows carry a distinction that the rest of the chapter depends on. A real UR5e already
+has a certified safety controller. Nothing in this thesis replaces it, competes with it, or is
+evaluated against it. The simulation borrows the arm's physical envelope, its reach and its speed
+ceiling, and tests whether a learned policy can be held inside a kinematic safety budget by the
+optimiser itself, which is a different question from whether a hardware interlock can stop the arm.
+
+The six revolute joints are named in Table~\ref{tab:m-joints}, with the working range of each and
+the home configuration the environment resets to. The joint-limit cost term of
+Section~\ref{sec:m-cost} measures clearance against these ranges, so the naming is used again there
+and in the per-joint reporting of Chapter~\ref{ch:results}.
+
+\begin{kuettable}{The six arm joints, their working range and the reset configuration used in this
+work.}{tab:m-joints}
+\begin{tabular}{p{0.26\textwidth}p{0.22\textwidth}p{0.16\textwidth}p{0.16\textwidth}}
+\toprule
+Joint & Working range & Home (rad) & Home (deg)\\
+\midrule
+\texttt{shoulder\_pan} & \(\pm\)360\textdegree{} & 0.00 & 0.0\\
+\texttt{shoulder\_lift} & \(\pm\)360\textdegree{} & \(-\)1.20 & \(-\)68.8\\
+\texttt{elbow} & \(\pm\)360\textdegree{} & 1.40 & 80.2\\
+\texttt{wrist\_1} & \(\pm\)360\textdegree{} & \(-\)1.75 & \(-\)100.3\\
+\texttt{wrist\_2} & \(\pm\)360\textdegree{} & \(-\)1.57 & \(-\)90.0\\
+\texttt{wrist\_3} & \(\pm\)360\textdegree{} & 0.00 & 0.0\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+
+The home pose places the arm reaching forward over the table with the wrist pointing down, which is
+the configuration every episode starts from before the cube and goal are randomised.
+
+% PLACEHOLDER, 2026-08-03. Drop the image in as figures/ur5e_sim.png (or .pdf) and it
+% appears automatically with no edit here. Until then a labelled empty box is drawn, so
+% the build never breaks and the slot is impossible to forget.
+\begin{kuetfigure}[H]{The UR5e in the simulated workspace.}{fig:m-ur5e-sim}
+\IfFileExists{figures/ur5e_sim.pdf}%
+  {\includegraphics[width=0.72\textwidth]{figures/ur5e_sim.pdf}}%
+  {\IfFileExists{figures/ur5e_sim.png}%
+    {\includegraphics[width=0.72\textwidth]{figures/ur5e_sim.png}}%
+    {\framebox[0.72\textwidth]{\rule{0pt}{45mm}\itshape figure to be supplied}}}
+\end{kuetfigure}
+
+\section{Reinforcement learning, on-policy and off-policy}\label{sec:m-onoff}
+
+A reinforcement-learning agent observes the state of its environment, selects an action from a
+policy, receives a scalar reward, and lands in a new state. Repeating this produces a trajectory,
+and the object of training is a policy that maximises the reward accumulated along trajectories it
+generates. In this work the policy is a neural network that maps the observation vector of
+Section~\ref{sec:m-mdp} to a distribution over six joint-position targets, and training adjusts the
+network weights.
+
+Algorithms of this kind are organised by two questions: whether the agent has a model of the
+environment, and what it learns. Figure~\ref{fig:m-taxonomy} shows the taxonomy. A model-based
+agent has, or learns, a function predicting state transitions and rewards, which lets it plan
+ahead, but a learned model is exploitable: an agent can find a policy that scores well against the
+model's errors and behaves badly in the real environment. This work is model-free, which is where
+the great majority of published manipulation results sit. Within model-free methods the split is
+between policy optimisation and Q-learning, with a group of algorithms interpolating between them,
+and that split lines up almost exactly with the on-policy and off-policy division described next.
+
+\begin{kuetfigure}[H]{A taxonomy of reinforcement-learning algorithms. Redrawn from the taxonomy
+given in OpenAI's Spinning Up in Deep Reinforcement Learning \cite{achiam2018spinningup}; the
+figure is an original rendering of that classification, not a reproduction of the original artwork.
+The algorithm used in this thesis is shown in bold.}{fig:m-taxonomy}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\footnotesize,
+  node/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, minimum height=7mm},
+  leaf/.style={draw, dashed, align=left, inner sep=4pt, font=\scriptsize},
+  link/.style={-{Latex[length=2mm]}, gray!70!black}
+]
+\node[node] (root) at (0,-0.6) {RL\\algorithms};
+
+\node[node] (mf) at (3.2, 2.3) {Model-free RL};
+\node[node] (mb) at (3.2,-3.6) {Model-based RL};
+
+\node[node] (po)  at (7.4, 4.4) {Policy\\optimisation};
+\node[node] (ql)  at (7.4, 0.2) {Q-learning};
+\node[node] (lm)  at (7.4,-2.6) {Learn the model};
+\node[node] (gm)  at (7.4,-5.0) {Given the model};
+
+\node[leaf] (pol) at (12.0, 4.4) {Policy gradient\\A2C / A3C\\\textbf{PPO}\\TRPO};
+\node[leaf] (mid) at (12.0, 2.2) {DDPG\\TD3\\SAC};
+\node[leaf] (qll) at (12.0, 0.2) {DQN\\C51\\QR-DQN\\HER};
+\node[leaf] (lml) at (12.0,-2.6) {World models\\I2A\\MBMF\\MBVE};
+\node[leaf] (gml) at (12.0,-5.0) {AlphaZero};
+
+\draw[link] (root) -- (mf);
+\draw[link] (root) -- (mb);
+\draw[link] (mf) -- (po);
+\draw[link] (mf) -- (ql);
+\draw[link] (mb) -- (lm);
+\draw[link] (mb) -- (gm);
+\draw[link] (po) -- (pol);
+\draw[link] (ql) -- (qll);
+\draw[link] (lm) -- (lml);
+\draw[link] (gm) -- (gml);
+\draw[link, dashed] (po) -- (mid);
+\draw[link, dashed] (ql) -- (mid);
+\end{tikzpicture}}
+\end{kuetfigure}
+
+Algorithms also divide by what data they may learn from. An \emph{on-policy} method updates the
+policy using only transitions collected by the policy as it currently stands, discarding them once
+an update changes the policy. An \emph{off-policy} method keeps a replay buffer and reuses
+transitions from earlier versions of the policy. Table~\ref{tab:m-onoff} sets the two side by side.
+
+\begin{kuettable}[H]{On-policy and off-policy methods compared.}{tab:m-onoff}
+\begin{tabular}{p{0.24\textwidth}p{0.31\textwidth}p{0.31\textwidth}}
+\toprule
+Property & On-policy & Off-policy\\
+\midrule
+Data used for an update & Only transitions from the current policy & Any past transition, from a replay buffer\\
+Data reuse & Discarded after one update & Reused many times\\
+Sample efficiency & Lower & Higher\\
+Stability and reproducibility & Higher; optimises the distribution it visits & Lower; distribution shift between behaviour and target policy\\
+Typical bottleneck & Gradient computation & Replay and value-estimation error\\
+Suits & Cheap, massively parallel simulation & Expensive interaction, physical hardware\\
+Example algorithms & \textbf{PPO}, TRPO, A2C / A3C, vanilla policy gradient & SAC, TD3, DDPG, DQN\\
+Used in this thesis & Yes, PPO and its Lagrangian variant & No; retained as future work\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+
+This study is on-policy, and the reason is that its samples are cheap. At 4096 environments
+running in parallel on one GPU the bottleneck is the gradient computation, not the collection of
+experience, so the sample efficiency an off-policy method would buy has little to pay for itself
+with. Both families are established on robotic grasping \cite{shahid2022continuous_grasping}, so
+this is a positioned choice rather than the only available one, and Chapter~\ref{ch:conclusion}
+returns to the off-policy comparison as the recognised complement to what is reported here. The
+particular on-policy algorithm used, and its constrained variant, are developed in
+Section~\ref{sec:m-cppo}, once the problem they solve has been stated.
+
+\begin{keypoints}
+\begin{itemize}\tightlist
+\item This work is model-free and on-policy, in the policy-optimisation branch of
+Figure~\ref{fig:m-taxonomy}.
+\item On-policy methods discard data after one update but stay stable and reproducible; off-policy
+methods reuse a replay buffer and are far more sample efficient.
+\item The choice here follows from cheap samples, not from off-policy methods being unsuitable. At
+4096 parallel environments the gradient step is the bottleneck, not data collection.
+\item An off-policy comparison arm was pre-registered and cut on schedule grounds, so it is reported
+as a limitation rather than quietly omitted.
+\end{itemize}
+\end{keypoints}
 
 \section{Problem formulation}\label{sec:m-cmdp}
 
-The grasping task is posed as a constrained Markov decision process (CMDP). A standard MDP is the
-tuple (S, A, P, r, \(\gamma\)) over states S, actions A, transition kernel P, reward r and discount \(\gamma\); a CMDP
-augments it with a cost function c and a budget d, and asks the policy to maximise expected return
-while keeping expected cumulative cost bounded:
+The grasping task is posed as a constrained Markov decision process, or CMDP
+\cite{altman1999cmdp}. A standard Markov decision process is the tuple
+(S, A, P, r, \(\gamma\)) over a state space S, an action space A, a transition kernel P giving the
+probability of the next state under a chosen action, a reward function r and a discount factor
+\(\gamma\). A CMDP augments that tuple with a cost function c, which scores each transition for
+hazard exactly as r scores it for progress, and a budget d. It asks for the policy that maximises
+expected discounted return subject to the expected accumulated cost staying within budget:
 
 \begin{equation}
   \max_{\pi}\ \mathbb{E}\!\left[\sum_{t}\gamma^{t} r(s_t,a_t)\right]
@@ -41,115 +287,411 @@ while keeping expected cumulative cost bounded:
   \label{eq:cmdp}
 \end{equation}
 
-This framing separates \emph{what the robot should achieve} (grasp and place the cube, encoded in r) from
-\emph{what it must not do} (enter unsafe configurations, encoded in c). The remainder of this chapter
-defines the simulation environment and MDP (Section~\ref{sec:m-env}), the safety cost that instantiates c
-(Section~\ref{sec:m-cost}), the constrained optimisation algorithm that solves the CMDP (Section~\ref{sec:m-cppo}), the calibration
-that makes the constraint meaningful (Section~\ref{sec:m-calib}), and the training and evaluation protocol
-(Sections~\ref{sec:m-train}--\ref{sec:m-eval}).
+The formulation separates \emph{what the robot should achieve}, which is to lift the cube and bring
+it to a commanded pose, from \emph{what it must not do}, which is to pass through configurations
+where the arm loses controllability or approaches its mechanical limits. The first is encoded in r
+and the second in c, and the two never mix. This is the structural property the whole comparison in
+Chapter~\ref{ch:results} rests on: because no safety term appears in the reward, any safety
+difference measured between a constrained agent and an unconstrained one is attributable to the
+constraint machinery and not to a reward the two agents were optimising differently.
 
-\section{Simulation environment and task}\label{sec:m-env}
+Three properties of Equation~\ref{eq:cmdp} shape how the results must be read, and stating them
+here avoids over-claiming later.
 
-Experiments are carried out in NVIDIA Isaac Sim 5.0.0 with the Isaac Lab 2.3.0 manager-based
-framework, using the \texttt{rsl\_rl} 3.0.1 reinforcement-learning library, PyTorch 2.7 (CUDA 12.8) and a
-single RTX 5090 GPU. The task is retargeted from Isaac Lab's Franka cube-lift environment onto a
-Universal Robots UR5e equipped with a Robotiq 2F-85 gripper; only the robot, action space, and
-end-effector frame are changed, so the reward shaping and task structure of the well-tested base
-environment are preserved.
+The constraint binds an \textbf{expectation, not a maximum}. A policy satisfying it is one whose
+\emph{average} accumulated cost over episodes falls within d, which permits individual episodes to
+exceed the budget provided others compensate. A hardware safety case therefore has to be argued in
+terms of expected exposure over many operations, not in terms of a guaranteed worst case
+\cite{brunke2022safe}, and Chapter~\ref{ch:results} reports a counter-result where the single worst
+episode is no better under the constraint than without it.
 
-The manipulator is a six-degree-of-freedom arm controlled by joint-position commands on its six
-revolute joints (shoulder pan, shoulder lift, elbow, and three wrist joints), with the action scaled
-by 0.5 about the default configuration. The gripper is driven by a single binary open/close command
+The cost is \textbf{undiscounted and episodic}. Where the return in Equation~\ref{eq:cmdp} is
+discounted by \(\gamma\), the constrained quantity is a plain sum over a fixed 250-step episode.
+Hazard late in an episode therefore counts as heavily as hazard early in it, which is the correct
+treatment for a physical limit but ties the numerical value of d to the episode length. Changing the
+episode duration rescales the constraint and voids its calibration, a point Section~\ref{sec:m-calib}
+returns to.
+
+The budget is \textbf{a single scalar over an aggregated cost}. Section~\ref{sec:m-cost} sums three
+separate hazard terms into one number before the constraint sees it, so one multiplier governs all
+three and the agent is free to trade between them. This keeps the optimisation simple at the price
+of not being able to state a separate guarantee per hazard, and the three terms are therefore
+reported separately even though they are constrained jointly.
+
+Solving Equation~\ref{eq:cmdp} directly is awkward, since the constraint couples every timestep of
+every episode. The standard treatment, and the one used here, converts it into an unconstrained
+saddle-point problem through a Lagrange multiplier, which Section~\ref{sec:m-cppo} develops. The
+remainder of the chapter fills in each element of the tuple in turn: the simulation environment and
+the MDP itself (Section~\ref{sec:m-env}), the software that implements them
+(Section~\ref{sec:m-software}), the safety cost that instantiates c (Section~\ref{sec:m-cost}), the
+algorithm that solves the CMDP (Section~\ref{sec:m-cppo}), the calibration that makes the constraint
+meaningful rather than decorative (Section~\ref{sec:m-calib}), and the training and evaluation
+protocol (Sections~\ref{sec:m-train}--\ref{sec:m-eval}).
+
+\begin{keypoints}
+\begin{itemize}\tightlist
+\item The task is a CMDP: maximise expected return subject to expected accumulated cost staying
+within a budget d.
+\item Reward and cost are kept in separate channels, which is what makes the Chapter~\ref{ch:results}
+comparison attributable to the constraint.
+\item The constraint binds an average, not a worst case, so the safety claim is about expected
+exposure rather than a guarantee.
+\item The cost is undiscounted over a fixed-length episode, so d is only meaningful at the episode
+length it was calibrated against.
+\end{itemize}
+\end{keypoints}
+
+\section{The grasping task}\label{sec:m-env}
+
+The task runs on the platform of Section~\ref{sec:m-isaac}, is trained with the \texttt{rsl\_rl}
+3.0.1 library \cite{rudin2022walk}, and is registered as \texttt{Isaac-Lift-Cube-UR5e-v0}. It is
+retargeted from Isaac Lab's Franka cube-lift environment onto the UR5e of
+Section~\ref{sec:m-ur5e}, equipped with a Robotiq 2F-85 gripper. Only the robot articulation, the
+action space and the end-effector frame are replaced, so the reward shaping and the task structure
+of a well-tested base environment are preserved rather than rewritten.
+
+The arm is controlled by joint-position commands, the gripper by a single binary open/close command
 on the Robotiq actuation joint. The object is a rigid cube (Isaac's DexCube asset scaled to 0.8)
 initialised on a table in front of the arm, and its target is a goal pose sampled once per episode.
 
-Because the Robotiq 2F-85 is a closed-loop linkage whose passive finger joints transmit no normal
-force to the pads in simulation, contact-based grasping does not hold the cube (verified with
-\texttt{grasp\_hold\_test.py}: the cube falls through the fingers regardless of clamp force). A subsequent
-diagnostic (\texttt{tools/check\_gripper\_mount.py}) identified the underlying mechanism: in the converted
-USD asset, all nine gripper rigid bodies are reported by the physics articulation view at positions
-coincident with the \texttt{wrist\_3\_link} origin, rather than distributed along the 150 mm gripper body.
-The pad-to-pad separation is nevertheless reproduced correctly (84.4 mm measured against an 85 mm
-specification stroke), confirming that the gripper's internal linkage is intact while its transform
-relative to the wrist is degenerate. Finger contact therefore cannot resolve at the location where
-the gripper geometry is rendered, which fully accounts for the observed pass-through behaviour.
+Contact-based grasping does not hold the cube in this asset. A gripper diagnostic traced the cause:
+in the converted USD file every gripper rigid body is reported at the wrist origin rather than
+distributed along the gripper body, while the pad-to-pad separation is reproduced correctly. The
+linkage is therefore intact but its transform relative to the wrist is degenerate, so finger contact
+cannot resolve where the geometry is drawn, which accounts for the cube falling through the fingers
+regardless of clamp force.
 
-Since the Layer 1 safe-RL result is independent of the specific grasp mechanism, the gripper is
+Because the Layer 1 result is independent of the grasp mechanism, the gripper is
 modelled as a lumped mass at the wrist flange and contact grasping is replaced by a \emph{proximity-weld}
 abstraction. The tool centre point is defined kinematically as a fixed 160 mm offset along the
-\texttt{wrist\_3\_link} approach axis --- the position a correctly mounted 2F-85 pad midpoint would occupy ---
+\texttt{wrist\_3\_link} approach axis (the position a correctly mounted 2F-85 pad midpoint would occupy),
 and when the policy commands a close action while the cube lies within a 6 cm tolerance of that
 frame, the cube latches and its pose tracks the end-effector each control step (with its velocity
 zeroed); an open command releases it and physics resumes. This makes ``grasp-and-lift'' reliable so
 that both the baseline and the constrained policy can learn the task, and defers realistic finger
 contact to the Layer 3 sim-to-real work.
 
-Two consequences of this abstraction are stated explicitly. First, the lumped-mass gripper alters
-the wrist inertia relative to a fully articulated model; because the same asset is used for every
-run in the benchmark, this affects all algorithms identically and does not confound the comparison.
-Second, self-collision is disabled in simulation and the collision cost term is a table-plane
-keep-out rather than a link-pair check, so learned configurations are not guaranteed to be
-self-collision-free on hardware. Both are revisited in the Limitations discussion.
+Two consequences follow. The lumped-mass gripper alters the wrist inertia relative to a fully
+articulated model, but the same asset is used for every run, so this affects all arms identically
+and cannot confound the comparison. And with self-collision disabled and the collision term reduced
+to a table-plane keep-out, learned configurations are not guaranteed to be self-collision-free on
+hardware. Both are revisited in the Limitations discussion.
 
 \subsection{State, action, and reward}\label{sec:m-mdp}
 
-The policy receives a privileged observation comprising the arm joint positions and velocities
-(relative to their defaults), the cube position expressed in the robot base frame, the commanded goal
-position, and the previous action. Object pose is provided directly rather than through vision, which
-isolates the safe-RL contribution from perception; closing the loop with an image-based estimate is
-the subject of Layer 2. All observation terms are clamped to a finite range as a numerical
-safeguard, preventing a single transiently-unstable environment from corrupting the on-policy batch.
+Table~\ref{tab:m-mdp} gives the observation, the action and the episode structure.
 
-The action is the six-dimensional vector of target arm-joint positions together with the binary
-gripper command. Episodes last five simulated seconds with a control decimation of two physics steps
-per action, and the goal pose is resampled once per episode from a uniform range over the workspace
-(x \(\in\) {[}0.4, 0.6{]} m, y \(\in\) {[}\(-\)0.25, 0.25{]} m, z \(\in\) {[}0.25, 0.5{]} m). At reset the cube position is randomised
-within a small planar region so the policy cannot memorise a fixed trajectory.
+\begin{kuettable}{Observation, action and episode.}{tab:m-mdp}
+\begin{tabular}{p{0.30\textwidth}p{0.58\textwidth}}
+\toprule
+Element & Definition\\
+\midrule
+Observation & Arm joint positions and velocities (relative to defaults), cube position in the base frame, commanded goal position, previous action. All terms clamped to a finite range\\
+Action & 6 target arm-joint positions (scale 0.5) + 1 binary gripper command\\
+Episode & 5.0 s = 250 control steps at 50 Hz, decimation 2 physics steps per action\\
+Goal sampling & Once per episode, uniform over x {[}0.22, 0.60{]}, y {[}\(-\)0.30, 0.30{]}, z {[}0.10, 0.50{]} m\\
+Cube reset & Randomised within a small planar region\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
 
-The reward is the shaped sum inherited from the base lift task: a reaching term that rewards reducing
-the end-effector-to-object distance (tanh kernel, standard deviation 0.1, weight 1), a lifting term
-that rewards raising the cube above 0.04 m (weight 15), and two goal-tracking terms that reward
-bringing the lifted cube toward the commanded goal at coarse and fine scales (tanh kernels with
-standard deviations 0.3 and 0.05, weights 16 and 5). Small quadratic penalties on the action rate and
-joint velocity (each weight \(-\)\(10^{-4}\)) discourage jerky motion. Crucially, the reward contains \textbf{no
-safety term} --- safety is expressed entirely through the separate cost channel of Section~\ref{sec:m-cost}, so that
-the comparison in the Results chapter isolates the effect of the constraint.
+Two of those rows carry a decision rather than a value. The object pose is given to the policy
+directly instead of being estimated from an image, which isolates the safe-RL contribution from
+perception; closing that loop is the subject of Layer 2. And the goal box is bounded by
+reachability, not convenience: with the arm's base at the environment origin and a rated reach of
+about 0.85 m, the box's far corner sits 0.84 m out, so no sampled goal is physically unreachable.
+Clamping the observations is a numerical safeguard that stops one transiently unstable environment
+from corrupting the whole on-policy batch.
+
+The reward is the shaped sum inherited from the base lift task, with weights retuned for this goal
+box (Table~\ref{tab:m-reward}). All three lift-dependent terms gate on the cube having climbed half
+of the distance from the table to the goal height sampled for that episode, rather than on a fixed
+absolute height, because a fixed threshold scales badly once the box spans 0.10 m to 0.50 m in z.
+Shaped distance-and-lift rewards of this form, tuned per task rather than derived, are the standard
+construction in learned contact-rich manipulation \cite{elguea2023review}, so the design is
+conventional and only its safety treatment is not.
+
+\begin{kuettable}{Reward terms.}{tab:m-reward}
+\begin{tabular}{p{0.28\textwidth}p{0.36\textwidth}p{0.20\textwidth}}
+\toprule
+Term & Form & Weight\\
+\midrule
+Reaching & tanh kernel on end-effector-to-object distance, \(\sigma\) = 0.1 & 1\\
+Lifting & Gated on 50 \% of the climb to the goal height & 10\\
+Goal tracking, coarse & tanh kernel on cube-to-goal distance, \(\sigma\) = 0.3 & 15\\
+Goal tracking, fine & tanh kernel on cube-to-goal distance, \(\sigma\) = 0.05 & 5\\
+Action rate & Quadratic penalty & \(-10^{-4}\)\\
+Joint velocity & Quadratic penalty & \(-10^{-4}\)\\
+Safety & \textbf{None.} Safety is a separate cost channel & \textbf{n/a}\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+
+The last row is the one that matters for the comparison. The reward contains no safety term at all,
+so safety is expressed entirely through the cost channel of Section~\ref{sec:m-cost} and the
+Results chapter can attribute any safety difference to the constraint.
+Table~\ref{tab:m-env-summary} collects the scene settings not already given above.
+
+\begin{kuettable}[H]{Scene and simulation settings.}{tab:m-env-summary}
+\begin{tabular}{p{0.32\textwidth}p{0.56\textwidth}}
+\toprule
+Item & Setting\\
+\midrule
+Simulator & Isaac Sim 5.0.0, PhysX, GPU-resident\\
+Framework & Isaac Lab 2.3.0, manager-based\\
+Task & \texttt{Isaac-Lift-Cube-UR5e-v0}, retargeted from the Franka cube-lift task\\
+Robot & UR5e, 6 revolute joints, fixed base at the environment origin\\
+End effector & Robotiq 2F-85, modelled as a lumped mass at the wrist flange\\
+Grasp model & Proximity weld, 160 mm TCP offset, 6 cm latch tolerance\\
+Object & DexCube asset, scale 0.8, reset on the table in front of the arm\\
+Self-collision & Disabled; collision cost is a table-plane keep-out\\
+Parallel environments & 4096 (training), 128 (evaluation)\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+
+\section{Software framework}\label{sec:m-software}
+
+Every piece of code written for this thesis lives in one Python package, \texttt{ur5\_grasp},
+installed beside Isaac Lab rather than inside it. Keeping it outside the simulator's own source
+tree has two practical consequences. The environment, the safety cost and the constrained
+algorithm are versioned and frozen as a single unit, which is what makes a run reproducible. It also
+keeps the boundary visible between what this work contributes and what it inherits from the
+framework. Table~\ref{tab:m-package} lists the modules.
+
+\begin{kuettable}{The \texttt{ur5\_grasp} package.}{tab:m-package}
+\begin{tabular}{p{0.44\textwidth}p{0.44\textwidth}}
+\toprule
+Module & Role\\
+\midrule
+\texttt{robots/ur5e\_robotiq.py} & UR5e articulation, actuator gains, joint speed and effort limits\\
+\texttt{tasks/lift/ur5e\_lift\_env\_cfg.py} & Task configuration: action space, goal-sampling box, reward terms\\
+\texttt{tasks/lift/ur5e\_lift\_env.py} & Environment class, safety thresholds, per-step cost and \texttt{safety/*} logging\\
+\texttt{tasks/lift/rewards.py} & Goal-relative lift gate used by the three lift-dependent reward terms\\
+\texttt{safe\_rl/costs.py} & \texttt{SafetyCostComputer}: the three cost terms of Section~\ref{sec:m-cost}\\
+\texttt{safe\_rl/actor\_critic\_cost.py} & Actor, reward critic and cost critic\\
+\texttt{safe\_rl/rollout\_storage\_cost.py} & Rollout buffer carrying the cost stream and cost advantages\\
+\texttt{safe\_rl/ppo\_lagrangian.py} & Combined advantage, dual update, partitioned gradient clip\\
+\texttt{safe\_rl/lagrangian\_runner.py} & Runner that assembles the constrained agent\\
+\texttt{tasks/lift/agents/} & Per-arm hyperparameter configurations (baseline, control, cPPO)\\
+\texttt{scripts/train.py} & Training entry point for every arm\\
+\texttt{scripts/eval\_policy.py} & Evaluation of a frozen checkpoint (Section~\ref{sec:m-eval})\\
+\texttt{tools/} & Asset builders, gripper diagnostics, run summarisers, regression tests\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+
+The safety cost is computed by \texttt{SafetyCostComputer}. It resolves the arm joint indices, the
+monitored body indices and the Jacobian body-axis index once on the first call and caches them, and
+all arithmetic is batched across environments with nothing copied back to the host. At 4096
+environments a per-step host synchronisation would cost more than the physics step it is measuring.
+The class returns the aggregate cost that the constraint acts on, and alongside it a mean value and
+a binary violation indicator for each of the three terms, so the constraints can be reported
+separately even though a single multiplier governs them jointly.
+
+The four \texttt{safe\_rl} modules extend \texttt{rsl\_rl} \cite{rudin2022walk} rather than replacing
+it with a different library, and two details of how they attach matter later.
+\texttt{ActorCriticCost} builds the cost critic \emph{after} the base class has finished, so the
+actor and reward critic draw their initial weights from the same random state as the unconstrained
+baseline's. \texttt{LagrangianRunner} replaces exactly one method of the stock runner,
+\texttt{\_construct\_algorithm}, which is necessary only because the stock runner resolves class
+names inside its own module namespace, where classes defined outside the library are invisible.
+Everything else, the rollout loop, the logging and the checkpointing, is inherited unchanged.
+
+Both entry points are single scripts, so the arms cannot diverge by accident: the baseline and the
+constrained agents are launched by the same command with one configuration flag changed. Each run
+also writes its resolved environment and agent configuration to disk beside its checkpoints, so two
+runs are compared by differencing their dumped configurations rather than by trusting that the same
+flags were passed.
+
+One implementation detail of that extension has to be stated here because the experimental design
+depends on it. Stock PPO applies a single gradient-norm clip across every parameter handed to the
+optimiser. In a constrained agent that parameter list also holds the cost critic, so the cost
+critic's gradients enter the norm and shrink the actor's step even when the multiplier is zero,
+which makes the constrained agent an optimiser change rather than purely a constraint. The clip is
+therefore partitioned, the actor and reward critic in one group and the cost critic in another, so
+the baseline half of the network is treated exactly as the unconstrained agent's is. Because a
+correction of this kind cannot be verified by reading the code, a control arm was added that carries
+the cost critic with its multiplier ceiling pinned to zero. Section~\ref{sec:r-validity} reports
+that verification and the withdrawn result that prompted it.
+
+\begin{keypoints}
+\begin{itemize}\tightlist
+\item All contributed code sits in one package outside the simulator tree, so the environment, the
+cost and the algorithm are frozen together.
+\item The constrained agent is a thin extension of the same trainer the baseline uses, which is what
+lets a measured difference be attributed to the constraint rather than to two different
+implementations of PPO.
+\item The gradient clip is partitioned so that the cost critic cannot alter the actor's step, and a
+control arm exists to verify that it does not.
+\end{itemize}
+\end{keypoints}
 
 \section{The safety cost function}\label{sec:m-cost}
 
-Safety is encoded by a per-step cost computed in \texttt{SafetyCostComputer} (\texttt{safe\_rl/costs.py}) from three
-geometric-kinematic terms. Each term is zero while the arm is safe and grows smoothly as the arm
+Safety is encoded by a per-step cost, computed by the cost class of
+Section~\ref{sec:m-software} from three geometric-kinematic terms. Each term is zero while the arm is safe and grows smoothly as the arm
 enters a danger zone; smoothness matters because it gives the cost critic (Section~\ref{sec:m-cppo}) a usable
 gradient. The three terms are summed into a single aggregate cost so that a single Lagrange multiplier
 governs the whole constraint, and each term additionally exposes a mean value and a binary violation
 indicator for reporting.
 
-The first term is a \textbf{collision keep-out}. For each monitored arm link (forearm, wrist-1, wrist-3)
-the penetration depth below the table plane, max(z\_floor \(-\) z, 0), is summed across links, with the
-table plane at z\_floor = 0. Because self-collisions are disabled in simulation and no contact sensors
-are present, this geometric proxy is the honest, inexpensive choice.
+Table~\ref{tab:m-cost} defines the three terms.
 
-The second term is a \textbf{joint-limit margin}. For each arm joint the clearance to its nearer soft limit
-is computed, and an encroachment penalty clamp(1 \(-\) clearance / margin, 0, 1) is summed over the six
-joints, with a margin of 0.10 rad (about 5.7\textdegree{}). The penalty is zero until a joint enters the final
-margin band and rises linearly to one at the limit.
+\begin{kuettable}{The three safety cost terms. Each is summed over the bodies or joints it
+monitors, and the three are added with unit weights.}{tab:m-cost}
+\begin{tabular}{p{0.20\textwidth}p{0.36\textwidth}p{0.15\textwidth}p{0.17\textwidth}}
+\toprule
+Term & Per-step penalty & Threshold & Status\\
+\midrule
+Collision keep-out & max(z\_floor \(-\) z, 0), summed over forearm, wrist-1 and wrist-3 & z\_floor = 0.05 m & Monitored, inactive\\
+Joint-limit margin & clamp(1 \(-\) clearance / margin, 0, 1), summed over the 6 arm joints & margin = 0.175 rad (10.0\textdegree{}) & \textbf{Active}\\
+Singularity floor & clamp(1 \(-\) w / w\_floor, 0, 1) on the manipulability measure w & w\_floor = 0.06 & \textbf{Active}\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
 
-The third term, and the operative constraint of this thesis, is a \textbf{singularity floor}. The Yoshikawa
-manipulability measure w = \(\sqrt{\det(JJ^{\top})}\) \cite{yoshikawa1985manipulability} is computed from the \(6\times6\) end-effector Jacobian J of the arm,
-where a small w indicates a near-singular configuration in which the arm momentarily loses the ability
-to move in some Cartesian direction and commands can produce large, jerky joint velocities. The
-penalty clamp(1 \(-\) w / w\_floor, 0, 1) activates as w falls below a floor of 0.045 and reaches one as w
-approaches zero. The Jacobian body-axis index is resolved automatically to accommodate the
-fixed-base articulation (for which PhysX omits the root body from the Jacobian), and correctness was
-confirmed at calibration by a smooth, small-positive distribution of w.
+The third term is the operative constraint of this thesis. The Yoshikawa manipulability measure
+w = \(\sqrt{\det(JJ^{\top})}\) \cite{yoshikawa1985manipulability} is computed from the
+\(6\times6\) end-effector Jacobian J of the arm. A small w means a near-singular configuration, one
+in which the arm momentarily loses the ability to move in some Cartesian direction and a modest
+Cartesian command produces large, jerky joint velocities. The Jacobian body-axis index is resolved
+automatically to accommodate the fixed-base articulation, for which PhysX omits the root body from
+the Jacobian, and correctness was confirmed at calibration by a smooth, small-positive distribution
+of w.
 
-The aggregate per-step cost is c = c\_collision + c\_joint + c\_singularity (unit weights), and its
-undiscounted sum over an episode is the quantity constrained against the budget d.
+Two details of the other terms are worth stating. The collision floor is a 5 cm standoff above the
+table rather than the table surface itself, so the term begins to cost before a link penetrates
+anything; with self-collisions disabled and no contact sensors present, this geometric proxy is the
+honest and inexpensive choice. The joint-limit penalty is zero until a joint enters the final margin
+band and then rises linearly to one at the limit.
 
-\section{Constrained policy optimisation (cPPO)}\label{sec:m-cppo}
+The aggregate per-step cost is c = c\_collision + c\_joint + c\_singularity, and its undiscounted sum
+over an episode is the quantity constrained against the budget d.
 
-The CMDP is solved with a Lagrangian formulation of Proximal Policy Optimisation, hereafter cPPO,
-which converts the constrained problem into the saddle-point objective
+\begin{keypoints}
+\begin{itemize}\tightlist
+\item Three hazards are scored: proximity to the table, proximity to a joint limit, and proximity to
+a kinematic singularity.
+\item Every term is smooth rather than a switch, because the cost critic needs a gradient to learn
+from. A binary violation flag would give it none.
+\item The singularity term uses the Yoshikawa manipulability measure and is the constraint this
+thesis is built around; the joint-limit term turned out to be active as well, which
+Section~\ref{sec:m-calib} explains.
+\item The three are summed into one number before the constraint sees it, so one multiplier governs
+all three, but each is logged separately for reporting.
+\end{itemize}
+\end{keypoints}
+
+\section{Policy optimisation: PPO and cPPO}\label{sec:m-cppo}
+
+This section develops the algorithm that solves the CMDP of Section~\ref{sec:m-cmdp}. It is built in
+two stages, because the constrained method changes exactly one term of the unconstrained one and the
+change is far easier to follow once the unmodified objective is on the page. Proximal Policy
+Optimisation, PPO, is the unconstrained baseline \cite{schulman2017ppo}; the constrained arm,
+written cPPO throughout, is its Lagrangian variant.
+
+A policy-gradient method improves a parameterised policy \(\pi_\theta\) by ascending an estimate of
+the gradient of expected return, in which each action is weighted by its advantage \(\hat{A}_t\),
+that is, by how much better it was than the policy's average behaviour in that state. Ascending that
+estimate directly is unreliable, because it is only valid near the policy that collected the data: a
+step large enough to be useful is often large enough to move the policy somewhere the estimate no
+longer describes. Trust-region methods bound the policy change explicitly, at the cost of a
+second-order optimisation. PPO reaches the same end with a first-order method by building the bound
+into the objective.
+
+\subsection{The clipped surrogate objective}\label{sec:m-ppo-clip}
+
+Let \(\pi_{\theta_{\text{old}}}\) be the policy that collected the current batch. PPO works with the
+probability ratio between the candidate policy and that one,
+
+\begin{equation}
+  r_t(\theta) \;=\; \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)},
+  \qquad r_t(\theta_{\text{old}}) = 1 .
+  \label{eq:ratio}
+\end{equation}
+
+The ratio measures how much more, or less, likely the candidate policy is to have taken the action
+that was actually taken. An unconstrained surrogate would maximise \(r_t(\theta)\hat{A}_t\), which
+grows without bound as the policy moves further from the one that generated the data. PPO instead
+maximises
+
+\begin{equation}
+  L^{\text{CLIP}}(\theta) \;=\;
+  \hat{\mathbb{E}}_t\!\left[\min\Bigl(r_t(\theta)\,\hat{A}_t,\;
+  \operatorname{clip}\bigl(r_t(\theta),\,1-\epsilon,\,1+\epsilon\bigr)\hat{A}_t\Bigr)\right],
+  \label{eq:clip}
+\end{equation}
+
+with clipping range \(\epsilon = 0.2\) in this work. The behaviour of
+Equation~\ref{eq:clip} is asymmetric in a way worth stating plainly. Where the advantage is
+positive, the action was better than average and the objective would reward pushing \(r_t\) up, but
+the clip caps the gain at \(1+\epsilon\), so there is no incentive to move the policy further than
+that. Where the advantage is negative, the same cap applies at \(1-\epsilon\) in the other
+direction. The minimum of the clipped and unclipped terms makes the objective a pessimistic bound
+on the unclipped one, so the update never benefits from a large policy change, only from a
+well-directed small one. A single scalar therefore does the work a trust region does, without a
+constrained optimisation.
+
+\subsection{Advantage estimation and the full objective}\label{sec:m-ppo-gae}
+
+The advantage itself is estimated by generalised advantage estimation over a truncated rollout of
+length T. Writing the temporal-difference residual as
+
+\begin{equation}
+  \delta_t \;=\; r_t + \gamma V(s_{t+1}) - V(s_t),
+  \label{eq:td}
+\end{equation}
+
+the estimate is the exponentially weighted sum
+
+\begin{equation}
+  \hat{A}_t \;=\; \sum_{l=0}^{T-t-1} (\gamma\lambda_{\text{GAE}})^{l}\,\delta_{t+l},
+  \label{eq:gae}
+\end{equation}
+
+in which \(\gamma\) discounts future reward and \(\lambda_{\text{GAE}}\) sets where the estimate
+sits between a one-step bootstrap, at \(\lambda_{\text{GAE}} = 0\), which has low variance and high
+bias, and a full Monte-Carlo return, at \(\lambda_{\text{GAE}} = 1\), which has the opposite. This
+work uses \(\gamma = 0.98\) and \(\lambda_{\text{GAE}} = 0.95\). The subscript is carried
+deliberately: from Section~\ref{sec:m-ppo-to-cppo} onward an unsubscripted \(\lambda\) always means
+the Lagrange multiplier, which is a different quantity entirely.
+
+Because the value function \(V\) appearing in Equation~\ref{eq:td} is itself learned, and because a
+policy that collapses to a single action stops exploring, the quantity actually optimised combines
+three terms:
+
+\begin{equation}
+  L(\theta) \;=\; \hat{\mathbb{E}}_t\!\left[
+  L^{\text{CLIP}}_t(\theta)
+  \;-\; c_1\,\bigl(V_\theta(s_t) - V_t^{\text{targ}}\bigr)^{2}
+  \;+\; c_2\,S\bigl[\pi_\theta\bigr](s_t)\right],
+  \label{eq:ppo-full}
+\end{equation}
+
+where the second term fits the value network to its bootstrapped target with coefficient
+\(c_1 = 1.0\), and the third is an entropy bonus with coefficient \(c_2 = 0.006\) that keeps the
+policy stochastic for long enough to explore. Each batch of experience is then used for several
+epochs of minibatch gradient steps, five epochs of four minibatches here, which recovers part of the
+sample efficiency an on-policy method gives up by discarding its data. The implementation used in
+this work additionally adapts the learning rate between iterations to hold the observed
+Kullback-Leibler divergence between successive policies near a target of 0.01, which is a second,
+softer guard on the same failure the clip addresses.
+
+\subsection{The constrained variant}\label{sec:m-ppo-to-cppo}
+
+cPPO changes Equation~\ref{eq:ppo-full} in one place and leaves the rest alone. It carries a second
+critic that predicts accumulated future \emph{cost} exactly as the ordinary critic predicts
+accumulated future reward, producing a second advantage \(\hat{A}^{\text{cost}}_t\) from its own copy
+of Equations~\ref{eq:td} and \ref{eq:gae}. It carries a scalar Lagrange multiplier \(\lambda\) that
+weighs cost against reward. And it updates that multiplier once per iteration from the constraint
+violation the last batch actually exhibited, so the safety-versus-task weight is set by measurement
+rather than chosen by the designer. The method is PPO-Lagrangian as specified and benchmarked by Ray
+et al.\ \cite{ray2019benchmarking}, within the constrained policy optimisation family founded by
+Achiam et al.\ \cite{achiam2017cpo}. Their benchmark is also the reason the Lagrangian variant is
+preferred here over CPO itself, which it reports as the weaker of the two on the same tasks.
+
+The method converts the constrained problem into the saddle-point objective
 
 \begin{equation}
   \max_{\pi}\ \min_{\lambda \ge 0}\quad
@@ -158,8 +700,8 @@ which converts the constrained problem into the saddle-point objective
 \end{equation}
 
 where \(\lambda\) is a non-negative Lagrange multiplier acting as an automatically-tuned penalty on constraint
-violation. The implementation (\texttt{safe\_rl/ppo\_lagrangian.py}, \texttt{actor\_critic\_cost.py},
-\texttt{rollout\_storage\_cost.py}, \texttt{lagrangian\_runner.py}) follows the textbook separate-critic variant: in
+violation. The implementation, whose modules are listed in Table~\ref{tab:m-package}, follows the
+textbook separate-critic variant: in
 addition to the usual value network that estimates future reward, a second critic estimates future
 cost, so reward and cost advantages are learned independently. Cost advantages are computed by
 generalised advantage estimation with its own discount and smoothing (\(\gamma\)\_cost = 0.98, \(\lambda\)\_GAE = 0.95).
@@ -186,80 +728,190 @@ exceeds its cost budget the multiplier rises and unsafe actions are penalised mo
 policy is comfortably under budget the multiplier decays back toward zero. The multiplier tunes
 itself during training and is never hand-set.
 
-The unconstrained baseline is exactly this algorithm with \(\lambda\) pinned at zero --- that is, stock PPO on
-the same \texttt{rsl\_rl} trainer, with no cost critic. Building the constrained agent as a thin extension of
-the baseline, rather than adopting a different safe-RL library, is a deliberate methodological choice:
-it guarantees that the baseline and the constrained policy share an identical trainer, network
-architecture, and hyperparameters, so any measured difference is attributable to the safety
-constraint alone and not to two dissimilar PPO implementations.
+Setting \(\lambda = 0\) in Equation~\ref{eq:advantage} returns \(A = A_{\text{reward}}\), so the
+unconstrained baseline is this same algorithm with the multiplier pinned at zero. Building the
+constrained agent as a thin extension of the baseline, rather than adopting a separate safe-RL
+library, is a deliberate methodological choice: it guarantees that the two share an identical
+trainer, network architecture and hyperparameters, so any measured difference is attributable to the
+safety constraint alone and not to two dissimilar PPO implementations.
 
 Both agents use the same actor and critic multilayer perceptrons with hidden layers of 256, 128 and
-64 units and ELU activations, and the same optimisation hyperparameters, summarised in Table M1.
+64 units and ELU activations, and the same optimisation hyperparameters, summarised in
+Table~\ref{tab:m-hyper}.
 
-\textbf{Table M1. Shared training hyperparameters (PPO baseline and cPPO).}
-
-\begin{longtable}[]{@{}ll@{}}
+\begin{kuettable}[H]{Shared training hyperparameters.}{tab:m-hyper}
+\begin{tabular}{p{0.50\textwidth}p{0.36\textwidth}}
 \toprule
-Hyperparameter & Value\tabularnewline
+Hyperparameter & Value\\
 \midrule
-\endhead
-Parallel environments & 4096\tabularnewline
-Rollout length (steps/env) & 24\tabularnewline
-Iterations & 1500\tabularnewline
-Actor / critic hidden layers & {[}256, 128, 64{]}, ELU\tabularnewline
-Clip parameter & 0.2\tabularnewline
-Entropy coefficient & 0.006\tabularnewline
-Learning epochs / mini-batches & 5 / 4\tabularnewline
-Learning rate (adaptive, target KL 0.01) & 1\(\times\)\(10^{-4}\)\tabularnewline
-Discount \(\gamma\) / GAE \(\lambda\) & 0.98 / 0.95\tabularnewline
-Max gradient norm & 1.0\tabularnewline
-cPPO cost budget d (\texttt{cost\_limit}) & 25\tabularnewline
-cPPO dual step \(\eta\) / \(\lambda\) ceiling & 0.035 / 100\tabularnewline
-cPPO cost discount / GAE \(\lambda\) & 0.98 / 0.95\tabularnewline
+Parallel environments & 4096\\
+Rollout length (steps/env) & 24\\
+Iterations & 1500\\
+Actor / critic hidden layers & {[}256, 128, 64{]}, ELU\\
+Clip parameter & 0.2\\
+Entropy coefficient & 0.006\\
+Learning epochs / mini-batches & 5 / 4\\
+Learning rate (adaptive, target KL 0.01) & 1\(\times\)\(10^{-4}\)\\
+Discount \(\gamma\) / \(\lambda_{\text{GAE}}\) & 0.98 / 0.95\\
+Max gradient norm (per group) & 1.0\\
+cPPO cost budget d (\texttt{cost\_limit}) & 25, and 15 for the tighter arm\\
+cPPO dual step \(\eta\) / \(\lambda\) ceiling & 0.035 / 100\\
+cPPO cost discount / \(\lambda_{\text{GAE}}\) & 0.98 / 0.95\\
 \bottomrule
-\end{longtable}
+\end{tabular}
+\end{kuettable}
+
+\begin{keypoints}
+\begin{itemize}\tightlist
+\item PPO's central idea is a probability ratio between the new policy and the one that collected
+the data, clipped so that a large policy change can never be rewarded.
+\item The clipped objective is a pessimistic bound on the unclipped one, which is how a first-order
+method achieves what a trust region does second-order.
+\item Advantages come from generalised advantage estimation, where \(\lambda_{\text{GAE}}\) trades
+bias against variance. It is not the Lagrange multiplier, which shares the letter.
+\item cPPO changes exactly one quantity in that objective, the advantage. The clip, the value loss,
+the entropy bonus and the epoch structure are identical to the baseline, and the baseline is this
+algorithm with the multiplier pinned at zero.
+\item The multiplier is set by dual ascent on measured violation, so the safety-versus-task weight
+is never hand-tuned. This is the property a shaped reward cannot offer.
+\end{itemize}
+\end{keypoints}
 
 \section{Constraint calibration and cost budget}\label{sec:m-calib}
 
 A safety benchmark is only meaningful if the unconstrained baseline actually violates the constraint;
-otherwise the constrained policy has nothing to demonstrate. Both the singularity floor and the cost
-budget were therefore calibrated from the real trained baseline rather than guessed.
+otherwise the constrained policy has nothing to demonstrate. All three thresholds and the budget were
+therefore measured from a converged 1500-iteration unconstrained agent, run against the final
+environment immediately before the code was frozen. Calibrating against a converged policy rather
+than a short probe matters here, because a policy fifty iterations into training has barely begun to
+reach and its cost distribution says little about the one that would be deployed.
+Table~\ref{tab:m-calib} gives what was measured and what each measurement settled.
 
-The manipulability floor was set from a 25,600-sample rollout of the trained baseline. The measure w
-was distributed with a minimum of 0.021, a mean of 0.055 and a maximum of 0.114; a floor of 0.045,
-lying between the tenth and twenty-fifth percentiles, causes the unconstrained baseline to violate the
-constraint roughly one fifth of the time, which makes it the single active constraint. The same
-rollout showed a minimum joint-limit clearance of 1.39 rad and a minimum monitored-link height of
-0.125 m above the table, meaning the arm never approaches its joint limits or the table surface in
-this tabletop workspace. The joint-limit and collision terms are therefore inactive by construction;
-they are retained and reported as monitored constraints that remain satisfied, which is a truthful and
-defensible configuration for a first safe-RL benchmark.
+\begin{kuettable}{Calibration against the converged unconstrained baseline.}{tab:m-calib}
+\begin{tabular}{p{0.24\textwidth}p{0.34\textwidth}p{0.30\textwidth}}
+\toprule
+Quantity & Measured on the baseline & Outcome\\
+\midrule
+Manipulability w & min 0.0171, mean 0.0750, max 0.1109; p10 = 0.0517, p25 = 0.0682 & Floor set to 0.06, about p18, so the baseline violates on roughly a fifth of steps\\
+Joint-limit clearance & 33.7 \% of steps inside the margin; minimum clearance reaches the soft limit & Margin 0.175 rad is \textbf{active}, and is the larger of the two active terms\\
+Monitored-link height & Minimum 0.0896 m, about 44 mm above the floor & Collision floor 0.05 m stays inactive\\
+Cost composition & Joint-limit \(\approx\) 86 \%, singularity \(\approx\) 14 \%, collision 0 \% & Two constraints share one budget\\
+Natural episodic cost & \(\approx\) 105 & Budget d = 25, a \(\approx\) 76 \% reduction\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
 
-The episodic cost budget d was set from a 50-iteration unconstrained probe, during which the natural
-episodic cost of a grasping policy rose above 70 as it learned to reach through near-singular poses.
-Setting d = 25 targets roughly a two-thirds reduction of that natural cost; the probe confirmed the
-Lagrangian machinery behaved correctly, with the multiplier engaging in a controlled manner (rising to
-about 6.9 without saturating) and the expected modest reward trade-off.
+Three consequences follow. The manipulability floor was raised to 0.06 from an earlier value of
+0.045, which had been set against a narrower goal-sampling box and no longer produced a violation
+rate inside the intended band once the workspace was widened. Joint-limit proximity is no longer the
+monitored-but-satisfied term it was in earlier drafts, so two active constraints now share one budget
+and one multiplier, the agent is free to trade between them, and Chapter~\ref{ch:results} reports
+each separately for that reason. And the budget is an undiscounted sum over a per-step cost across a
+fixed 250-step episode, so it is tied to the five-second episode length: changing that length would
+rescale the constraint and void the calibration.
 
 \section{Training protocol}\label{sec:m-train}
 
-Each agent was trained for 1500 iterations at 4096 parallel environments (roughly 2\(\times\)\(10^{5}\) environment
-steps per second on the RTX 5090), headless, with progress monitored through TensorBoard. The
-constrained and baseline agents are launched from the same script and differ only by an agent-config
-flag, and they log to separate experiment directories so their curves overlay directly for comparison.
+Table~\ref{tab:m-train} states the protocol as run. The one thing it cannot state is what a
+successful run looks like while it is in progress.
 The healthy Lagrangian signature to be verified during training is that the mean episodic cost trends
 down toward the budget, the multiplier rises while over budget and then settles without pinning at its
 ceiling, the reward continues to improve, and the singularity-violation rate falls below the baseline.
 
+\subsection{Experimental arms and seeds}\label{sec:m-arms}
+
+Three arms were trained, listed in Table~\ref{tab:m-arms}. They differ only in the two fields shown;
+network architecture, hyperparameters, environment and trainer are identical across
+all three. The second constrained budget is a sensitivity check on the calibration rather than a
+separate method: 15 binds more deeply than 25 on the seeds where either binds at all, so the pair
+shows whether the effect of the constraint scales with how hard it is applied.
+
+\begin{kuettable}[H]{The three experimental arms.}{tab:m-arms}
+\begin{tabular}{p{0.17\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.40\textwidth}}
+\toprule
+Arm & \texttt{cost\_limit} & \(\lambda_{\max}\) & Reported in this thesis as\\
+\midrule
+\texttt{ctrl} & 25 & 0 & PPO (baseline)\footnotemark{}\\
+\texttt{cppo} & 25 & 100 & cPPO, d = 25\\
+\texttt{cppo15} & 15 & 100 & cPPO, d = 15\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+\footnotetext{The control arm carries the cost critic with its multiplier ceiling pinned to zero, so
+its policy update is stock PPO. A plain PPO arm was trained on the same seeds and its stored network
+weights proved byte-identical to the control arm's, so the control arm stands in for it and the plain
+arm is not reported separately. The verification is given in Section~\ref{sec:r-validity} and the raw
+comparison in \texttt{Comparison\_test/ppo\_redundant/README.md}.}
+
+Each arm was trained on five random seeds, 1, 3, 4, 52 and 54, giving fifteen trained policies.
+Reporting five seeds and their dispersion, rather than a single run or a mean alone, follows the
+reproducibility argument made by Henderson et al.\ \cite{henderson2018matters}, who show that deep
+policy-gradient results on continuous control can differ qualitatively between seeds of the same
+algorithm and that a mean over too few runs can describe a policy none of them produced. Dispersion
+across seeds is therefore reported as a result in its own right in Chapter~\ref{ch:results}, not as
+an error bar attached to one.
+
+\begin{kuettable}[H]{Training protocol.}{tab:m-train}
+\begin{tabular}{p{0.34\textwidth}p{0.54\textwidth}}
+\toprule
+Item & Setting\\
+\midrule
+Arms & 3: PPO (baseline), cPPO at d = 25, cPPO at d = 15\\
+Seeds per arm & 5: 1, 3, 4, 52, 54\\
+Trained policies & 15\\
+Iterations & 1500 per run\\
+Parallel environments & 4096\\
+Rollout length & 24 steps per environment per iteration\\
+Throughput & \(\approx 2\times10^{5}\) environment steps/s on an RTX 5090\\
+Library & \texttt{rsl\_rl} 3.0.1, PyTorch 2.7, CUDA 12.8\\
+Execution & Headless, monitored through TensorBoard\\
+Launch & One script, arm selected by agent-config entry point\\
+Logging & Separate experiment directory per arm, so curves overlay directly\\
+Verification & All 15 final checkpoints confirmed present on disk, not inferred from clean logs\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+
 \section{Evaluation protocol}\label{sec:m-eval}
 
-Task performance is measured after training by replaying each checkpoint over 512 held-out episodes
-(64 parallel environments) with the evaluation utility \texttt{eval\_success.py}, which reuses the
-environment's own lift and goal definitions so the reported success is consistent with the reward. A
-\emph{lift success} is recorded when the cube is raised more than 0.1 m above the table, and a \emph{goal-reach
-success} when the lifted cube is additionally brought within 1 cm of the commanded goal pose, the
-goal position being transformed into the world frame from the robot base frame exactly as in the
-reward computation. Alongside success, the benchmark reports the final mean reward, the
-singularity-violation rate and mean per-step safety cost logged by the environment for both agents,
-and, for the constrained agent, the terminal multiplier and the episodic-cost trajectory that
-document the Lagrangian dynamics. The resulting comparison is presented in the Results chapter.
+Every reported number is measured after training on the frozen policy, not read from training-time
+telemetry. This distinction is a correction rather than a preference. An earlier version of this work
+reported safety percentages taken from the TensorBoard scalars of a policy that was still exploring
+and still learning, which describes neither the policy that would be deployed nor any policy at all.
+Each checkpoint is therefore replayed by \texttt{eval\_policy.py} with the actor set to its
+deterministic mean action, exploration noise off and observation corruption disabled.
+
+Table~\ref{tab:m-eval} states the protocol. Three of its choices carry an argument that the rows
+cannot.
+
+Evaluation seeds are disjoint from training seeds so that variation caused by the exam is separable
+from variation caused by which policy was learned, and the two turn out to differ by more than an
+order of magnitude. Goal-reach is reported with the full distribution of final goal distances rather
+than on its own, because the weld writes the cube's pose to the tool frame at every step, so the 1 cm
+test reduces to whether the tool centre point reached the goal: a converged policy passes it on
+almost every episode and an unconverged one fails on almost every episode, which makes a single
+threshold saturate and hide exactly the differences a distribution shows. And safety is counted per
+episode rather than averaged per step, so one dangerous excursion stays visible instead of being
+diluted across 250 steps. The resulting comparison is presented in Chapter~\ref{ch:results}.
+
+\begin{kuettable}[H]{Evaluation protocol.}{tab:m-eval}
+\begin{tabular}{p{0.34\textwidth}p{0.54\textwidth}}
+\toprule
+Item & Setting\\
+\midrule
+Policy & Frozen checkpoint, deterministic mean action, exploration noise off\\
+Observation corruption & Disabled\\
+Evaluation seeds & 101, 102, 103, disjoint from the training seeds\\
+Episodes & 1000 per checkpoint per evaluation seed\\
+Parallel environments & 128\\
+Episodes per policy & 3000\\
+Episodes per arm & 15{,}000\\
+Lift success & Cube past 50 \% of the climb to that episode's goal height\\
+Goal-reach success & Lifted cube within 1 cm of the commanded goal pose\\
+Reported alongside & Full distribution of final goal distances, since the weld makes a single threshold saturate\\
+Safety, per episode & Episodic cost; singularity crossings (w \(< 10^{-4}\)); episodes touching the joint-limit margin\\
+Constrained arms only & Terminal multiplier, episodic-cost trajectory\\
+Source of all figures & \texttt{Comparison\_test/final\_results/}\\
+\bottomrule
+\end{tabular}
+\end{kuettable}

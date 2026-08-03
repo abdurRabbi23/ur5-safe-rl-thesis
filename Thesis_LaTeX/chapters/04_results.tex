@@ -62,27 +62,26 @@ larger of the two. The collision floor of 0.05 m was confirmed still inactive. T
 held at 25; Section~\ref{sec:r-variance} shows why that value turns out not to admit a single slack-or-binding
 verdict.
 
-\textbf{Table 4.1 --- Experimental configuration.}
-
-\begin{longtable}[]{@{}ll@{}}
+\begin{kuettable}{Experimental configuration.}{tab:r-config}
+\begin{tabular}{p{0.34\textwidth}p{0.56\textwidth}}
 \toprule
-Item & Value\tabularnewline
+Item & Value\\
 \midrule
-\endhead
-Commit / tag & \texttt{567e4c0}, tag \texttt{matrix-v2}\tabularnewline
-Task & \texttt{Isaac-Lift-Cube-UR5e-v0} (frozen weld environment)\tabularnewline
-Arms trained & \texttt{ppo}, \texttt{ctrl}, \texttt{cppo}\tabularnewline
-Arms not trained in this batch & \texttt{cppo10}, \texttt{sac}\tabularnewline
-Training seeds & 1, 2, 3, 4, 5, 50, 51, 52, 53, 54 (n = 10 per arm)\tabularnewline
-Training budget & 1500 iterations, 4096 environments, \texttt{rsl\_rl} 3.0.1\tabularnewline
-Evaluation seeds & 101, 102, 103 (n = 3, disjoint from training)\tabularnewline
-Evaluation protocol & 1000 episodes per checkpoint \(\times\) evaluation seed, 128 environments, deterministic policy, observation corruption off\tabularnewline
-\texttt{MANIP\_FLOOR} & 0.06 (recalibrated from 0.045)\tabularnewline
-\texttt{JOINT\_LIMIT\_MARGIN} & 0.175 rad (unchanged value, reclassified active)\tabularnewline
-\texttt{COLLISION\_Z\_FLOOR} & 0.05 m (unchanged, confirmed inactive)\tabularnewline
-\texttt{cost\_limit} & 25.0\tabularnewline
+Commit / tag & \texttt{567e4c0}, tag \texttt{matrix-v2}\\
+Task & \texttt{Isaac-Lift-Cube-UR5e-v0} (frozen weld environment)\\
+Arms trained & \texttt{ppo}, \texttt{ctrl}, \texttt{cppo}\\
+Arms not trained in this batch & \texttt{cppo10}, \texttt{sac}\\
+Training seeds & 1, 2, 3, 4, 5, 50, 51, 52, 53, 54 (n = 10 per arm)\\
+Training budget & 1500 iterations, 4096 environments, \texttt{rsl\_rl} 3.0.1\\
+Evaluation seeds & 101, 102, 103 (n = 3, disjoint from training)\\
+Evaluation protocol & 1000 episodes per checkpoint \(\times\) evaluation seed, 128 environments, deterministic policy, observation corruption off\\
+\texttt{MANIP\_FLOOR} & 0.06 (recalibrated from 0.045)\\
+\texttt{JOINT\_LIMIT\_MARGIN} & 0.175 rad (unchanged value, reclassified active)\\
+\texttt{COLLISION\_Z\_FLOOR} & 0.05 m (unchanged, confirmed inactive)\\
+\texttt{cost\_limit} & 25.0\\
 \bottomrule
-\end{longtable}
+\end{tabular}
+\end{kuettable}
 
 %--- (md section break)
 
@@ -182,17 +181,16 @@ remains open. Section~\ref{sec:r-limits} returns to this.
 Table 4.2 reports training-time performance as a tail mean over the final tenth of training,
 averaged across the ten seeds.
 
-\textbf{Table 4.2 --- Training-time performance (tail mean over final 10 \% of iterations, n = 10 seeds).}
-
-\begin{longtable}[]{@{}lll@{}}
+\begin{kuettable}{Training-time performance (tail mean over final 10 \% of iterations, n = 10 seeds).}{tab:r-train}
+\begin{tabular}{p{0.26\textwidth}p{0.22\textwidth}p{0.40\textwidth}}
 \toprule
-Arm & Mean reward (\(\pm\) std) & \texttt{viol\_singularity}, soft-margin step fraction (\(\pm\) std)\tabularnewline
+Arm & Mean reward (\(\pm\) std) & \texttt{viol\_singularity}, soft-margin step fraction (\(\pm\) std)\\
 \midrule
-\endhead
-\texttt{ppo} / \texttt{ctrl} (identical) & 133.57 \(\pm\) 1.58 & 0.318 \(\pm\) 0.261\tabularnewline
-\texttt{cppo} & 132.65 \(\pm\) 1.80 & 0.261 \(\pm\) 0.124\tabularnewline
+\texttt{ppo} / \texttt{ctrl} (identical) & 133.57 \(\pm\) 1.58 & 0.318 \(\pm\) 0.261\\
+\texttt{cppo} & 132.65 \(\pm\) 1.80 & 0.261 \(\pm\) 0.124\\
 \bottomrule
-\end{longtable}
+\end{tabular}
+\end{kuettable}
 
 The reward decomposition is (cppo \(-\) ppo) = 0.000 + (\(-\)0.920), so the entire difference of
 approximately 0.7 \% arises from the constraint and none from the artifact. That difference should
@@ -219,21 +217,19 @@ episode, which drives any single-threshold success rate towards a ceiling and le
 rank two policies that have both converged. It was exactly this ceiling that produced the
 implausible 100 \% against 0 \% figures in the withdrawn version of this work.
 
-\textbf{Table 4.3 --- Evaluation-time task performance (frozen deterministic policy; mean over 10 training
-seeds, each the mean of 3 evaluation seeds; 30,000 episodes per arm).}
-
-\begin{longtable}[]{@{}lll@{}}
+\begin{kuettable}{Evaluation-time task performance (frozen deterministic policy; mean over 10 training seeds, each the mean of 3 evaluation seeds; 30,000 episodes per arm).}{tab:r-task}
+\begin{tabular}{p{0.44\textwidth}p{0.22\textwidth}p{0.22\textwidth}}
 \toprule
-Metric & \texttt{ppo} / \texttt{ctrl} & \texttt{cppo}\tabularnewline
+Metric & \texttt{ppo} / \texttt{ctrl} & \texttt{cppo}\\
 \midrule
-\endhead
-Lift success (\(\ge\) 50 \% of commanded goal height) & 99.86 \% & 99.87 \%\tabularnewline
-Goal-reach \textless{} 1 cm & 94.28 \% & 96.49 \%\tabularnewline
-Goal-reach \textless{} 2 cm & 99.08 \% & 99.17 \%\tabularnewline
-Goal-reach \textless{} 5 cm & 99.81 \% & 99.85 \%\tabularnewline
-Goal distance, mean / median / p90 (m) & 0.0060 / 0.0047 / 0.0080 & 0.0054 / 0.0042 / 0.0068\tabularnewline
+Lift success (\(\ge\) 50 \% of commanded goal height) & 99.86 \% & 99.87 \%\\
+Goal-reach \textless{} 1 cm & 94.28 \% & 96.49 \%\\
+Goal-reach \textless{} 2 cm & 99.08 \% & 99.17 \%\\
+Goal-reach \textless{} 5 cm & 99.81 \% & 99.85 \%\\
+Goal distance, mean / median / p90 (m) & 0.0060 / 0.0047 / 0.0080 & 0.0054 / 0.0042 / 0.0068\\
 \bottomrule
-\end{longtable}
+\end{tabular}
+\end{kuettable}
 
 The two arms are indistinguishable on the task at every threshold and across the whole distance
 distribution. The constrained agent is marginally ahead on each row, and its distance distribution
@@ -259,21 +255,20 @@ kinematic singularity --- a manipulability measure \cite{yoshikawa1985manipulabi
 the arm's genuine loss of a degree of freedom rather than about a calibrated soft margin --- and with
 the mean episode-minimum manipulability.
 
-\textbf{Table 4.4 --- Safety on the frozen policy, pooled over 30,000 evaluation episodes per arm.}
-
-\begin{longtable}[]{@{}lll@{}}
+\begin{kuettable}{Safety on the frozen policy, pooled over 30,000 evaluation episodes per arm.}{tab:r-safety}
+\begin{tabular}{p{0.34\textwidth}p{0.27\textwidth}p{0.27\textwidth}}
 \toprule
-Metric & \texttt{ppo} / \texttt{ctrl} & \texttt{cppo}\tabularnewline
+Metric & \texttt{ppo} / \texttt{ctrl} & \texttt{cppo}\\
 \midrule
-\endhead
-True singularity crossings (w \textless{} \(10^{-4}\)) & 1.343 \% (403 / 30,000 episodes) & 0.250 \% (75 / 30,000 episodes)\tabularnewline
-Mean episode-minimum manipulability & 0.05471 & 0.06169\tabularnewline
-Worst single-episode manipulability & 0.000001 & 0.000001\tabularnewline
-Joint limit touched at all & 5.37 \% of episodes & 0.00 \% of episodes, all 10 seeds\tabularnewline
-Collision touched at all & 0.13 \% of episodes & 0.017 \% of episodes\tabularnewline
-Episodic safety cost, mean / p90 / max & 47.68 / 180.63 / 343.01 & 18.41 / 73.26 / 224.07\tabularnewline
+True singularity crossings (w \textless{} \(10^{-4}\)) & 1.343 \% (403 / 30,000 episodes) & 0.250 \% (75 / 30,000 episodes)\\
+Mean episode-minimum manipulability & 0.05471 & 0.06169\\
+Worst single-episode manipulability & 0.000001 & 0.000001\\
+Joint limit touched at all & 5.37 \% of episodes & 0.00 \% of episodes, all 10 seeds\\
+Collision touched at all & 0.13 \% of episodes & 0.017 \% of episodes\\
+Episodic safety cost, mean / p90 / max & 47.68 / 180.63 / 343.01 & 18.41 / 73.26 / 224.07\\
 \bottomrule
-\end{longtable}
+\end{tabular}
+\end{kuettable}
 
 The constraint reduces true singularity crossings by a factor of approximately 5.4, from 403
 episodes to 75 out of 30,000. This is a stricter and more meaningful measurement than the
@@ -318,19 +313,30 @@ environment: Henderson \emph{et al.} \cite{henderson2018matters} show that rando
 produce substantially different outcomes for the same algorithm in the same task, and it is on
 that basis that this study reports dispersion across ten seeds rather than a single mean.
 
-\textbf{Table 4.5 --- Per-seed natural episodic cost (training, tail mean) and the constrained agent's
-final multiplier.}
-
-\begin{longtable}[]{@{}lllllllllll@{}}
+\begin{kuettable}{Per-seed natural episodic cost (training, tail mean) and the constrained agent's final multiplier.}{tab:r-seed}
+\small\setlength{\tabcolsep}{3.6pt}
+\begin{tabular}{lrrrrrrrrrr}
 \toprule
-Seed & 1 & 2 & 3 & 4 & 5 & 50 & 51 & 52 & 53 & 54\tabularnewline
+Seed & 1 & 2 & 3 & 4 & 5 & 50 & 51 & 52 & 53 & 54\\
 \midrule
-\endhead
-\texttt{ctrl} natural cost & 102.1 & 7.7 & 162.3 & 30.0 & 19.1 & 8.6 & 1.8 & 106.9 & 18.8 & 7.9\tabularnewline
-\texttt{cppo} natural cost & 18.0 & 16.6 & 11.9 & 19.7 & 24.1 & 23.9 & 17.0 & 9.5 & 23.5 & 12.0\tabularnewline
-\texttt{cppo} \(\lambda\) (final iteration) & 0 & 0 & 0 & 0 & 0.013 & 0.001 & 0 & 0 & 0.154 & 0\tabularnewline
+\texttt{ctrl} natural cost & 102.1 & 7.7 & 162.3 & 30.0 & 19.1 & 8.6 & 1.8 & 106.9 & 18.8 & 7.9\\
+\texttt{cppo} natural cost & 18.0 & 16.6 & 11.9 & 19.7 & 24.1 & 23.9 & 17.0 & 9.5 & 23.5 & 12.0\\
+\texttt{cppo} \(\lambda\) (final) & 0 & 0 & 0 & 0 & 0.013 & 0.001 & 0 & 0 & 0.154 & 0\\
 \bottomrule
-\end{longtable}
+\end{tabular}
+\end{kuettable}
+
+The same data is plotted in Figure~\ref{fig:r-seedcost}, where each seed contributes one vertical
+segment joining its control value to its constrained value. The figure is drawn this way, rather
+than as two sorted bands, because a sorted band would show the collapse in spread while hiding
+which direction each seed moved in. Both facts matter to the reading below.
+
+\begin{kuetfigure}{Per-seed episodic safety cost, control arm against constrained agent, on a
+logarithmic scale. Open circles are the control arm, filled circles the constrained agent, and
+each segment joins the two values for one seed. The dashed line is the cost budget of 25. Six of
+the ten seeds finish higher under the constraint than they did without it.}{fig:r-seedcost}
+\includegraphics[width=0.92\textwidth]{figures/per_seed_cost.pdf}
+\end{kuetfigure}
 
 The control arm's row is the behaviour of unconstrained policy optimisation with the cost merely
 observed and never acted upon, and it is extraordinarily inconsistent. Its natural episodic cost
