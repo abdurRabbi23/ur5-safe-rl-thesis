@@ -31,12 +31,12 @@ which the previous version wrongly said was unavailable.
 
 \section{Experimental design and provenance}\label{sec:r-design}
 
-The results in this chapter come from a single frozen state of the code base, committed as
-\texttt{567e4c0} and tagged \texttt{matrix-v2}. Freezing the environment, the cost function and
-the calibrated thresholds before the first training run of the comparison, rather than after,
-is a deliberate part of the fairness protocol: it makes it impossible for a threshold to be
-adjusted in response to a result that has already been seen. All runs use the frozen weld
-environment \texttt{Isaac-Lift-Cube-UR5e-v0} described in Chapter~\ref{ch:methods}.
+The results in this chapter come from a single frozen state of the code base. Freezing the
+environment, the cost function and the calibrated thresholds before the first training run of the
+comparison, rather than after, is a deliberate part of the fairness protocol: it makes it
+impossible for a threshold to be adjusted in response to a result that has already been seen. All
+runs use the frozen weld environment \texttt{Isaac-Lift-Cube-UR5e-v0} described in
+Chapter~\ref{ch:methods}.
 
 Three arms are reported, as set out in Section~\ref{sec:m-arms}. The \texttt{ctrl} arm carries
 the cost critic with its multiplier ceiling pinned to zero, so its policy update is stock PPO;
@@ -75,7 +75,6 @@ confirmed inactive and remains so in every result below.
 \toprule
 Item & Value\\
 \midrule
-Commit / tag & \texttt{567e4c0}, tag \texttt{matrix-v2}\\
 Task & \texttt{Isaac-Lift-Cube-UR5e-v0} (frozen weld environment)\\
 Arms reported & \texttt{ctrl} (PPO baseline), \texttt{cppo} (\(d=25\)), \texttt{cppo15} (\(d=15\))\\
 Training seeds & 1, 3, 4, 52, 54 (n = 5 per arm; 15 trained policies)\\
@@ -118,11 +117,10 @@ show first: the minimum-manipulability tail mean reads \(7.419\times10^{-6}\) fo
 equivalence looks like, and it was therefore treated as a suspected logging fault rather than as
 a result until it had been checked at the file level.
 
-Second, the possibility that the two arms were reading the same event file was excluded
-directly. The files have different MD5 hashes, different sizes (3.13\,MB for \texttt{ppo}
-against 3.59\,MB for \texttt{ctrl}, the difference being consistent with the control arm's
-additional cost-critic logging), and were written by different process IDs. The two final
-checkpoints were then opened and every stored tensor compared by content hash. All 68 tensors
+Second, the possibility that the two arms were reading the same log was excluded directly. The
+two runs wrote separate files, of different sizes, from separate processes, and the control arm's
+file is the larger by an amount consistent with its additional cost-critic logging. The two final
+checkpoints were then opened and every stored tensor compared by content. All 68 tensors
 constituting \texttt{ppo\_s1}'s trained actor and reward critic were found byte-for-byte inside
 \texttt{ctrl\_s1}'s checkpoint, which carries 100 tensors in total, the remainder being the
 control arm's own cost critic. Parameter names recovered from the serialised stream confirm that
@@ -186,9 +184,13 @@ Table~\ref{tab:r-train} reports training-time performance as a tail mean over th
 training, with the spread across the five seeds.
 
 \begin{kuettable}{Training-time performance (tail mean over the final 10 \% of iterations, mean \(\pm\) sd across n = 5 seeds).}{tab:r-train}
-\begin{tabular}{p{0.30\textwidth}p{0.18\textwidth}p{0.18\textwidth}p{0.18\textwidth}}
+% Ragged-right on the label column: justified setting stretched the wrap inside
+% "viol_singularity (step fraction)" into a visible gap.
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.30\textwidth}p{0.18\textwidth}p{0.18\textwidth}p{0.18\textwidth}}
 \toprule
-Quantity & PPO (baseline) & cPPO, \(d=25\) & cPPO, \(d=15\)\\
+\multirow{2}{*}{Quantity} & \multicolumn{3}{c}{Mean \(\pm\) sd across n = 5 seeds}\\
+\cmidrule(l){2-4}
+ & PPO (baseline) & cPPO, \(d=25\) & cPPO, \(d=15\)\\
 \midrule
 Mean reward & 133.06 \(\pm\) 1.27 & 132.18 \(\pm\) 1.99 & \textbf{134.09 \(\pm\) 0.80}\\
 Mean episodic cost & 81.86 \(\pm\) 62.56 & 14.22 \(\pm\) 4.38 & \textbf{10.94 \(\pm\) 4.30}\\
@@ -207,29 +209,25 @@ task effect in either direction. What the row supports is that the constraint do
 reward, and the honest form of that statement is an upper bound rather than a point estimate.
 Figure~\ref{fig:r-reward} shows the learning curves behind that row.
 
-\begin{kuetfigure}{Mean episodic reward against training iteration, averaged across the five
-seeds. The three arms converge to the same level. The constrained arms learn more slowly for
-roughly the first two hundred iterations, which is the multiplier of
-Section~\ref{sec:r-lambda} suppressing early exploration, and the gap closes well before the
-budget is exhausted. Curves are exponentially smoothed for legibility; every figure quoted in the
-text is computed from the unsmoothed logs.}{fig:r-reward}
+\begin{kuetfigure}{Mean episodic reward, averaged across the five seeds.}{fig:r-reward}
 \includegraphics[width=0.86\textwidth]{fig_mean_reward.pdf}
 \end{kuetfigure}
 
-The reward total is a sum of shaped terms, and the two that carry the task are plotted separately
-in Figures~\ref{fig:r-reach} and \ref{fig:r-lift}. Both converge to a common level on all three
-arms, so the equality of the reward row is not an artifact of one term compensating for another.
+All three arms converge to the same level. The constrained arms learn more slowly for roughly the
+first two hundred iterations, which is the multiplier of Section~\ref{sec:r-lambda} suppressing
+early exploration, and the gap closes well before training ends. Curves in this and every
+subsequent figure are exponentially smoothed for legibility; every value quoted in the text is
+computed from the unsmoothed logs.
 
-\begin{kuetfigure}{Reaching-object reward against training iteration, averaged across the five
-seeds. Curves are exponentially smoothed for legibility.}{fig:r-reach}
-\includegraphics[width=0.86\textwidth]{fig_reaching_object.pdf}
-\end{kuetfigure}
+The reward total is a sum of shaped terms, and the two that carry the task are plotted in
+Figure~\ref{fig:r-rewardterms}. Both converge to a common level on all three arms, so the equality
+of the reward row is not an artifact of one term compensating for another.
 
-\begin{kuetfigure}{Lifting-object reward against training iteration, averaged across the five
-seeds. The three arms are indistinguishable after roughly three hundred iterations, which is the
+\begin{kuetfigure}{The two task-carrying reward terms, averaged across the five seeds. The arms
+are indistinguishable on lifting after roughly three hundred iterations, which is the
 training-time counterpart of the lift-success row of Table~\ref{tab:r-task}. Curves are
-exponentially smoothed for legibility.}{fig:r-lift}
-\includegraphics[width=0.86\textwidth]{fig_lifting_object.pdf}
+exponentially smoothed for legibility.}{fig:r-rewardterms}
+\includegraphics[width=0.99\textwidth]{fig_reward_terms.pdf}
 \end{kuetfigure}
 
 The soft-margin violation fractions in the lower rows are included for completeness and are
@@ -288,7 +286,7 @@ success rates with the vertical axis zoomed to the 90 to 100\,\% band, the suppr
 marked by the hatched strip at the axis base. Panel (b) shows the complement, the failure rate,
 on a logarithmic axis, where differences invisible in panel (a) separate by more than a factor of
 seventy. Lower is better in panel (b).}{fig:r-evaltask}
-\includegraphics[width=0.99\textwidth]{fig_eval_task_performance.pdf}
+\includegraphics[width=0.70\textwidth]{fig_eval_task_performance.pdf}
 \end{kuetfigure}
 
 One column of that table is more interesting than the margins, and it is the bracketed one. The
@@ -314,7 +312,9 @@ that reached an actual kinematic singularity, meaning a manipulability measure
 genuine loss of a degree of freedom rather than about a calibrated soft margin.
 
 \begin{kuettable}{Safety on the frozen policy, pooled over 15{,}000 evaluation episodes per arm. Bracketed figures are the standard deviation across the five training seeds.}{tab:r-safety}
-\begin{tabular}{p{0.31\textwidth}p{0.19\textwidth}p{0.19\textwidth}p{0.19\textwidth}}
+% Ragged-right throughout: justified cells stretched the wrap inside the first row
+% ("2.66 % (399) [3.79]") into a visible gap.
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}}
 \toprule
 Metric & PPO (baseline) & cPPO, \(d=25\) & cPPO, \(d=15\)\\
 \midrule
@@ -344,7 +344,7 @@ margin while (c) counts an actual loss of a degree of freedom, which is why the 
 improve far more on (c) than on (a): the constraint does not merely keep the arm out of the
 margin, it prevents the margin excursions from deepening into genuine
 singularities.}{fig:r-evalsafety}
-\includegraphics[width=0.94\textwidth]{fig_eval_safety_violations.pdf}
+\includegraphics[width=0.86\textwidth]{fig_eval_safety_violations.pdf}
 \end{kuetfigure}
 
 The joint-limit row is the cleanest single result in the dataset. Joint-limit contact occurs in
@@ -456,7 +456,11 @@ sorted bands, because a sorted band would show the collapse in spread while hidi
 direction each seed moved in. Both facts matter to the reading below.
 
 \begin{kuetfigure}{Per-seed episodic safety cost on a logarithmic scale. Each vertical segment
-joins the three arms for one seed. The two horizontal lines are the budgets.}{fig:r-seedcost}
+joins the three arms for one seed, and the two horizontal lines are the budgets. Seeds are
+ordered by descending baseline cost rather than by seed number, so that the baseline's twentyfold
+sweep across the plot can be compared against the two constrained arms, which stay flat. The
+spread beside each legend entry is the ratio of that arm's highest seed to its
+lowest.}{fig:r-seedcost}
 \includegraphics[width=0.92\textwidth]{per_seed_cost.pdf}
 \end{kuetfigure}
 

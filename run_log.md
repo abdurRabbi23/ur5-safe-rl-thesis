@@ -3295,3 +3295,323 @@ draftnote blocks and in the Chapter 5/6 stub boxes, all of which drop in `[final
 **One factual fix inside the chapter:** the draftnote's sourcing rule said "both figures are
 produced by make_ch4_figs.py". Updated to name the current script and to disclose the smoothing.
 No other prose was altered.
+
+## Day 27 (2026-08-04), later — Chapter 4 review pass, figures and tables
+Touhid reviewed the built PDF and raised nine points. All actioned; no argument or finding was
+changed, only presentation.
+
+**Provenance detail removed from the chapter.** The git commit hash and tag are gone from the
+opening paragraph and from Table 4.1, and the MD5-hash and file-size sentence is gone from
+Section 4.2. The identity argument there is unchanged in substance: it still says the two runs
+wrote separate files of different sizes from separate processes, which is the point, without
+quoting the hashes or the megabytes. Reproduction now hangs on the script names, which is where
+it belongs.
+
+**Table 4.2** gained a spanning header, "Mean +/- sd across n = 5 seeds", over the three arm
+columns.
+
+**Figures reworked.**
+- 4.1 caption cut from six lines to one; the detail moved into the body text below it, where it
+  reads better and does not bloat the List of Figures.
+- **Old 4.2 and 4.3 merged into a single 1x2 figure** (`fig_reward_terms`), so Chapter 4 now has
+  ten figures, not eleven, and everything after it renumbered.
+- 4.3 (evaluation task performance) turned from 1x2 side by side into **2x1 stacked**.
+- 4.4 (safety grid) panel gaps opened up.
+- 4.7 to Table 4.5: the blank band between them was a **float-page artifact**, not a spacing
+  value. A page carrying no body text gets its floats distributed by LaTeX's `\@fptop`/`\@fpsep`
+  rubber lengths. Fixed globally in `thesis-format.sty` by pinning `\@fptop` to 0 pt and
+  loosening the float fractions, so figures also stay nearer the text that introduces them. This
+  is the one change that affects the whole book rather than Chapter 4 alone.
+- 4.8 (`per_seed_cost`) reworked on Touhid's invitation to improve it. Seeds are now ordered by
+  descending baseline cost and each arm carries a faint trend line, which turns the finding into
+  a shape: the baseline sweeps down through twentyfold across the plot while both constrained
+  arms stay flat. The per-arm spread ratio moved into the legend, where it has room. Caption
+  states the ordering so the choice is visible.
+- 4.10 (`lambda_traj`) text enlarged.
+
+**Root cause behind the small type, worth remembering.** A figure authored on a 12-inch canvas
+and placed on a 6-inch measure is scaled by half, and every label halves with it, which is how
+13 pt tick labels reached print at under 7 pt. Fixed by keeping multi-panel canvases near the
+printed width and setting panel type explicitly through a new `panel_type()` helper. Applied to
+all five multi-panel figures, not only the one reported.
+
+**Two table faults found during the same pass and fixed:** the label column of Table 4.2 and the
+cells of Table 4.4 were justified, which stretched the wrap inside `viol_singularity (step
+fraction)` and `2.66 % (399) [3.79]` into visible gaps. Both columns are ragged-right now.
+
+**Verified:** latexmk exit 0 on a forced rebuild, 86 pages, 0 errors, 0 undefined references,
+em-dash count 0, no git or hash detail left in the chapter, all ten `\includegraphics` targets
+present on disk.
+
+## Day 26 (2026-08-03, cont.) — Chapter 3: four open review items closed, three figures added
+
+All four items raised in the Ch. 3 review are now done.
+
+1. **Repository paths gone.** `grep -c 'Comparison\_test'` on the chapter returns **0**. The
+   \S3.10.1 footnote now ends at the \S4.2 cross-reference, and Table 3.12's `Source of all figures`
+   row is deleted.
+2. **Table ordering in \S3.10 fixed.** The training-protocol table now sits directly under the
+   section's own paragraph, before the arms subsection, so the text no longer points forward past a
+   different table.
+3. **"Layer 1/2/3" glossed at first use.** \S3.5 now reads "the Layer 1 result, the safe-RL
+   comparison delivered by this thesis", and the Layer 2 mention says what it would have been.
+4. **Three TikZ figures added**, no external files:
+   - **Fig. 3.3** goal-sampling box against the reach envelope, in the x-z plane, with the far
+     corner marked and the caption noting the y extent the section view cannot show.
+   - **Fig. 3.4** the singularity penalty against w, with the p10-p25 band of the baseline's own
+     distribution shaded, which makes the "smooth ramp, not a switch" argument visually.
+   - **Fig. 3.5** the cPPO block diagram, dashed region marking what the constrained arm adds.
+     Replaced the three-clause enumeration in \S3.8.3 that described the same wiring in prose.
+
+**Three real defects caught by rendering, not by the exit code, all fixed:**
+- **`[H]` was the wrong placement for these figures.** With `[H]` the book went to 88 pages: each
+  figure that did not fit the remaining space was pushed to a fresh page and left the rest blank.
+  Switched all three to floating (they are not followed by lists, so the split-list hazard that
+  motivated `[H]` does not apply here). **Rule of thumb for this project: `[H]` for a table or
+  figure immediately before a list, floating otherwise.**
+- **Fig. 3.4's x-scale was wrong by a factor of nine.** `x=80mm` made the w axis 11 mm wide, a
+  sliver with labels sprawling past it. Now `x=680mm`, so the 0 to 0.135 range spans ~92 mm.
+- Label collisions in all three: "table" over the 0.8 tick in Fig. 3.3, "near-singular" on the
+  curve and "safe, no cost" on the axis in Fig. 3.4, and the dashed region clipping the
+  combined-advantage box in Fig. 3.5. All repositioned; the Fig. 3.5 caption was rewritten to match
+  the corrected region.
+
+**Diagnostic note worth keeping.** Isolating the page-count jump was done by deleting the three
+figures, rebuilding, and comparing (80 pp without, 87 with), rather than by guessing. A `latexmk -C`
+clean rebuild was also run to confirm the count was converged and not a stale-aux artifact.
+
+**Chapter 3: pp. 27-48 (22 pp). Book 87 pp `[draft]` / 84 `[final]`.** Both exit 0, 0 undefined,
+0 em dashes, 0 overfull boxes in Ch. 3, 0 repository references. Chapter 3 now carries 5 figures
+(one still a placeholder awaiting Touhid's screenshot) and 13 tables.
+
+## Day 27 — Per-chapter PDF export tool
+Built `Thesis_LaTeX/tools/build_chapter_pdfs.py`: generates a standalone, no-title-page PDF for
+any one chapter or any requested combination (e.g. `3 4`), always in `[final]` (draft notes
+stripped). Cross-references into chapters not included (e.g. Ch. 1 pointing at Ch. 4) are
+resolved by importing `\newlabel` values from `main.aux`, so nothing prints `??` — requires a
+current full `latexmk -pdf main.tex` build to exist first. All 6 chapters built individually and
+sanity-checked (page count, no leaked draft notes, no unresolved refs); output lives in
+`Thesis_LaTeX/chapter_pdfs/`, filenames `Chapter_N_Title.pdf` / `Chapters_N-M_Title_Title.pdf`.
+
+**Same day, follow-up:** chapter PDFs no longer carry a bibliography (Touhid's instruction) —
+`Bibliography.pdf` is now its own deliverable, built from `main.bbl` verbatim (the full book's
+reference list, all 23 entries, not per-chapter). `Cover_Page.pdf` is also now its own
+deliverable (`frontmatter/coverpage.tex` alone). `--all` now builds all 6 chapters + cover +
+bibliography = 8 PDFs. Details: `logbook/06_writing.md`.
+
+**Same day, submission build:** added `--submission` to `build_chapter_pdfs.py` — every chapter
+(1-6, in order) + a real bibliography in one PDF, `Thesis_Report_Body_Submission.pdf`, `[final]`,
+no front matter (Touhid's choice: skip cover/declaration/approval/acknowledgement/abstract/TOC
+/LOF/LOT/abbreviations, since Cover_Page.pdf already exists separately). Unlike the single-chapter
+exports this mode is self-contained — every chapter is present in the same build, so it does not
+depend on a fresh `main.aux`/`main.bbl`. `main.tex` itself was left on `[draft]`, untouched.
+Verified: 73 pp., starts at Chapter 1 (no cover), all 6 chapter headings present in order, full
+23-entry bibliography, 0 draft-note leakage, 0 unresolved refs.
+
+**Same day, cover added back:** Touhid asked for the front page at the start after all — cover
+page (`frontmatter/coverpage.tex`) now opens `Thesis_Report_Body_Submission.pdf` (page 1), before
+Chapter 1 (page 2). 74 pp. total. No other front matter added. Re-verified clean.
+
+**Same day, title finalised:** `\thesistitle` (single source, `frontmatter/_thesis_details.tex`)
+changed from "Safe Constrained Reinforcement Learning for Precision Grasping on a UR5e
+Manipulator: A Simulation Study" to **"Comparative Evaluation of Constrained and Unconstrained
+Deep Reinforcement Learning for Safe Robotic Grasping on a UR5 Manipulator in Simulation"**
+(Touhid's decision). Propagates automatically to cover page, title page, declaration and
+approval (all reference the `\thesistitle` macro, no hardcoded copies). Full book rebuilt clean,
+87 pp., 0 errors. `Cover_Page.pdf` and `Bibliography.pdf` regenerated to match; the 6 chapter
+PDFs don't show the title (no title page in them) so weren't rebuilt. Note: new title says "UR5"
+where the rest of the book says "UR5e" throughout — flagged to Touhid, his call whether to
+align.
+
+## Day 27 (2026-08-04), close — handoff written for Chapters 5, 6 and the Abstract
+No thesis prose changed in this step. Reviewed the state of the book and wrote
+`logbook/NEXT_SESSION_ch5_ch6.md`, which carries a ready-to-paste prompt.
+
+**Verified while reviewing, worth recording:**
+- `[final]` builds clean: exit 0, 84 pages, 0 errors. Together with `[draft]` at 87 pages this
+  means **the book has no hard-error blockers left**. The earlier note that six examiner-name
+  TODOs blocked `[final]` is out of date; they were resolved on Day 26 and Examiner 2 is now a
+  deliberately blank block for hand completion.
+- All 23 bibliography entries are cited, so the reference list is complete rather than partial.
+- Chapter page starts: 1 / 8 / 27 / 49 / 68 / 69.
+
+**Concurrency, third occurrence.** `chapters/03_methodology.tex` was modified at 13:07 today by
+another session while this handoff was being written (a Layer-1 gloss and a Section 3.5 edit).
+Nothing was overwritten because this session did not touch that file, but it is the third time
+two sessions have worked the same book at once. The handoff now opens with a mandatory
+`git status` / mtime check and a short account of the two earlier collisions, because the
+Chapter 4 near-duplication was caught by luck rather than by process.
+
+**Three things the handoff pins down that were previously only implicit:**
+1. `logbook/10_references.md`'s section headed "Chapter 7" means the current Chapter 6. The book
+   went from seven chapters to six and that heading was never updated, which is a live trap for
+   anyone reading the claim map cold.
+2. Chapter 5 must not imply hardware. Layer 3 never ran. The claim is about what the method
+   makes possible, not what was demonstrated.
+3. Chapters 5 and 6 introduce no new numbers. Everything they quote already exists in Chapter 4.
+
+## Day 27 (2026-08-04), continued — Chapters 5, 6 and the Abstract written
+Picked up `logbook/NEXT_SESSION_ch5_ch6.md`. Concurrency check first, per that handoff's own
+warning: `git status`, `git log -5` and `stat` on `chapters/*.tex` showed `03_methodology.tex`
+and `04_results.tex` mid-edit by another session (mtimes 13:07 and 12:45 today) but
+`05_real_world.tex` and `06_conclusion.tex` untouched since their 2026-08-02 stub state. Read
+only, never wrote to, Chapters 3 and 4. Read `logbook/NEXT_SESSION_ch5_ch6.md`,
+`logbook/00_INDEX.md`, `logbook/10_references.md`, `logbook/11_writing_style.md`,
+`logbook/06_writing.md`, `logbook/04_layer2_ibvs.md`, `logbook/05_layer3_sim2real.md`,
+`chapters/01_introduction.tex` in full and `chapters/04_results.tex` in full before writing
+anything, so every number and every objective statement below is traced to those two files.
+
+**Chapter 5 (Relation with a Real-World Problem), p. 68-69 in `[draft]`.** No sub-sections,
+matching the accepted book. Four beats in order: industrial relevance (the UR5e as a
+production-floor-class arm), the engineering contribution (a stated cost budget \(d\) is
+auditable where a reward weight is not, illustrated with the Chapter 4 joint-limit and
+singularity numbers), the socio-economic argument (predictability as what an integrator actually
+buys, reusing the Section 4.6 seed-lottery finding rather than re-deriving it), and an SDG
+mapping. Claimed only SDG 9 and SDG 8 (Target 8.8, safe working environments), not all four the
+exemplar names — SDG 12 is named and explicitly declined, since supporting it would need a
+resource-use or waste claim this thesis does not make. One citation, `brunke2022safe`, at the
+worst-case-severity counter-result, exactly where the handoff said to put it. Stated plainly that
+nothing ran on hardware.
+
+**Chapter 6 (Conclusions and Future Works), p. 70-72 in `[draft]`.** Two sections. 6.1 Conclusion
+opens `chapters/01_introduction.tex` at `sec:i-objectives` and answers the general objective and
+all six specific objectives in the order Chapter 1 states them, each pointing at the Chapter 4
+section that settled it (`sec:r-design`, `sec:r-validity`, `sec:r-budget`, `sec:r-variance`,
+`sec:r-design` again for the evaluation protocol, and back to `sec:r-variance`/`sec:r-summary`
+for the sixth). No new findings, only the four claims Section 4's summary already establishes,
+quoted rather than recomputed. 6.2 Future Works covers five positioned gaps: the Layer 2 IBVS
+loop (privileged pose to eye-in-hand camera, extending `khan2025csrt_ibvs`), Layer 3 sim-to-real
+(RH-P12-RN vs the simulated Robotiq 2F-85 named as a real transfer gap, not glossed as a detail),
+the cut `sac` arm (`shahid2022continuous_grasping`), PID-Lagrangian as the direct response to the
+measured multiplier overshoot in Section 4.7 (`stooke2020pid`), and the seed-count limitation
+already stated in Section 4.9.
+
+**Abstract**, one paragraph, 297 words, no citations. Headline is the Section 4.6 result: the
+constrained agent holds task performance while collapsing seed-to-seed safety variance from more
+than twentyfold to roughly two-to-fivefold. Assembled from Chapter 1's framing (reward weight vs
+constraint budget) and Chapter 6's closing claim, not written independently of either.
+
+**Verification, all three success criteria met:**
+1. `latexmk -pdf main.tex` exits 0 in both modes. `[draft]`: 90 pages, 0 errors, 0 undefined refs
+   or citations, confirmed stable on a second consecutive run (`Nothing to do`). `[final]`: same
+   check, 87 pages, 0 errors, 0 undefined. Switched `main.tex` back to `[draft]` afterward and
+   rebuilt once more to confirm the file matches its pre-edit state (`git status` shows no diff
+   on `main.tex`).
+2. `grep -c -- '---'` returns 0 on all three new files. No unicode em or en dash either.
+3. Cross-checked every numeral in the three files against `chapters/04_results.tex`: all trace to
+   a table or a stated figure there (10.70 %, 0.00 %, factor of 7.0 and 39.9, the 7.95-to-162.30
+   seed range, 47.83 %, the 7.5-to-1 point precision-variance collapse, iterations 47-58). The
+   only other digits present are SDG target numbers (8.8, 9.4), citation years, and hardware part
+   numbers (2F-85, RH-P12-RN), none of them results.
+
+Deleted the `draftnote` block from all three files as they were replaced, per the handoff's
+closing instruction. `logbook/06_writing.md` and this entry are the only things updated outside
+`Thesis_LaTeX/`; Chapters 3 and 4 were not touched.
+
+**Not fixed, flagged only (per the handoff's own instruction not to touch Chapter 3 mid-edit):**
+`chapters/03_methodology.tex` §3.8 still calls the singularity term "the operative constraint of
+this thesis" against its own Table 3.9 majority-joint-limit finding. Chapters 5 and 6 as written
+here do not repeat or depend on that claim either way, so the contradiction is isolated to
+Chapter 3 and does not need to block anything above.
+
+**Next:** the book has all six chapters, the abstract, and no stub files left. Remaining open
+items are pre-existing and untouched by this session: the Chapter 3 §3.8 contradiction above, the
+Chapter 1/Chapter 2 §2.2 framing overlap, and `frontmatter/approval.tex`'s deliberately blank
+Examiner 2 slot.
+
+## Day 26 (2026-08-03, cont.) — "operative constraint" contradiction: my error, and it was worse than the wording
+
+Touhid caught \S3.7 calling the singularity term "the operative constraint of this thesis" while its
+own tables said joint-limit carried ~86 % of realised cost. Chapter 2's draftnote had already
+flagged the same sentence and asked for it to be hedged. Reviewing it properly turned up a second,
+larger fault underneath.
+
+**The numbers in Chapter 3 were wrong, not just the adjective.** The "joint-limit ~86 %,
+singularity ~14 %, natural episodic cost ~105" figures came from a code comment describing the
+**Day-23 single-run calibration probe** (`cost_probe_v2_ctrl`), and I had presented them as the cost
+composition of the reported experiment. Measured directly from
+`Comparison_test/final_results/training/PPO_baseline/` (tail mean, final 10 % of training):
+
+| Seed | singularity | joint-limit | episodic cost |
+|---|---|---|---|
+| 1 | 15 % | **85 %** | 102 |
+| 3 | **100 %** | 0 % | 163 |
+| 4 | **100 %** | 0 % | 30 |
+| 52 | **100 %** | 0 % | 107 |
+| 54 | 49 % | 51 % | 8 |
+| **mean** | **78 %** | **22 %** | **82** |
+
+So the probe happens to look like seed 1 and nothing else. **Chapter 4's caption ("the singularity
+term is an order of magnitude larger than the joint-limit term") was right all along; Chapter 3 was
+the wrong one.**
+
+**Fixed in Chapter 3:**
+- \S3.7 no longer calls any term "the operative constraint". It says the singularity term is the one
+  the study is *designed* around, which is the honest claim (it is where the thesis meets the
+  literature and how the research question is posed), and states plainly that which term consumes
+  the budget varies by seed.
+- The \S3.7 key-points bullet rewritten the same way.
+- Table 3.11 retitled **"The calibration probe"**, its column head changed to "Measured on the
+  probe", and the budget row now says "a ~76 % reduction against this run". The probe's numbers are
+  kept, because they are the honest record of how the thresholds were actually set.
+- **New Table 3.12** giving the per-seed composition above, sourced from `final_results/`.
+- New prose making the seed-dependence the headline: three of five baseline runs spend their whole
+  budget on near-singular configurations and never approach a joint limit, one spends most of it on
+  joint-limit proximity. The average of 78/22 describes none of them well. This converts a
+  contradiction into a finding that supports Chapter 4's variance argument.
+- Budget restated against both: d = 25 is ~70 % of the five-seed mean of 82, ~76 % of the probe's 105.
+- **Deliberately did NOT copy Chapter 4's per-seed episodic-cost totals into Chapter 3.** My tail
+  window rounds seed 3 to 163 where Chapter 4 reports 162.30, and duplicating results at two
+  roundings is the same class of fault being fixed. Table 3.12 carries the composition only and
+  points at Chapter 4 for the totals.
+
+**Chapter 3: pp. 27-49. Book 91 pp `[draft]` / 88 `[final]`.** Both exit 0, 0 undefined, 0 em
+dashes, 0 overfull boxes in Ch. 3.
+
+**FLAGGED, needs a decision, NOT changed (Chapters 2 and 4 are out of scope):**
+1. **Chapter 2's hedge is now based on a false premise.** Its draftnote and \S2.9 say manipulability
+   is not the operative constraint "because Section 3.9 measures joint-limit proximity at about
+   86 % of realised cost against manipulability at 14 %". That 86/14 is the probe, not the reported
+   runs, where the split is 22/78 the other way. The *conclusion* (don't call either one "the"
+   operative constraint) still stands, but for the opposite reason: the split is seed-dependent, and
+   on the mean it is singularity that dominates. **The sentence in Chapter 2 should be corrected.**
+2. Chapter 2's draftnote instruction "Chapter 3 \S3.8 still says ... and should be hedged the same
+   way" is now discharged and can be deleted from that draftnote.
+3. Chapter 4 line ~355 says the joint-limit result "is notable precisely because the joint-limit
+   term had been classified as inactive by construction until the recalibration". That remains
+   correct and is consistent with the corrected Chapter 3.
+
+## Day 26 (2026-08-03, cont.) — Chapter 2 reconciled with the corrected Chapter 3
+
+Both items flagged in the previous entry are done. Chapter 2 was carrying the same wrong number
+Chapter 3 had, in three places rather than the two expected.
+
+1. **\S2.9 opening rewritten.** It had said the manipulability term "turned out to account for
+   roughly 14\,\% of the realised episodic cost, against about 86\,\% for joint-limit proximity",
+   and concluded that manipulability "is not the term that dominates the budget in practice". Both
+   halves were wrong: measured across the five reported baseline seeds the split is about 78\,\%
+   manipulability to 22\,\% joint-limit. The section now states that joint-limit proximity is
+   genuinely active alongside manipulability, gives the corrected mean, and makes the instability
+   the point (three of five seeds spend the whole budget on near-singular configurations, one
+   spends most of it on joint-limit proximity). The conclusion is unchanged in spirit but now rests
+   on the right reason: **no stable split exists**, rather than manipulability being minor. This is
+   also a stronger position for \S2.9, since the section spends several pages developing the measure.
+2. **The chapter-summary sentence at \S2.12 fixed.** It said "Section~\ref{sec:m-calib} shows
+   joint-limit proximity carrying most of the realised cost". Now: joint-limit is active alongside
+   manipulability and which of the two consumes the budget varies by seed.
+3. **The draftnote instruction discharged.** The bolded "Chapter 3 \S3.8 still says the operative
+   constraint ... and should be hedged the same way" is deleted, replaced by a dated correction note
+   recording that the 86/14 figures came from the pre-freeze calibration probe and not from the
+   reported runs. The old figures are quoted inside that note deliberately, so the correction is
+   traceable rather than silently overwritten.
+
+Not changed: \S2.7's "The operative quantity itself came from an older source" refers to the
+Yoshikawa measure's provenance, not to which term dominates the budget. Correct as written.
+
+**Verification.** `[draft]` 91 pp, `[final]` 88 pp, both exit 0, 0 undefined citations or
+references. 0 em dashes in Chapters 2 and 3. The two overfull boxes in Chapter 2 sit at lines 53-58
+and 116-119, outside all three edited regions, so they are pre-existing; the larger one is inside
+the draftnote and disappears in `[final]`. Rendered the corrected \S2.9 page and read it.
+
+**The 86/14 figure is now gone from the thesis except where it is explicitly labelled as the
+calibration probe's own number.** Chapters 2, 3 and 4 agree.

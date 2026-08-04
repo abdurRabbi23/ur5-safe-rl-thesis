@@ -68,6 +68,22 @@
 \renewcommand{\arraystretch}{1.2}
 \graphicspath{{figures/}}
 
+% Float-only pages (a page carrying no body text, which Chapter 4 produces because it is
+% figure-dense). LaTeX's defaults distribute such floats down the page with large rubber
+% gaps, which reads as an unexplained blank band between a figure and the table under it.
+% Aligning them to the top and tightening the inter-float separation removes it. Added
+% 2026-08-04. To restore the stock behaviour, delete this block; nothing else depends on it.
+\makeatletter
+\setlength{\@fptop}{0pt}                 % float page starts at the top, not centred
+\setlength{\@fpsep}{16pt plus 1fil}      % gap between two floats on a float page
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+% Let a page carry more float before LaTeX defers it, so figures stay near their text.
+\renewcommand{\topfraction}{0.88}
+\renewcommand{\bottomfraction}{0.70}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.70}
+
 % Table body text is 12 pt (spec 4). The template contradicts itself here
 % -- the MTE_Thesis_Table style says 10 pt -- and 12 pt was confirmed.
 % Tables are set single-spaced at 11 pt, not at the body's 1.5 spacing. Standard

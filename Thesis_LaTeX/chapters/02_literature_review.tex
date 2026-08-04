@@ -25,11 +25,15 @@ arms as PPO / ctrl / cPPO, which contradicts Table~3.11: the three trained arms 
 \texttt{ppo} arm trained but not reported separately. The figure now matches.
 (ii) \texttt{cppo15} and the budget-sensitivity question it answers were absent from this
 chapter and are now a third gap. (iii) Section~\ref{sec:b-manip} no longer calls manipulability
-\emph{the} operative constraint, because Section~\ref{sec:m-calib} measures joint-limit
-proximity at about 86\,\% of realised cost against manipulability at 14\,\%.
-\textbf{Chapter~\ref{ch:methods} \S3.8 still says ``the operative constraint of this thesis''
-of the singularity term, which contradicts its own Table~3.9 and should be hedged the same
-way.} (iv) The CMDP tuple and the PPO clip were stated in both chapters; this chapter now cites
+\emph{the} operative constraint, because Chapter~\ref{ch:methods} scores three hazards and two of
+them are active. \textbf{Corrected 2026-08-03:} this note previously justified that hedge with
+``joint-limit proximity at about 86\,\% of realised cost against manipulability at 14\,\%''. Those
+figures came from the single pre-freeze calibration probe, not from the reported runs. Measured
+across the five baseline seeds the split is the other way round, about 78\,\% manipulability to
+22\,\% joint-limit, and it is strongly seed-dependent. The hedge stands, but the reason is that no
+stable split exists, not that manipulability is minor. Chapter~\ref{ch:methods} \S3.7 and its
+Tables~3.11 and 3.12 now carry the corrected numbers.
+(iv) The CMDP tuple and the PPO clip were stated in both chapters; this chapter now cites
 Equations~\eqref{eq:cmdp} and \eqref{eq:clip} instead. The division of labour is that this
 chapter carries the equations of the \emph{reviewed literature} and Chapter~\ref{ch:methods}
 carries those of \emph{this thesis's method}. (v) Minor: the claim that both UR5 studies use
@@ -470,14 +474,17 @@ takes up what follows.
 
 The constraint this thesis is built around is a floor on manipulability. One qualification
 belongs here rather than later, because it changes how this section should be read. The cost
-function of Chapter~\ref{ch:methods} scores three hazards, and when the thresholds were
-calibrated against the unconstrained baseline the manipulability term turned out to account for
-roughly 14\,\% of the realised episodic cost, against about 86\,\% for joint-limit proximity and
-none at all for collision (Section~\ref{sec:m-calib}). Manipulability is therefore the framing
-constraint and the one that motivates the design, but it is not the term that dominates the
-budget in practice. This section develops the measure carefully all the same, because the
-argument of the thesis rests on it and because the difference between this work and its nearest
-neighbour is entirely a difference in where that quantity is placed.
+function of Chapter~\ref{ch:methods} scores three hazards rather than one, and joint-limit
+proximity is genuinely active alongside manipulability, with the collision term inactive
+throughout. Across the five unconstrained baseline runs the manipulability term carries about
+78\,\% of the realised episodic cost on average and joint-limit proximity about 22\,\%, but that
+average is unstable: three of the five runs spend their whole budget on near-singular
+configurations and never approach a joint limit, while one spends most of its budget on
+joint-limit proximity instead (Section~\ref{sec:m-calib}). Manipulability is therefore the framing
+constraint, the one that motivates the design, and on the mean the dominant one, but it is not the
+only term the budget is spent on and it does not dominate on every seed. This section develops the
+measure carefully because the argument of the thesis rests on it and because the difference between
+this work and its nearest neighbour is entirely a difference in where that quantity is placed.
 
 \subsection{The measure and what it means}
 
@@ -820,8 +827,9 @@ concern a simulated UR5e and are transferable only in the sense that
 \cite{shahid2022continuous_grasping} demonstrates such transfer is possible. It abstracts the
 grasp as a weld, so its success rates are not comparable with the full-grasp figures of
 \cite{ferreira2025grasping}. And although manipulability is the constraint the argument is built
-on, Section~\ref{sec:m-calib} shows joint-limit proximity carrying most of the realised cost, so
-the safety result is not a manipulability result alone.
+on, Section~\ref{sec:m-calib} shows joint-limit proximity active alongside it, with which of the
+two consuming the budget varying from seed to seed, so the safety result is not a manipulability
+result alone.
 
 Within those boundaries it contributes fifteen trained policies across three arms and five
 seeds: a control arm whose weights are verified identical to plain PPO, so the implementation

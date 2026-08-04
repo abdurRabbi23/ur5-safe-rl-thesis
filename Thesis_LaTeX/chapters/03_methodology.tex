@@ -361,7 +361,8 @@ linkage is therefore intact but its transform relative to the wrist is degenerat
 cannot resolve where the geometry is drawn, which accounts for the cube falling through the fingers
 regardless of clamp force.
 
-Because the Layer 1 result is independent of the grasp mechanism, the gripper is
+Because the Layer 1 result, the safe-RL comparison delivered by this thesis, is independent of the
+grasp mechanism, the gripper is
 modelled as a lumped mass at the wrist flange and contact grasping is replaced by a \emph{proximity-weld}
 abstraction. The tool centre point is defined kinematically as a fixed 160 mm offset along the
 \texttt{wrist\_3\_link} approach axis (the position a correctly mounted 2F-85 pad midpoint would occupy),
@@ -397,11 +398,40 @@ Cube reset & Randomised within a small planar region\\
 
 Two of those rows carry a decision rather than a value. The object pose is given to the policy
 directly instead of being estimated from an image, which isolates the safe-RL contribution from
-perception; closing that loop is the subject of Layer 2. And the goal box is bounded by
-reachability, not convenience: with the arm's base at the environment origin and a rated reach of
-about 0.85 m, the box's far corner sits 0.84 m out, so no sampled goal is physically unreachable.
+perception; closing that loop with vision was Layer 2 of the original programme, not attempted here.
+And the goal box is bounded by reachability, not convenience, as Figure~\ref{fig:m-goalbox} shows.
 Clamping the observations is a numerical safeguard that stops one transiently unstable environment
 from corrupting the whole on-policy batch.
+
+\begin{kuetfigure}{The goal-sampling box against the arm's reach envelope, seen in the vertical
+plane through the base. The far corner of the three-dimensional box, which includes the
+\(y=\pm0.30\) m extent not visible in this section, lies 0.84 m from the base against a rated reach
+of 0.85 m.}{fig:m-goalbox}
+\begin{tikzpicture}[x=95mm,y=95mm, font=\footnotesize]
+% axes
+\draw[->] (0,0) -- (0.98,0) node[right]{\(x\) (m)};
+\draw[->] (0,0) -- (0,0.78) node[above]{\(z\) (m)};
+\foreach \v in {0.2,0.4,0.6,0.8} \draw (\v,0) -- (\v,-0.012) node[below]{\v};
+\foreach \v in {0.2,0.4,0.6} \draw (0,\v) -- (-0.008,\v) node[left]{\v};
+% reach envelope
+\draw[thick, gray!60!black] (0.85,0) arc[start angle=0, end angle=72, radius=0.85];
+\node[gray!50!black, anchor=west, font=\scriptsize] at (0.60,0.66) {reach envelope, 0.85 m};
+% table
+\draw[gray!55] (0.05,0) -- (0.92,0);
+\node[gray!50!black, anchor=south east, font=\scriptsize] at (0.90,0.012) {table};
+% goal box
+\fill[gray!22] (0.22,0.10) rectangle (0.60,0.50);
+\draw[very thick] (0.22,0.10) rectangle (0.60,0.50);
+\node[anchor=center, font=\scriptsize] at (0.41,0.30) {goal box};
+% far corner marker
+\fill (0.60,0.50) circle (0.006);
+\draw[dashed, gray!60!black] (0,0) -- (0.60,0.50);
+\node[anchor=south west, font=\scriptsize] at (0.605,0.505) {far corner, 0.84 m in 3-D};
+% base
+\fill (0,0) circle (0.008);
+\node[anchor=north east, font=\scriptsize] at (-0.005,-0.005) {base};
+\end{tikzpicture}
+\end{kuetfigure}
 
 The reward is the shaped sum inherited from the base lift task, with weights retuned for this goal
 box (Table~\ref{tab:m-reward}). All three lift-dependent terms gate on the cube having climbed half
@@ -551,7 +581,12 @@ Singularity floor & clamp(1 \(-\) w / w\_floor, 0, 1) on the manipulability meas
 \end{tabular}
 \end{kuettable}
 
-The third term is the operative constraint of this thesis. The Yoshikawa manipulability measure
+The third term is the one this study is designed around. Manipulability is where the thesis makes
+contact with the literature, since the nearest prior work places the same quantity in the reward
+rather than in a constraint, and the research question is posed about it. It is not, however, the
+only active term, and it is not uniformly the dominant one: Section~\ref{sec:m-calib} shows that
+which term consumes the budget varies from seed to seed, so calling either one \emph{the} operative
+constraint would misdescribe at least one of the reported runs. The Yoshikawa manipulability measure
 w = \(\sqrt{\det(JJ^{\top})}\) \cite{yoshikawa1985manipulability} is computed from the
 \(6\times6\) end-effector Jacobian J of the arm. A small w means a near-singular configuration, one
 in which the arm momentarily loses the ability to move in some Cartesian direction and a modest
@@ -560,11 +595,37 @@ automatically to accommodate the fixed-base articulation, for which PhysX omits 
 the Jacobian, and correctness was confirmed at calibration by a smooth, small-positive distribution
 of w.
 
+Figure~\ref{fig:m-penalty} shows the shape of that penalty against the baseline's own distribution of
+w. The ramp is what makes the term learnable: a binary violation flag would be zero almost
+everywhere and would give the cost critic no gradient to descend, whereas this form tells the agent
+how close it is to trouble as well as whether it is in it.
+
+\begin{kuetfigure}{The singularity penalty against the manipulability measure w. The floor sits
+at 0.06, inside the tenth-to-twenty-fifth percentile band of the unconstrained baseline's own
+distribution, so the baseline pays a cost on roughly a fifth of its steps.}{fig:m-penalty}
+\begin{tikzpicture}[x=680mm,y=30mm, font=\footnotesize]
+\draw[->] (0,0) -- (0.135,0) node[right]{\(w\)};
+\draw[->] (0,0) -- (0,1.25) node[above]{penalty};
+\foreach \x/\t in {0/0, 0.03/0.03, 0.06/0.06, 0.09/0.09, 0.12/0.12}
+  \draw (\x,0) -- (\x,-0.03) node[below]{\t};
+\foreach \y in {0,0.5,1} \draw (0,\y) -- (-0.003,\y) node[left]{\y};
+% baseline distribution band p10 to p25
+\fill[gray!18] (0.0517,0) rectangle (0.0682,1.18);
+\node[gray!50!black, font=\scriptsize, anchor=south] at (0.0600,1.18) {p10--p25 of baseline w};
+% the penalty curve: clamp(1 - w/0.06, 0, 1)
+\draw[very thick] (0,1) -- (0.06,0) -- (0.13,0);
+\draw[dashed, gray!70!black] (0.06,0) -- (0.06,1.05);
+\node[anchor=south west, font=\scriptsize] at (0.061,1.0) {\(w_{\text{floor}}=0.06\)};
+\node[anchor=south east, font=\scriptsize] at (0.128,0.06) {safe, no cost};
+\node[anchor=west, font=\scriptsize] at (0.007,0.80) {near-singular};
+\end{tikzpicture}
+\end{kuetfigure}
+
 Two details of the other terms are worth stating. The collision floor is a 5 cm standoff above the
 table rather than the table surface itself, so the term begins to cost before a link penetrates
 anything; with self-collisions disabled and no contact sensors present, this geometric proxy is the
-honest and inexpensive choice. The joint-limit penalty is zero until a joint enters the final margin
-band and then rises linearly to one at the limit.
+honest and inexpensive choice. The joint-limit penalty has the same ramp shape, zero until a joint
+enters the final margin band and rising linearly to one at the limit.
 
 The aggregate per-step cost is c = c\_collision + c\_joint + c\_singularity, and its undiscounted sum
 over an episode is the quantity constrained against the budget d.
@@ -575,9 +636,9 @@ over an episode is the quantity constrained against the budget d.
 a kinematic singularity.
 \item Every term is smooth rather than a switch, because the cost critic needs a gradient to learn
 from. A binary violation flag would give it none.
-\item The singularity term uses the Yoshikawa manipulability measure and is the constraint this
-thesis is built around; the joint-limit term turned out to be active as well, which
-Section~\ref{sec:m-calib} explains.
+\item The singularity term uses the Yoshikawa manipulability measure and is the term the study is
+designed around, but the joint-limit term is active too, and which of the two carries the budget
+varies by seed. Section~\ref{sec:m-calib} gives the measured split.
 \item The three are summed into one number before the constraint sees it, so one multiplier governs
 all three, but each is logged separately for reporting.
 \end{itemize}
@@ -680,16 +741,48 @@ softer guard on the same failure the clip addresses.
 
 \subsection{The constrained variant}\label{sec:m-ppo-to-cppo}
 
-cPPO changes Equation~\ref{eq:ppo-full} in one place and leaves the rest alone. It carries a second
-critic that predicts accumulated future \emph{cost} exactly as the ordinary critic predicts
-accumulated future reward, producing a second advantage \(\hat{A}^{\text{cost}}_t\) from its own copy
-of Equations~\ref{eq:td} and \ref{eq:gae}. It carries a scalar Lagrange multiplier \(\lambda\) that
-weighs cost against reward. And it updates that multiplier once per iteration from the constraint
-violation the last batch actually exhibited, so the safety-versus-task weight is set by measurement
-rather than chosen by the designer. The method is PPO-Lagrangian as specified and benchmarked by Ray
-et al.\ \cite{ray2019benchmarking}, within the constrained policy optimisation family founded by
-Achiam et al.\ \cite{achiam2017cpo}. Their benchmark is also the reason the Lagrangian variant is
-preferred here over CPO itself, which it reports as the weaker of the two on the same tasks.
+cPPO changes Equation~\ref{eq:ppo-full} in one place and leaves the rest alone. Figure~\ref{fig:m-cppo}
+shows the whole agent, with everything cPPO adds over the baseline drawn inside the dashed region:
+a second critic, a scalar Lagrange multiplier, and the dual-ascent loop that sets the multiplier from
+measured violation rather than from a designer's guess. The method is PPO-Lagrangian as specified and
+benchmarked by Ray et al.\ \cite{ray2019benchmarking}, within the constrained policy optimisation
+family founded by Achiam et al.\ \cite{achiam2017cpo}. Their benchmark is also the reason the
+Lagrangian variant is preferred here over CPO itself, which it reports as the weaker of the two on
+the same tasks.
+
+\begin{kuetfigure}{The cPPO agent. The dashed region marks what the constrained arm adds to the
+baseline: a cost critic and a multiplier updated by dual ascent on measured violation. Their only
+point of entry into the policy update is the combined advantage, and pinning \(\lambda\) to zero
+recovers the baseline exactly.}{fig:m-cppo}
+\resizebox{0.96\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, minimum height=8mm, minimum width=20mm},
+  op/.style={draw, align=center, inner sep=3pt, minimum height=8mm},
+  fl/.style={-{Latex[length=2mm]}},
+  lbl/.style={font=\scriptsize, inner sep=1pt}
+]
+\node[box] (env)   at (0,0)      {Environment\\\scriptsize 4096 parallel};
+\node[box] (actor) at (0,2.6)    {Actor \(\pi_\theta\)};
+\node[box] (vc)    at (4.6,1.0)  {Reward critic \(V\)};
+\node[box] (cc)    at (4.6,-1.4) {Cost critic \(V_c\)};
+\node[op]  (comb)  at (9.0,0)    {Combined advantage\\\(A=\dfrac{A_{\text{reward}}-\lambda A_{\text{cost}}}{1+\lambda}\)};
+\node[op]  (clip)  at (9.0,2.6)  {Clipped surrogate\\Eq.~\ref{eq:clip}};
+\node[box] (lam)   at (4.6,-3.6) {Multiplier \(\lambda\)\\\scriptsize dual ascent, Eq.~\ref{eq:dual-update}};
+
+\draw[dashed, gray!70!black, rounded corners=4pt] (2.9,-4.6) rectangle (11.9,-0.55);
+
+\draw[fl] (actor) -- node[lbl,left]{action} (env);
+\draw[fl] (env.east) -- node[lbl,above,pos=0.32]{state, reward} (vc.west);
+\draw[fl] (env.east) -- node[lbl,below,pos=0.22]{state, cost} (cc.west);
+\draw[fl] (vc) -- node[lbl,above]{\(A_{\text{reward}}\)} (comb);
+\draw[fl] (cc) -- node[lbl,below]{\(A_{\text{cost}}\)} (comb);
+\draw[fl] (comb) -- node[lbl,right]{\(A\)} (clip);
+\draw[fl] (clip) -- node[lbl,above]{policy update} (actor);
+\draw[fl] (env.south) |- node[lbl,below,pos=0.25]{measured episodic cost \(\hat{J}_{\text{cost}}\), budget \(d\)} (lam.west);
+\draw[fl] (lam.east) -| node[lbl,below,pos=0.25]{\(\lambda\)} (comb.south);
+\end{tikzpicture}}
+\end{kuetfigure}
 
 The method converts the constrained problem into the saddle-point objective
 
@@ -787,28 +880,64 @@ than a short probe matters here, because a policy fifty iterations into training
 reach and its cost distribution says little about the one that would be deployed.
 Table~\ref{tab:m-calib} gives what was measured and what each measurement settled.
 
-\begin{kuettable}{Calibration against the converged unconstrained baseline.}{tab:m-calib}
+\begin{kuettable}{The calibration probe: what was measured on one converged unconstrained run, and
+what each measurement settled. The probe is a single run and its cost composition is not
+representative of the five reported seeds, for which see Table~\ref{tab:m-composition}.}{tab:m-calib}
 \begin{tabular}{p{0.24\textwidth}p{0.34\textwidth}p{0.30\textwidth}}
 \toprule
-Quantity & Measured on the baseline & Outcome\\
+Quantity & Measured on the probe & Outcome\\
 \midrule
 Manipulability w & min 0.0171, mean 0.0750, max 0.1109; p10 = 0.0517, p25 = 0.0682 & Floor set to 0.06, about p18, so the baseline violates on roughly a fifth of steps\\
-Joint-limit clearance & 33.7 \% of steps inside the margin; minimum clearance reaches the soft limit & Margin 0.175 rad is \textbf{active}, and is the larger of the two active terms\\
+Joint-limit clearance & 33.7 \% of steps inside the margin; minimum clearance reaches the soft limit & Margin 0.175 rad is \textbf{active}, not monitored-but-satisfied as in earlier drafts\\
 Monitored-link height & Minimum 0.0896 m, about 44 mm above the floor & Collision floor 0.05 m stays inactive\\
 Cost composition & Joint-limit \(\approx\) 86 \%, singularity \(\approx\) 14 \%, collision 0 \% & Two constraints share one budget\\
-Natural episodic cost & \(\approx\) 105 & Budget d = 25, a \(\approx\) 76 \% reduction\\
+Natural episodic cost & \(\approx\) 105 & Budget d = 25, a \(\approx\) 76 \% reduction against this run\\
 \bottomrule
 \end{tabular}
 \end{kuettable}
 
-Three consequences follow. The manipulability floor was raised to 0.06 from an earlier value of
-0.045, which had been set against a narrower goal-sampling box and no longer produced a violation
-rate inside the intended band once the workspace was widened. Joint-limit proximity is no longer the
-monitored-but-satisfied term it was in earlier drafts, so two active constraints now share one budget
-and one multiplier, the agent is free to trade between them, and Chapter~\ref{ch:results} reports
-each separately for that reason. And the budget is an undiscounted sum over a per-step cost across a
-fixed 250-step episode, so it is tied to the five-second episode length: changing that length would
-rescale the constraint and void the calibration.
+The probe settled the thresholds, and that is all it settled. It is one run, and its cost
+composition turns out not to describe the five baseline seeds that are actually reported.
+Table~\ref{tab:m-composition} gives those, measured from the same training logs Chapter~\ref{ch:results}
+draws on.
+
+\begin{kuettable}{How the unconstrained baseline's episodic cost divides between the two active
+terms, per seed, as a tail mean over the final tenth of training. The collision term is zero on
+every seed. Chapter~\ref{ch:results} reports the episodic cost totals
+themselves.}{tab:m-composition}
+\begin{tabular}{p{0.20\textwidth}p{0.26\textwidth}p{0.26\textwidth}}
+\toprule
+Seed & Singularity & Joint-limit\\
+\midrule
+1 & 15 \% & \textbf{85 \%}\\
+3 & \textbf{100 \%} & 0 \%\\
+4 & \textbf{100 \%} & 0 \%\\
+52 & \textbf{100 \%} & 0 \%\\
+54 & 49 \% & 51 \%\\
+\midrule
+Mean & 78 \% & 22 \%\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
+
+Three things follow, and the third is the one that matters. First, the manipulability floor was
+raised to 0.06 from an earlier value of 0.045, which had been set against a narrower goal-sampling
+box and no longer produced a violation rate inside the intended band once the workspace was widened.
+Second, joint-limit proximity is genuinely active rather than the monitored-but-satisfied term it was
+in earlier drafts, so two constraints share one budget and one multiplier and the agent is free to
+trade between them. Third, and least expected, \textbf{the split between them is not a property of
+the task but of the seed}. Three of the five baseline runs spend their entire budget on
+near-singular configurations and never approach a joint limit; one spends most of it on joint-limit
+proximity instead. Averaging gives 78 per cent against 22, but the average describes none of the
+individual runs well. That instability is a result in its own right and Chapter~\ref{ch:results}
+develops it; here it is a warning against reading either term as \emph{the} constraint the method
+acts on.
+
+The budget itself is unaffected by any of this. Holding d = 25 against a mean natural cost of about
+82 asks for roughly a 70 per cent reduction, and against the probe's 105 for about 76 per cent. It
+is an undiscounted sum over a per-step cost across a fixed 250-step episode, so it is tied to the
+five-second episode length: changing that length would rescale the constraint and void the
+calibration.
 
 \section{Training protocol}\label{sec:m-train}
 
@@ -817,6 +946,27 @@ successful run looks like while it is in progress.
 The healthy Lagrangian signature to be verified during training is that the mean episodic cost trends
 down toward the budget, the multiplier rises while over budget and then settles without pinning at its
 ceiling, the reward continues to improve, and the singularity-violation rate falls below the baseline.
+
+\begin{kuettable}[H]{Training protocol.}{tab:m-train}
+\begin{tabular}{p{0.34\textwidth}p{0.54\textwidth}}
+\toprule
+Item & Setting\\
+\midrule
+Arms & 3: PPO (baseline), cPPO at d = 25, cPPO at d = 15\\
+Seeds per arm & 5: 1, 3, 4, 52, 54\\
+Trained policies & 15\\
+Iterations & 1500 per run\\
+Parallel environments & 4096\\
+Rollout length & 24 steps per environment per iteration\\
+Throughput & \(\approx 2\times10^{5}\) environment steps/s on an RTX 5090\\
+Library & \texttt{rsl\_rl} 3.0.1, PyTorch 2.7, CUDA 12.8\\
+Execution & Headless, monitored through TensorBoard\\
+Launch & One script, arm selected by agent-config entry point\\
+Logging & Separate experiment directory per arm, so curves overlay directly\\
+Verification & All 15 final checkpoints confirmed present on disk, not inferred from clean logs\\
+\bottomrule
+\end{tabular}
+\end{kuettable}
 
 \subsection{Experimental arms and seeds}\label{sec:m-arms}
 
@@ -840,8 +990,7 @@ Arm & \texttt{cost\_limit} & \(\lambda_{\max}\) & Reported in this thesis as\\
 \footnotetext{The control arm carries the cost critic with its multiplier ceiling pinned to zero, so
 its policy update is stock PPO. A plain PPO arm was trained on the same seeds and its stored network
 weights proved byte-identical to the control arm's, so the control arm stands in for it and the plain
-arm is not reported separately. The verification is given in Section~\ref{sec:r-validity} and the raw
-comparison in \texttt{Comparison\_test/ppo\_redundant/README.md}.}
+arm is not reported separately. The verification is given in Section~\ref{sec:r-validity}.}
 
 Each arm was trained on five random seeds, 1, 3, 4, 52 and 54, giving fifteen trained policies.
 Reporting five seeds and their dispersion, rather than a single run or a mean alone, follows the
@@ -850,27 +999,6 @@ policy-gradient results on continuous control can differ qualitatively between s
 algorithm and that a mean over too few runs can describe a policy none of them produced. Dispersion
 across seeds is therefore reported as a result in its own right in Chapter~\ref{ch:results}, not as
 an error bar attached to one.
-
-\begin{kuettable}[H]{Training protocol.}{tab:m-train}
-\begin{tabular}{p{0.34\textwidth}p{0.54\textwidth}}
-\toprule
-Item & Setting\\
-\midrule
-Arms & 3: PPO (baseline), cPPO at d = 25, cPPO at d = 15\\
-Seeds per arm & 5: 1, 3, 4, 52, 54\\
-Trained policies & 15\\
-Iterations & 1500 per run\\
-Parallel environments & 4096\\
-Rollout length & 24 steps per environment per iteration\\
-Throughput & \(\approx 2\times10^{5}\) environment steps/s on an RTX 5090\\
-Library & \texttt{rsl\_rl} 3.0.1, PyTorch 2.7, CUDA 12.8\\
-Execution & Headless, monitored through TensorBoard\\
-Launch & One script, arm selected by agent-config entry point\\
-Logging & Separate experiment directory per arm, so curves overlay directly\\
-Verification & All 15 final checkpoints confirmed present on disk, not inferred from clean logs\\
-\bottomrule
-\end{tabular}
-\end{kuettable}
 
 \section{Evaluation protocol}\label{sec:m-eval}
 
@@ -911,7 +1039,6 @@ Goal-reach success & Lifted cube within 1 cm of the commanded goal pose\\
 Reported alongside & Full distribution of final goal distances, since the weld makes a single threshold saturate\\
 Safety, per episode & Episodic cost; singularity crossings (w \(< 10^{-4}\)); episodes touching the joint-limit margin\\
 Constrained arms only & Terminal multiplier, episodic-cost trajectory\\
-Source of all figures & \texttt{Comparison\_test/final\_results/}\\
 \bottomrule
 \end{tabular}
 \end{kuettable}

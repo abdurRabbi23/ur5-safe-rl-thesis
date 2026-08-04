@@ -18,6 +18,44 @@ Porting rule: `Thesis_Documentation/*_Chapter_Layer1.md` is the source of truth 
 chapter has a `.tex`; after that the `.tex` is authoritative and the `.md` is a frozen dated
 record. Chapters 3 and 4 are ported. Do not re-run `Thesis_LaTeX/tools/` over an edited chapter.
 
+## ▶ Per-chapter PDF export (new, 2026-08-04, Day 27)
+`Thesis_LaTeX/tools/build_chapter_pdfs.py` hands out any single chapter, a requested
+combination, the cover page, or the bibliography as its own PDF, without shipping the whole
+book. Usage:
+```
+python3 tools/build_chapter_pdfs.py 3          # Chapter_3_Research_Methodology.pdf
+python3 tools/build_chapter_pdfs.py 3 4        # Chapters_3-4_..._..._.pdf, combined
+python3 tools/build_chapter_pdfs.py --cover        # Cover_Page.pdf alone
+python3 tools/build_chapter_pdfs.py --bibliography # Bibliography.pdf alone
+python3 tools/build_chapter_pdfs.py --all      # every chapter + cover + bibliography
+```
+Output: `Thesis_LaTeX/chapter_pdfs/`. Always `[final]` (no draft notes/TODO markers), no title
+page (dropped on Touhid's instruction, 2026-08-04). **Chapter PDFs carry no bibliography either
+(same instruction)** — the reference list is a separate deliverable, `Bibliography.pdf`, built
+from `main.bbl` verbatim so it's always the *full book's* reference list (every chapter's
+`\cite`s), not just whatever's in the chapters being exported alongside it. Chapter number is
+preserved even standalone (a lone Ch. 3 PDF still says "CHAPTER 3"). `Cover_Page.pdf` is
+`frontmatter/coverpage.tex` alone (the unnumbered KUET cover, distinct from the fuller
+`titlepage.tex`, which this tool does not currently expose separately).
+
+Cross-chapter `\ref`/`\pageref` (e.g. Ch. 1 pointing at Ch. 4) resolve by importing `\newlabel`
+entries from `main.aux`; the bibliography needs a compiled `main.bbl`. **Run a full `latexmk
+-pdf main.tex` first if a chapter or a citation changed** — otherwise this tool is working off a
+stale table and could silently print outdated page numbers or an outdated reference list (it
+still hard-fails on a genuinely unresolved `??`, just not on a stale-but-present value).
+Does not touch `main.tex` or any chapter file. All 6 chapters + cover + bibliography built and
+verified 2026-08-04.
+
+## ▶ Submission build (new, 2026-08-04, Day 27)
+`python3 tools/build_chapter_pdfs.py --submission` builds cover page + every chapter (1-6, in
+order) + a real bibliography into one PDF, `Thesis_Report_Body_Submission.pdf` (used for the
+first supervisor hand-off). `[final]`. No other front matter (title page/declaration/approval
+/acknowledgement/abstract/TOC/LOF/LOT/abbreviations all skipped, Touhid's choice) — cover page
+added back the same day so it opens on the title rather than straight into Chapter 1. `main.tex`
+stays on `[draft]` for ongoing work; this is a one-off build, not a mode switch. Self-contained
+(every chapter present in the same run), so unlike the other modes in this tool it does not
+depend on a fresh `main.aux`/`main.bbl`.
+
 ## ▶ Chapter drafts that exist (updated 2026-08-02, Day 25 night)
 | Chapter | File | State |
 |---|---|---|
@@ -25,6 +63,9 @@ record. Chapters 3 and 4 are ported. Do not re-run `Thesis_LaTeX/tools/` over an
 | 2 — Literature Review (file is `02_literature_review.tex`, **not** `02_background.tex` — see HANDOFF) | `Thesis_LaTeX/chapters/02_literature_review.tex` | **rewritten and expanded 2026-08-03 (Day 26)** — 12 sections, pp. 20–41 of the `[draft]` build (22 pp., ~21 in `[final]` once the draftnote drops). Written against the 12 PDFs in `source_papers/`: 4 reproduced figures, 8 tables, 10 display equations, new §2.1 reading guide + key-findings box, new §2.8 comparative methodology table, boxed research gaps in §2.11, long narrative summary in §2.12. Humanizer pass done, 0 em dashes. **Stale "ten seeds" language fixed to five (1,3,4,52,54).** **Cut back to 18 pp. later the same day**, colour and framing removed, figure captions shortened, research gap converted into a figure plus a matrix table. **Then reconciled against the rewritten Chapter 3 (same day):** Fig. 2.6 redrawn to match Table 3.11 (`ctrl`/`cppo`/`cppo15`, not PPO/ctrl/cPPO); `cppo15` and budget sensitivity added as Gap 3; §2.9 hedged because joint-limit proximity carries ~86 % of realised cost; CMDP and PPO-clip equations dropped in favour of cross-references to Eq. (3.1) and (3.3); new original Fig. 2.3 (`lit_twolink_w.pdf`). Now pp. 21–39. **Open: §2.2 still overlaps Chapter 1 §1.2; Chapter 3 §3.8 still calls the singularity term "the operative constraint" against its own Table 3.9.** |
 | 3 — Research Methodology (Layer 1) | `Thesis_LaTeX/chapters/03_methodology.tex` | **written 2026-08-03 (Day 26)** — 8 sections + 3 subsections, body pp. 30–40. New §3.3 Software framework (package architecture as Table 3.1, cost computer, Lagrangian runner, train/eval pipeline) and §3.3.1 The gradient-clip audit, which is what §4.2 of the Results chapter assumes is set up here. Every Day-19 number replaced with the frozen `matrix-v2` values (goal box, reward weights, `MANIP_FLOOR` 0.06, `JOINT_LIMIT_MARGIN` 0.175 rad now ACTIVE, `COLLISION_Z_FLOOR` 0.05 m, natural cost ~105, eval protocol). New §3.7.1 states 3 arms / 5 seeds and carries the required "PPO (baseline)" footnote. 8 claim-map citations added; the three tooling entries were the last uncited ones in `references.bib`. Table M1 is now a real captioned float (Table 3.2). Humanizer pass done, 0 em dashes, builds clean. **Expanded later the same day to 20 pp. (body pp. 30–49):** new §3.1 Preliminaries (Isaac Sim/Lab, on- vs off-policy and why this study is on-policy, PPO and cPPO, UR5e spec table), §3.2 problem formulation roughly tripled with the expectation-not-worst-case, undiscounted-episodic and one-scalar-over-three-hazards caveats, six captioned tables, and nine plain "Key points" blocks. Sub-section headings now bold italic, a recorded deviation from the template (see `KUET_FORMAT_SPEC.md` D1). **Open:** Chapter 4 still says ten seeds and names the arms `ppo`/`ctrl`/`cppo`, so the two chapters disagree until Ch. 4 is re-derived. |
 | 4 — Results & Discussion (Layer 1) | `Thesis_LaTeX/chapters/04_results.tex` | **RE-DERIVED FROM SCRATCH 2026-08-03 night (Day 26)**, body pp. 61–73 (13 pp.). Rebuilt from `Comparison_test/final_results/` via two new scripts, `results/scripts/summarize_final.py` (all tables + the ppo/ctrl identity check) and `make_ch4_figs.py` (both figures) — no number is hand-typed. Three arms and five seeds throughout; **`cppo15` reported for the first time**, with a new §4.8 answering Chapter 2's Gap 3. **New §4.7 measures the λ trajectories** from `cost_lambda.csv` (single peak at iters 47–58, decaying to 0), which discharges the old Limitation 2. Principal finding survives with a narrower qualification: one seed of five rises, not six of ten. New unanticipated result: the variance collapse appears in task precision as well (goal-reach sd 7.52 → 1.04 → 0.95 points). Humanizer pass done, 44 em dashes → 0. Builds clean. **Open:** SAC arm never trained (stated as a limitation). |
+| 5 — Relation with a Real-World Problem | `Thesis_LaTeX/chapters/05_real_world.tex` | **written 2026-08-04 (Day 27)** — pp. 68–69 of the `[draft]` build (2 pp., matching the accepted book), no sub-sections. Four beats in order: industrial relevance, engineering contribution (stated cost budget vs reward weight, illustrated with the Ch. 4 joint-limit/singularity numbers), socio-economic argument (reusing the §4.6 seed-lottery finding, not re-derived), SDG mapping. Claims only **SDG 9 and SDG 8** (Target 8.8) — SDG 12 named and explicitly declined rather than copied from the exemplar's four. One citation, `brunke2022safe`, at the worst-case-severity counter-result. States plainly that nothing ran on hardware. Humanizer pass done, 0 em dashes. Introduces no number absent from Chapter 4. |
+| 6 — Conclusions and Future Works | `Thesis_LaTeX/chapters/06_conclusion.tex` | **written 2026-08-04 (Day 27)** — pp. 70–72 of the `[draft]` build (3 pp.). §6.1 Conclusion answers the general objective and all six specific objectives from `chapters/01_introduction.tex` §`sec:i-objectives`, in order, each pointing at the Ch. 4 section that settled it; no new findings, only Chapter 4's own summary claims quoted. §6.2 Future Works covers five positioned gaps: Layer 2 IBVS (`khan2025csrt_ibvs`), Layer 3 sim-to-real (RH-P12-RN vs. the simulated 2F-85 named as a real transfer gap), the cut `sac` arm (`shahid2022continuous_grasping`), PID-Lagrangian as the direct response to the measured λ overshoot (`stooke2020pid`), and the seed-count limitation. Humanizer pass done, 0 em dashes. Introduces no number absent from Chapter 4. |
+| Abstract | `Thesis_LaTeX/frontmatter/abstract.tex` | **written 2026-08-04 (Day 27)**, last, after Chapters 1 and 6 both existed. One paragraph, 297 words, no citations. Headline is the §4.6 result: the constrained agent holds task performance while collapsing seed-to-seed safety variance from more than twentyfold to roughly two-to-fivefold. Humanizer pass done, 0 em dashes. |
 
 Convention: thesis-book **prose** chapters live in `Thesis_Documentation/` as
 `*_Chapter_Layer1.md`. The numbered `NN_*.md` files in that folder are reproducibility /
@@ -52,8 +93,14 @@ far better graphically than as a ten-column table.
   Professor, Mechanical Engineering) in `frontmatter/_thesis_details.tex`, which feeds the title
   page, the declaration and Examiner 1. **`[final]` now builds clean: exit 0, 68 pages, 0 errors,
   0 undefined citations or references.** The book has no remaining hard-error blockers.
-- Chapter 5 (**Relation with a Real-World Problem + SDG mapping**) is KUET-specific, has no
-  equivalent in a generic ML thesis, and is not started.
+- ~~Chapter 5 (**Relation with a Real-World Problem + SDG mapping**) is KUET-specific, has no
+  equivalent in a generic ML thesis, and is not started.~~ **Written 2026-08-04 (Day 27).** See
+  the chapter table above.
+- **The book now has all six chapters, the abstract, and no stub files left.** `[draft]` builds
+  90 pages / 0 errors / 0 undefined refs; `[final]` builds 87 pages / 0 errors / 0 undefined refs,
+  both confirmed stable on a second consecutive `latexmk` run. Remaining open items are the
+  pre-existing ones below (Chapter 3 §3.8, the Chapter 1/2 §2.2 overlap, font size, Examiner 2),
+  none of them touched by the Chapter 5/6/Abstract session.
 
 ## ▶ Bibliography — see `logbook/10_references.md`
 21 verified entries in `Thesis_LaTeX/references.bib`. **Read the claim map in `10_references.md`
@@ -105,9 +152,9 @@ Draft chapters as work completes, build figures from real results, prep the defe
   (Algorithms, Hardware validation). Problem Description and Objectives untouched at Touhid's
   request. Rebuilt clean: 0 em dashes, 0 undefined citations, figure renders. Chapter now 6
   pages (was 3).
-- Write Chapters 4 (re-derivation, not just prose), 5, 6 (all stubbed or superseded). This line
-  still uses the old seven-chapter numbering in places elsewhere in this file — the live book is
-  six chapters, see HANDOFF.md.
+- ~~Write Chapters 4 (re-derivation, not just prose), 5, 6 (all stubbed or superseded).~~ **All
+  done.** Chapter 4 re-derived 2026-08-03; Chapters 5, 6 and the Abstract written 2026-08-04
+  (Day 27), see the chapter table above and `run_log.md` Day 27 continued.
 - Regenerate the per-seed episodic-cost figure. Confirmed 2026-08-02 that
   `Comparison_test/results/tb_csv/` (2035 files) is in the repo, so this can be done on the
   laptop without the lab PC.

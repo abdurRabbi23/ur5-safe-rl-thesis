@@ -1,10 +1,25 @@
 \kuetfrontheading{Abstract}
 
-\begin{draftnote}
-Not written yet. Write this last, after Chapters 1 and 7 exist, so it can be assembled from
-their opening and closing claims rather than invented separately. The headline it has to carry
-is in Chapter~\ref{ch:results}: the constrained agent holds task performance while collapsing
-seed-to-seed safety variance. One paragraph, roughly 200--300 words, no citations.
-\end{draftnote}
+This thesis asks whether stating a robot manipulator's safety requirement as an explicit
+constraint, rather than as a term added to the reward, changes the behaviour of a
+reinforcement-learned grasping policy and how predictable that behaviour is across independent
+training runs. The question matters because collaborative arms such as the Universal Robots UR5e
+now share workspaces with people, and a policy trained by reinforcement learning cannot be
+inspected the way a hand-derived controller can; its behaviour is known only from the statistics
+of what it does. A shaped reward gives the designer one lever for a safety requirement, a penalty
+weight fixed before training and validated only by trial and error. This work instead trains a
+UR5e in simulation to pick up and lift a cube, comparing an unconstrained proximal policy
+optimisation (PPO) baseline against a constrained variant, PPO-Lagrangian, trained under an
+explicit floor on manipulability, across five independent seeds and two constraint budgets, with
+an added control arm that isolates the constraint's own effect from the extra network a Lagrangian
+method introduces. The control arm reproduced the unconstrained baseline's trained weights
+exactly, so every measured difference is attributable to the constraint alone. The constrained
+agent held task performance steady at both budgets while cutting true singularity crossings by a
+factor of up to forty and eliminating all observed joint-limit contact. Its larger effect, and one
+this thesis did not anticipate, was on consistency: the unconstrained baseline's safety cost
+varied more than twentyfold across identically trained seeds, a spread the constraint collapsed to
+roughly two to five times, at no measurable cost to the grasping task. A manipulator whose safety
+requirement is a stated, checkable number rather than a hand-tuned weight is both a more reliable
+and a more defensible object to build a real deployment around.
 
 \clearpage

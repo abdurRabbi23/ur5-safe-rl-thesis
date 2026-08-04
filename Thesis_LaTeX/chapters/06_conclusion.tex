@@ -1,13 +1,119 @@
 \chapter{Conclusions and Future Works}\label{ch:conclusion}
 
-\begin{draftnote}
-MODULE 7 --- 6.1 Conclusion, 6.2 Future Works, per the accepted book.
+\section{Conclusion}\label{sec:c-conclusion}
 
-Future Works is where the abandoned layers go: image-based visual servoing
-(\texttt{logbook/04\_layer2\_ibvs.md}) and sim-to-real transfer
-(\texttt{logbook/05\_layer3\_sim2real.md}) both have real design content. The cut \texttt{sac} and
-\texttt{cppo10} arms belong here too, framed as positioned gaps rather than omissions.
+This thesis set out to determine whether stating a manipulability safety requirement as an
+explicit constraint, rather than folding it into the reward, changes the safety behaviour of a
+learned grasping policy on a UR5e manipulator, and whether it changes how predictable that
+behaviour is across independent training runs (Section~\ref{sec:i-objectives}). Both questions are
+answered. Constraining the policy reduces unsafe behaviour, and its larger and less anticipated
+effect is on how consistently that behaviour is reproduced from one training run to the next
+(Section~\ref{sec:r-summary}). The six specific objectives set out at the start of this thesis
+were each met in turn.
 
-Citations are pre-assigned in \texttt{logbook/10\_references.md} under "Chapter 7" --- that
-heading now means this chapter.
-\end{draftnote}
+The first objective was to implement an unconstrained PPO baseline and a constrained
+PPO-Lagrangian agent for a UR5e pick-and-lift grasping task in Isaac Lab, trained under a shared
+floor on manipulability. Both were built and trained as specified, on the frozen weld environment
+described in Chapter~\ref{ch:methods}, at the calibrated thresholds recorded in
+Section~\ref{sec:r-design}.
+
+The second objective was to isolate the effect of the constraint itself from the effect of the
+extra cost critic a Lagrangian method carries, by training a control arm whose multiplier is
+pinned at zero throughout. That isolation succeeded more completely than the design anticipated:
+Section~\ref{sec:r-validity} found the control arm's stored network weights identical to the
+unconstrained baseline's, on every seed, so the artifact term in the decomposition of
+Equation~\eqref{eq:decomposition} is zero by direct verification rather than by assumption, and
+every safety difference reported in this thesis can be attributed to the constraint alone.
+
+The third objective was to establish whether the constrained agent's behaviour depends on how
+tight its budget is, by training it at two episodic cost budgets, 25 and 15, rather than one.
+Section~\ref{sec:r-budget} answers it: tightening the budget continued to help within the range
+tested, reducing true singularity crossings further and leaving joint-limit contact at zero, at no
+measurable cost to task performance, though the worst single-instant manipulability was unmoved by
+the tighter budget as much as by the looser one.
+
+The fourth objective was to train every arm on five independent seeds and report outcomes as a
+distribution rather than a single mean. That is the reporting convention followed throughout
+Chapter~\ref{ch:results}, and it is what exposed the finding the general objective was actually
+asking about: the unconstrained baseline's safety outcome is not one number but a distribution
+spanning a factor of twenty, and no telemetry available during training would have told an
+engineer which end of that distribution a given run had landed on.
+
+The fifth objective was to evaluate every trained policy on frozen, held-out episodes, so the
+reported figures describe the policy that would actually be deployed rather than one still
+exploring. Section~\ref{sec:r-design} sets out that protocol, forty-five thousand evaluation
+episodes across three held-out seeds, and it exists because an earlier version of this project's
+evaluation had read safety statistics from a still-learning policy and reported a difference that
+later proved to be measuring an implementation artifact rather than the constraint
+(Section~\ref{sec:r-validity}). The corrected protocol is what makes every other objective's
+finding trustworthy.
+
+The sixth and final objective was to determine whether the constraint changes the average safety
+outcome of a training run, its spread, or both. It changes both, but not by equal amounts. On the
+mean, the constrained agent reduces true singularity crossings by a factor of 7.0 at a budget of
+25 and 39.9 at a budget of 15, and eliminates all observed joint-limit contact at both, against
+10.70\,\% of baseline episodes touching one. On the spread, which Section~\ref{sec:r-variance}
+identifies as the larger effect, a twentyfold seed-to-seed range in episodic safety cost collapses
+to roughly two-to-fivefold, and the same collapse turns up unprompted in task precision, where the
+seed-to-seed standard deviation of sub-centimetre success falls from about 7.5 percentage points
+to about one. Neither effect cost the constrained agent anything on the task itself: reward and
+goal-reach are equal to or better than the baseline's at both budgets.
+
+Read together, the six objectives support the general objective's answer directly. A stated safety
+budget does change what a learned grasping policy does, and its main effect is not a modest
+average improvement but the near-elimination of a lottery in which an unconstrained training run
+might, by the luck of its random seed alone, produce a policy that touches a joint limit on nearly
+half its episodes. Whether that policy is the one shipped to hardware is not something an
+unconstrained training procedure lets an engineer know in advance. A constrained one does.
+
+\section{Future Works}\label{sec:c-future}
+
+Five extensions follow from what this thesis chose not to attempt or could not finish, each
+positioned here rather than apologised for.
+
+The most direct is closing the visual loop. This thesis trained on privileged object pose, the
+cube's true position handed to the policy directly, because isolating the safety comparison from a
+perception problem was the point of Layer 1 (Section~\ref{sec:i-scope}). The registered
+programme's second layer would replace that privileged pose with an eye-in-hand RGB-D camera and
+object detector, and use the learned policy to tune the image Jacobian relating pixel motion to
+joint motion rather than fixing it in advance, extending the fixed, hand-derived visual servoing
+loop of the predecessor project in this laboratory \cite{khan2025csrt_ibvs} into a learned,
+adaptive one. Whether a constraint framed on manipulability continues to hold once the arm is also
+reacting to a noisy, partially occluded camera feed is not something this thesis's
+simulation-only, full-state-observation result can answer, and is the natural next question.
+
+The second is sim-to-real transfer to the physical UR5e, the programme's third layer. The trained
+policy already exports to both JIT and ONNX from the same checkpoint format used throughout this
+thesis, so the software path to a ROS 2 Humble deployment exists. What does not yet exist is a
+resolution to the largest known transfer gap: the simulation grasps with a lumped-mass abstraction
+of a Robotiq 2F-85, welding the cube to the tool frame at the moment of contact rather than
+modelling the grip physically, while the laboratory's real arm carries a ROBOTIS RH-P12-RN, a
+different gripper with different kinematics. Closing that gap is gripper-specific engineering, not
+a parameter to randomise away, and it is Layer 3's opening task rather than an afterthought to it.
+
+The third is the comparison this thesis registered but did not complete. The plan called for an
+off-policy arm, soft actor-critic, alongside the on-policy PPO and PPO-Lagrangian agents actually
+trained; it was cut on schedule grounds, not because a reason emerged to expect it would behave
+differently. Continuous-control grasping has been demonstrated with both algorithm families
+\cite{shahid2022continuous_grasping}, so nothing here argues against completing the comparison,
+only that time ran out before it could be run under the same fairness protocol as the rest of this
+batch.
+
+The fourth is a specific and already-evidenced improvement to the constrained optimiser itself.
+Section~\ref{sec:r-lambda} measured the Lagrange multiplier overshooting on every seed at both
+budgets before settling, a single sharp rise peaking between iterations 47 and 58 followed by a
+decay to zero. That is the textbook signature plain dual ascent is known to produce, integral
+control with nothing to damp it, and it is exactly the problem Stooke \emph{et al.}
+\cite{stooke2020pid} built PID-Lagrangian to correct, by adding proportional and derivative terms
+to the multiplier update. Because this thesis measured the overshoot rather than merely suspecting
+it, PID-Lagrangian is not a speculative extension here. It is a direct response to a documented
+result in Section~\ref{sec:r-lambda}, and the natural successor to the plain dual-ascent update
+used throughout this work.
+
+The fifth is scale in the one dimension this thesis deliberately kept small: the number of seeds.
+Five seeds were enough to show that unconstrained training on this task produces a wide and
+unpredictable range of safety outcomes and that the constraint narrows it
+(Section~\ref{sec:r-variance}), because the effect is large enough to appear clearly even at that
+sample size. Five seeds are not enough to attach a confidence interval to how large the narrowing
+is, a limitation Section~\ref{sec:r-limits} states directly. A larger seed count, beyond what this
+thesis's schedule allowed, would turn a demonstrated effect into a quantified one.

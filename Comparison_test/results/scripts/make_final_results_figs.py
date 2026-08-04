@@ -32,9 +32,9 @@ FONT
 Eleven figures:
   1. fig_mean_reward             training reward curve, 3 arms
   2. fig_mean_episode_cost       training episodic-cost curve, log y, budget reference lines
-  3. fig_reaching_object         training reaching-object reward curve
-  4. fig_lifting_object          training lifting-object reward curve
-  5. fig_manipulability          training mean episode-minimum manipulability curve
+  3. fig_reward_terms            reaching and lifting reward, 1x2 (merged 2026-08-04 from the
+                                  two separate figures fig_reaching_object / fig_lifting_object)
+  4. fig_manipulability          training mean episode-minimum manipulability curve
   6. fig_constraints_components  cost split into singularity/joint-limit/collision (3 panels)
   7. lambda_traj                 Lagrange multiplier, per seed, one panel per constrained arm
                                   (replaces the black-line-art figure of the superseded
@@ -184,6 +184,21 @@ def arm_handles(arms=ARMS):
     return [Line2D([], [], color=COLOR[a], lw=LW, label=LABEL[a]) for a in arms]
 
 
+# Multi-panel figures need a canvas not much wider than the text measure they are placed on.
+# A 12 in figure dropped onto a 6 in measure is scaled by 0.5, and every label halves with it,
+# which is how the first version ended up with 6 pt tick labels in print. Keep these canvases
+# near print width and set type explicitly.
+PANEL_TITLE, PANEL_LABEL, PANEL_TICK, PANEL_VALUE = 15.0, 14.0, 12.5, 12.0
+
+
+def panel_type(ax, title=None):
+    if title:
+        ax.set_title(title, pad=9, fontsize=PANEL_TITLE)
+    ax.tick_params(labelsize=PANEL_TICK)
+    ax.xaxis.label.set_size(PANEL_LABEL)
+    ax.yaxis.label.set_size(PANEL_LABEL)
+
+
 # ----------------------------------------------------------------------------- curve figures
 def training_curve_fig(D, metric, ylabel, name, ylog=False, ylim=None,
                        hlines=None, legend_loc="lower right", arms=ARMS):
@@ -211,23 +226,45 @@ def training_curve_fig(D, metric, ylabel, name, ylog=False, ylim=None,
     save(fig, name)
 
 
+def fig_reward_terms(D):
+    """Reaching and lifting reward side by side in one 1x2 figure (was two separate figures)."""
+    comps = [("reaching_object", "(a) Reaching-object reward"),
+             ("lifting_object", "(b) Lifting-object reward")]
+    fig, axes = plt.subplots(1, 2, figsize=(9.2, 3.8))
+    for ax, (metric, title) in zip(axes, comps):
+        for arm in ARMS:
+            m = D["training"][arm][metric]
+            ax.plot(np.array(m["steps"]), ema(m["mean"]), color=COLOR[arm], lw=LW, zorder=3)
+        ax.set_xlabel("Training iteration")
+        ax.set_xlim(0, 1500)
+        style_axes(ax)
+        panel_type(ax, title)
+    axes[0].set_ylabel("Reward")
+    axes[0].yaxis.label.set_size(PANEL_LABEL)
+    axes[1].legend(handles=arm_handles(), loc="lower right", frameon=False,
+                   fontsize=PANEL_VALUE)
+    fig.tight_layout(pad=0.6, w_pad=2.2)
+    save(fig, "fig_reward_terms")
+
+
 def fig_constraints_components(D):
     comps = [("cost_singularity", "(a) Singularity"),
              ("cost_joint_limit", "(b) Joint limit"),
              ("cost_collision", "(c) Collision")]
-    fig, axes = plt.subplots(1, 3, figsize=(12.6, 3.9))
+    fig, axes = plt.subplots(1, 3, figsize=(10.2, 3.6))
     for ax, (metric, title) in zip(axes, comps):
         for arm in ARMS:
             m = D["training"][arm][metric]
             ax.plot(np.array(m["steps"]), ema(m["mean"]), color=COLOR[arm], lw=2.0, zorder=3)
-        ax.set_title(title, pad=8)
         ax.set_xlabel("Training iteration")
         ax.set_xlim(0, 1500)
         style_axes(ax)
+        panel_type(ax, title)
     axes[0].set_ylabel("Cost contribution")
+    axes[0].yaxis.label.set_size(PANEL_LABEL)
     fig.legend(handles=arm_handles(), loc="upper center", ncol=3, frameon=False,
-               bbox_to_anchor=(0.5, 1.10))
-    fig.tight_layout(pad=0.5)
+               bbox_to_anchor=(0.5, 1.11), fontsize=PANEL_VALUE)
+    fig.tight_layout(pad=0.5, w_pad=1.8)
     save(fig, "fig_constraints_components")
 
 
@@ -248,21 +285,24 @@ def fig_lambda_traj(D):
     panels = [("cppo", r"(a) cPPO, $d = 25$"), ("cppo15", r"(b) cPPO, $d = 15$")]
     dashes = [(0, ()), (0, (5, 2)), (0, (1.5, 1.5)), (0, (6, 2, 1.5, 2)), (0, (3, 1.5, 1, 1.5))]
 
-    fig, axes = plt.subplots(1, 2, figsize=(11.6, 4.2), sharey=True)
+    # Deliberately narrow. A wide figure gets scaled down hard to fit the text block, which
+    # shrinks every label with it; at 11.6 in placed on a 6 in measure the tick labels came out
+    # near 7 pt. Keeping the canvas close to the printed width keeps the type legible, so the
+    # font sizes below are set explicitly rather than inherited from the rcParams defaults.
+    fig, axes = plt.subplots(1, 2, figsize=(8.6, 3.9), sharey=True)
     for ax, (arm, title) in zip(axes, panels):
         for seed, dash in zip(SEEDS, dashes):
             lam = np.array(D["training"][arm]["_lambda_series"][str(seed)])
-            ax.plot(np.arange(len(lam)), lam, color=COLOR[arm], lw=1.7,
+            ax.plot(np.arange(len(lam)), lam, color=COLOR[arm], lw=1.9,
                     linestyle=dash, label=f"seed {seed}", zorder=3)
         ax.set_xlim(0, 300)
-        ax.set_title(title, pad=8)
-        ax.set_xlabel("Training iteration")
+        ax.set_title(title, pad=9, fontsize=16)
+        ax.set_xlabel("Training iteration", fontsize=15)
+        ax.tick_params(labelsize=13.5)
         style_axes(ax)
-    axes[0].set_ylabel(r"Lagrange multiplier $\lambda$")
-    axes[1].legend(frameon=False, loc="upper right", handlelength=3.0, fontsize=11.5)
-    fig.text(0.5, -0.02, r"$\lambda$ is zero for the remaining 1200 iterations in every run.",
-             ha="center", fontsize=11.5, color=INK)
-    fig.tight_layout(pad=0.5)
+    axes[0].set_ylabel(r"Lagrange multiplier $\lambda$", fontsize=15)
+    axes[1].legend(frameon=False, loc="upper right", handlelength=2.8, fontsize=13)
+    fig.tight_layout(pad=0.6, w_pad=2.0)
     save(fig, "lambda_traj")
 
 
@@ -272,7 +312,7 @@ def fig_seed_variance(D):
     This figure carries the variance-collapse evidence that the removed +/- std bands used to
     show. Shared log y-axis so the three panels are directly comparable by eye.
     """
-    fig, axes = plt.subplots(1, 3, figsize=(12.6, 4.1), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(10.4, 3.9), sharey=True)
     budget = {"ctrl": None, "cppo": 25, "cppo15": 15}
     panel = ["(a) ", "(b) ", "(c) "]
     for k, (ax, arm) in enumerate(zip(axes, ARMS)):
@@ -288,17 +328,19 @@ def fig_seed_variance(D):
             ax.text(1480, budget[arm] * 1.15, f"d = {budget[arm]}", fontsize=11,
                     color=RULE, ha="right", va="bottom")
         spread = max(per_seed.values()) / max(min(per_seed.values()), 1e-9)
-        ax.set_title(f"{panel[k]}{LABEL[arm]}\nseed spread {spread:.0f}$\\times$", pad=8)
         ax.set_xlabel("Training iteration")
         ax.set_xlim(0, 1500)
         ax.set_yscale("log")
         ax.set_ylim(1, 500)
         style_axes(ax)
+        panel_type(ax, f"{panel[k]}{LABEL[arm]}\nseed spread {spread:.0f}$\\times$")
     axes[0].set_ylabel("Episodic safety cost")
+    axes[0].yaxis.label.set_size(PANEL_LABEL)
     fig.legend(handles=[Line2D([], [], color=INK, lw=2.6, label="across-seed mean"),
                         Line2D([], [], color=INK, lw=1.0, alpha=0.45, label="individual seed")],
-               loc="upper center", ncol=2, frameon=False, bbox_to_anchor=(0.5, 1.09))
-    fig.tight_layout(pad=0.5)
+               loc="upper center", ncol=2, frameon=False, bbox_to_anchor=(0.5, 1.10),
+               fontsize=PANEL_VALUE)
+    fig.tight_layout(pad=0.5, w_pad=1.6)
     save(fig, "fig_seed_variance")
 
 
@@ -313,31 +355,45 @@ def fig_per_seed_cost(D):
     Training tail means, matching Table 4.5's upper block, not the evaluation block.
     """
     tr = D["training"]
-    fig, ax = plt.subplots(figsize=(7.2, 4.3))
-    x = np.arange(len(SEEDS))
-    marks = {"ctrl": ("o", 8.0), "cppo": ("o", 7.0), "cppo15": ("s", 6.8)}
+    cost = {a: {s: tr[a]["mean_episode_cost"]["per_seed_tail"][str(s)] for s in SEEDS}
+            for a in ARMS}
 
-    for i, seed in enumerate(SEEDS):                       # the joining segment
-        ys = [tr[a]["mean_episode_cost"]["per_seed_tail"][str(seed)] for a in ARMS]
+    # Seeds are ordered by descending BASELINE cost rather than by seed number. The seed labels
+    # are categorical, so the order carries no information of its own, and sorting turns the
+    # finding into a shape: the baseline sweeps down through a factor of twenty across the plot
+    # while both constrained arms stay flat. Stated in the caption so the choice is visible.
+    order = sorted(SEEDS, key=lambda s: -cost["ctrl"][s])
+    x = np.arange(len(order))
+    marks = {"ctrl": ("o", 9.0), "cppo": ("o", 8.0), "cppo15": ("s", 7.6)}
+
+    fig, ax = plt.subplots(figsize=(7.6, 4.5))
+
+    for i, seed in enumerate(order):                        # the joining segment
+        ys = [cost[a][seed] for a in ARMS]
         ax.plot([i, i, i], ys, color="#9A9A9A", lw=1.2, zorder=2)
-    for a in ARMS:                                          # the three arm markers
-        ys = [tr[a]["mean_episode_cost"]["per_seed_tail"][str(s)] for s in SEEDS]
+    for a in ARMS:                                          # per-arm trend, then the markers
+        ys = [cost[a][s] for s in order]
+        spread = max(ys) / min(ys)
+        ax.plot(x, ys, color=COLOR[a], lw=1.4, alpha=0.45, zorder=3)
         mk, ms = marks[a]
-        ax.plot(x, ys, linestyle="none", marker=mk, ms=ms, color=COLOR[a],
-                mec="white", mew=1.1, label=LABEL[a], zorder=4)
+        # The spread rides in the legend rather than floating in the axes, where the baseline's
+        # label had nowhere to sit that was not either off-scale or on top of a data point.
+        ax.plot(x, ys, linestyle="none", marker=mk, ms=ms, color=COLOR[a], mec="white",
+                mew=1.2, label=f"{LABEL[a]}, {spread:.1f}$\\times$ spread", zorder=5)
 
     for b in (25, 15):
         ax.axhline(b, color=RULE, lw=1.3, ls="--", zorder=1)
-        ax.text(len(SEEDS) - 0.55, b * 1.07, f"$d = {b}$", fontsize=11.5,
-                color=RULE, ha="right", va="bottom")
+        ax.text(-0.38, b * 1.06, f"$d = {b}$", fontsize=11.5, color=RULE,
+                ha="left", va="bottom")
 
     ax.set_xticks(x)
-    ax.set_xticklabels([f"seed {s}" for s in SEEDS])
-    ax.set_xlim(-0.45, len(SEEDS) - 0.55)
+    ax.set_xticklabels([f"seed {s}" for s in order])
+    ax.set_xlim(-0.45, len(order) - 0.55)
     ax.set_ylabel("Episodic safety cost (training tail mean)")
     ax.set_yscale("log")
     style_axes(ax)
-    ax.legend(loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.15))
+    ax.legend(loc="upper center", ncol=1, frameon=False, bbox_to_anchor=(0.70, 1.02),
+              fontsize=11.5, handletextpad=0.5)
     fig.tight_layout(pad=0.5)
     save(fig, "per_seed_cost")
 
@@ -356,7 +412,7 @@ def fig_eval_task_performance(D):
                ("goal_reach_1cm_pct", "Goal-reach\n< 1 cm"),
                ("goal_reach_2cm_pct", "Goal-reach\n< 2 cm"),
                ("goal_reach_5cm_pct", "Goal-reach\n< 5 cm")]
-    fig, (axL, axR) = plt.subplots(1, 2, figsize=(13.6, 4.8))
+    fig, (axL, axR) = plt.subplots(2, 1, figsize=(8.6, 8.2))
     x = np.arange(len(metrics))
     width = 0.26
     base, top = 90.0, 102.4
@@ -395,8 +451,8 @@ def fig_eval_task_performance(D):
     style_axes(axR)
 
     fig.legend(handles=arm_handles(), loc="upper center", ncol=3, frameon=False,
-               bbox_to_anchor=(0.5, 0.99))
-    fig.subplots_adjust(left=0.065, right=0.985, top=0.80, bottom=0.13, wspace=0.20)
+               bbox_to_anchor=(0.5, 0.995))
+    fig.subplots_adjust(left=0.11, right=0.98, top=0.90, bottom=0.07, hspace=0.32)
     save(fig, "fig_eval_task_performance")
 
 
@@ -409,7 +465,7 @@ def fig_eval_safety_violations(D):
         ("true_singularity_pct", r"(c) True singularity crossing ($w < 10^{-4}$)", "Episodes (%)", True),
         ("coll_touched_pct", "(d) Collision floor touched", "Episodes (%)", False),
     ]
-    fig, axes = plt.subplots(2, 2, figsize=(11.4, 8.0))
+    fig, axes = plt.subplots(2, 2, figsize=(8.8, 7.4))
     x = np.arange(len(ARMS))
     for ax, (key, title, ylab, ylog) in zip(axes.ravel(), panels):
         vals = [ev[a][key] for a in ARMS]
@@ -425,13 +481,14 @@ def fig_eval_safety_violations(D):
         for j, v in enumerate(vals):
             lab = "0.00" if v == 0 else (f"{v:.3f}" if v < 0.1 else f"{v:.2f}")
             ypos = (max(v, 1e-2) * 1.18) if ylog else (v + max(vals) * 0.04)
-            ax.text(j, ypos, lab, ha="center", va="bottom", fontsize=12)
+            ax.text(j, ypos, lab, ha="center", va="bottom", fontsize=PANEL_VALUE)
         ax.set_xticks(x)
         ax.set_xticklabels([LABEL[a].replace(" (", "\n(") for a in ARMS])
         ax.set_ylabel(ylab)
-        ax.set_title(title, pad=8)
         style_axes(ax)
-    fig.tight_layout(pad=1.0, h_pad=2.6, w_pad=2.4)
+        panel_type(ax, title)
+    fig.tight_layout(pad=1.0)
+    fig.subplots_adjust(hspace=0.52, wspace=0.34)
     save(fig, "fig_eval_safety_violations")
 
 
@@ -450,8 +507,7 @@ def main():
     training_curve_fig(D, "mean_episode_cost", "Mean episodic safety cost", "fig_mean_episode_cost",
                        ylog=True, ylim=(1, 400), legend_loc="lower right",
                        hlines=[(25, "budget d = 25"), (15, "budget d = 15")])
-    training_curve_fig(D, "reaching_object", "Reaching-object reward", "fig_reaching_object")
-    training_curve_fig(D, "lifting_object", "Lifting-object reward", "fig_lifting_object")
+    fig_reward_terms(D)
     training_curve_fig(D, "manip_min", "Mean episode-minimum manipulability $w$",
                        "fig_manipulability", legend_loc="upper right")
     fig_constraints_components(D)
