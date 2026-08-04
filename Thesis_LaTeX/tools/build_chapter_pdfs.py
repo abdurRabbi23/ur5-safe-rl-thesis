@@ -47,6 +47,7 @@ Notes
 - Does not touch main.tex or any chapter file.
 """
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -100,11 +101,23 @@ def imported_label_block(main_aux, exclude_labels):
 
 
 def ensure_symlinks():
+    """Symlink the real project files into BUILD_DIR so latexmk can see them
+    from the scratch directory. Uses RELATIVE targets and self-heals: if
+    this repo was last built from a different machine/mount (e.g. Claude's
+    sandbox vs. your own machine), the leftover symlinks point at a path
+    that doesn't exist here and need replacing, not just leaving alone."""
     BUILD_DIR.mkdir(exist_ok=True)
     for item in SYMLINK_ITEMS:
         link = BUILD_DIR / item
-        if not link.exists():
-            link.symlink_to(ROOT / item)
+        target = ROOT / item
+        desired = os.path.relpath(target, BUILD_DIR)
+        if link.is_symlink():
+            if os.readlink(link) == desired:
+                continue  # already correct (relative, matches this checkout), nothing to do
+            link.unlink()  # stale/broken/absolute -- e.g. left by a different machine's run
+        elif link.exists():
+            continue  # a real file/dir already sits here, don't touch it
+        link.symlink_to(desired)
 
 
 def compile_and_check(tex_name, out_name, allow_bibliography_heading=False):

@@ -3412,6 +3412,32 @@ Verified: 73 pp., starts at Chapter 1 (no cover), all 6 chapter headings present
 page (`frontmatter/coverpage.tex`) now opens `Thesis_Report_Body_Submission.pdf` (page 1), before
 Chapter 1 (page 2). 74 pp. total. No other front matter added. Re-verified clean.
 
+## Day 27 (cont.) — refresh after chapter edits; hit and fixed two unrelated breakages
+Touhid edited existing chapters (turned out to be new sections inside chapters, not new chapter
+files) and asked for the PDFs to be refreshed. `latexmk -pdf main.tex` failed with two problems,
+both environment/tooling issues, not content bugs:
+1. **Stale TeX filename cache.** `pdflatex` reported core packages (`setspace`, `booktabs`,
+   `titlesec`, Times/`ptm` font metrics, etc.) as missing even though they were present on disk —
+   classic stale `ls-R` after this session's sandbox was freshly mounted. Fixed with `mktexlsr`.
+2. **Corrupted `main.aux`.** The last 3 `\citation{...}` lines had lost their leading backslash
+   (`citation{...}` instead of `\citation{...}`), which crashes LaTeX with a spurious "Missing
+   \begin{document}" — a leftover from an earlier `latexmk -C` clean attempt that couldn't fully
+   run because files in this connected folder can't be deleted, only overwritten (see
+   `chapter_pdfs/` history above). Fixed by truncating `main.aux`/`.bbl`/`.blg`/`.toc`/`.lof`
+   /`.lot`/`.out` to empty (truncate/overwrite works; delete doesn't) and rebuilding from scratch.
+
+After both fixes: full book builds clean, **89 pp.** (was 87), 0 errors, 0 undefined refs. All 9
+`chapter_pdfs/` deliverables regenerated (6 chapters, cover, bibliography, submission, the 3-4
+combo) and page counts checked against the edit: Ch.3 22→23 pp., Ch.5 1→2 pp., Ch.6 1→3 pp.
+(matches "new sections added" there); Ch.1/2/4 page counts unchanged despite edits (not
+necessarily a problem — minor text edits don't always shift page count).
+
+**Flag for Touhid:** a vim swap file, `chapters/.02_literature_review.tex.swp`, is sitting in the
+chapters folder (timestamp newer than `02_literature_review.tex` itself) — usually means an
+editor session on Chapter 2 didn't exit cleanly. Ch.2's page count didn't change in this refresh,
+so if you made edits there, they may not have been saved. Worth checking `vim -r
+chapters/02_literature_review.tex` to see if it offers unsaved recovery content.
+
 **Same day, title finalised:** `\thesistitle` (single source, `frontmatter/_thesis_details.tex`)
 changed from "Safe Constrained Reinforcement Learning for Precision Grasping on a UR5e
 Manipulator: A Simulation Study" to **"Comparative Evaluation of Constrained and Unconstrained
@@ -3615,3 +3641,105 @@ the draftnote and disappears in `[final]`. Rendered the corrected \S2.9 page and
 
 **The 86/14 figure is now gone from the thesis except where it is explicitly labelled as the
 calibration probe's own number.** Chapters 2, 3 and 4 agree.
+
+## Day 28 (2026-08-05) — Chapter 4 second review pass, and a broken build repaired
+Touhid raised nine points on the built PDF. All actioned. One unrelated blocker was found and
+fixed first.
+
+**THE BUILD WAS BROKEN ON ARRIVAL.** The commit "Created folder for pdfs and pngs and organised
+them" moved every figure into `figures/pdfs/`, `figures/_pngs/` and
+`figures/literature_review_figs/`, but `\graphicspath` in `thesis-format.sty` still pointed only
+at `figures/`. Result: `latexmk` exit 12, 17 missing-file errors, no figures in the PDF. Fixed by
+listing all four directories in `\graphicspath`, plus one hardcoded `figures/` prefix in
+Chapter 1 that `\graphicspath` cannot help (a path with a directory component is not searched).
+`make_final_results_figs.py` now writes PDFs and PNGs to the two subfolders directly.
+**Rule recorded in `figures/README.md`: a new subfolder means a new entry in `\graphicspath`.**
+
+**Tables.** 4.2 gained reaching-object and lifting-object reward rows. 4.3's goal-distance rows
+converted from metres to centimetres. 4.4 lost `Mean episode-minimum w` and
+`Worst single-episode w`.
+
+**The Table 4.4 deletion was nearly a cross-chapter break.** Touhid initially asked for the two
+rows AND the prose citing them to go. Chapter 5, written the previous evening by another
+session, opens its hardware-safety-case argument with an explicit cross-reference to that exact
+counter-result and cites `brunke2022safe` on it; Chapter 6 restates it. Deleting the Chapter 4
+prose would have left Chapter 5 pointing at a section that no longer said what it claimed.
+Raised with the evidence and the decision reversed: **rows dropped, all prose kept.** Chapters 5
+and 6 are untouched and still valid. Worth remembering that Chapter 4 is now load-bearing for two
+downstream chapters, so deletions there are no longer local.
+
+**Figures, now ten not eleven.**
+- Old 4.6 and 4.7 (manipulability, episodic cost) merged into `fig_safety_curves`, 1×2. The two
+  budget lines carry **different dash patterns**, not just different heights, so they survive a
+  monochrome print and a scale-down.
+- 4.3 (evaluation task performance) and 4.4 (safety grid) widened to the full text measure.
+- **New 4.10, `fig_budget_effect`**, for Section 4.8: proportional change per metric on
+  tightening d = 25 to d = 15, improvements drawn left of zero and regressions right regardless
+  of each metric's natural direction, so no sign has to be inverted while reading. It shows the
+  one regression (soft-margin fraction, +37.9 %) as prominently as the headline gain (true
+  singularity crossings, -82.5 %), which matches what the section's three qualifications say.
+- Every caption shortened. The long explanatory captions were bloating the List of Figures;
+  their content moved into body prose, which is where an argument belongs.
+- 4.7 (`per_seed_cost`) keeps its cost-descending seed order, confirmed with Touhid rather than
+  assumed. Sequential order would match Table 4.5 column-for-column but destroys the downward
+  sweep that makes the variance collapse legible.
+
+**Verified:** `[draft]` exit 0, 89 pages; `[final]` exit 0, 87 pages; 0 errors and 0 undefined
+references in both. Em-dash count 0 in Chapters 4, 5 and 6. Every `\includegraphics` target
+resolves except Chapter 3's `ur5e_sim.pdf`/`.png`, which never existed and sits inside an
+`\IfFileExists` fallback. Flagged, not fixed, because another session was in that file.
+
+**Left behind deliberately:** five now-unused figure PDFs in `figures/pdfs/` from the two merges.
+Listed in `figures/README.md` as safe to delete.
+
+## Day 28 (2026-08-05), later — every table and figure aligned to the text measure
+Touhid asked for all tables and figures to sit flush with the margins, matching Tables 4.2 and
+4.3. Measured first rather than assumed: the A4 geometry (left 30 mm, right 25 mm) gives a
+155 mm measure, Table 4.2 was filling about 95 % of it and Table 4.3 about 98 %, while
+Chapter 2's fixed-centimetre tables sat at 85--87 % and one Chapter 3 table at 80 %. That spread
+is what read as misalignment.
+
+**Tables: all 26 converted, chapters 2 to 4.** `tabular` became
+`tabular*{\textwidth}{@{\extracolsep{\fill}}...}`, which pads the inter-column gaps until the
+table spans exactly the measure. Chosen over the alternatives deliberately: `\resizebox` would
+have scaled the type and broken the 12 pt table-font rule, and rewriting every column spec by
+hand across 26 tables would have been slow and error-prone. `\extracolsep` leaves the declared
+column widths and all fonts untouched. Done by script with balanced-brace parsing of the column
+spec, since several specs contain nested braces such as
+`>{\raggedright\arraybackslash}p{0.30\textwidth}`. Verified 26 begin/end pairs before and after.
+
+**Figures: 15 `\includegraphics` set to `\textwidth`,** plus one `\resizebox` at 0.96 raised to
+full width. Chapter 1's photograph and four Chapter 2 figures were the largest changes, from
+0.44--0.88.
+
+**One figure deliberately exempted, on measurement.** `lit_ferreira_ur5env.png` is 433 px wide.
+At 0.44 textwidth it prints at about 161 dpi; at full width it would fall to **71 dpi**, which is
+visibly soft on paper. It keeps its size. The other rasters were checked the same way and all
+land at 160 dpi or better at full width (`ur5e_platform_interim` 160, `lit_stooke` 223,
+`lit_henderson` 216, `lit_shen` 290), so only the one is affected.
+
+**Not forced, and flagged instead:** two bare `tikzpicture` diagrams in Chapter 3 (lines 410 and
+606) draw at their natural size. Wrapping them in `\resizebox` would align them to the margin but
+would also scale their label type, leaving Chapter 3 with diagrams at several different font
+sizes. Left alone, also because another session has been editing that file.
+
+**Verified: no regression.** `[draft]` exit 0, 90 pages; `[final]` exit 0, 88 pages; 0 errors and
+0 undefined references in both. Overfull-hbox count in `[final]` is 3 distinct boxes, all
+pre-existing: two are sub-3 pt entries in the lists of tables and figures, one is a Chapter 2
+paragraph that was already overfull before this change. **No table overflowed**, which was the
+main risk of stretching them.
+
+## Day 27 (2026-08-05) — Figure 3.1 supplied
+
+- Touhid supplied the UR5e simulation screenshot for Figure 3.1 (`fig:m-ur5e-sim`, was a labelled
+  empty placeholder box since Day 26). Saved as `Thesis_LaTeX/figures/ur5e_sim.png` (Isaac Sim
+  viewport, UR5e at home pose, 993x632 px).
+- Forced rebuild with `latexmk -pdf -g` (the `\IfFileExists` placeholder branch isn't tracked as
+  a build dependency, so a plain rebuild would have kept using the empty-box branch — same
+  gotcha as the KUET monogram on Day 26).
+- Verified: `[draft]` build exit 0, 91 pages (unchanged from before the figure was added), 0
+  undefined references. Rendered page 45 and visually confirmed the figure sits below Table 3.3
+  and fits the page cleanly, no overflow.
+- Flagged, not fixed: the screenshot carries Isaac Sim's UI chrome (RTX Real-Time badge,
+  viewport icons, top-left corner) uncropped. Noted in `figures/README.md`; cheap to crop later
+  if Touhid wants a cleaner frame, left alone since it's his source image.

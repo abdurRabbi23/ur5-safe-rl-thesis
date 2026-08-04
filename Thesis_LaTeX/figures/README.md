@@ -35,19 +35,38 @@ which consumes `final_results_summary.json` written by `build_final_results_data
 `Comparison_test/final_results/` and nothing else. Do not hand-edit any of these; edit the script
 and re-run it.
 
+**Folder layout changed 2026-08-04.** PDFs live in `figures/pdfs/`, PNGs in `figures/_pngs/`,
+Chapter 1 and 2 raster art in `figures/literature_review_figs/`. LaTeX finds them because
+`\graphicspath` in `thesis-format.sty` lists every subfolder, so `\includegraphics` still takes a
+bare filename with no directory prefix. **Adding a new subfolder means adding it to
+`\graphicspath` too, or the build dies** with a missing-file error, which is exactly what
+happened when the folders were first created.
+
 | File | Fig. | Content |
 |---|---|---|
 | `fig_mean_reward.pdf` | 4.1 | Mean episodic reward, 3 arms |
-| `fig_reaching_object.pdf` | 4.2 | Reaching-object reward |
-| `fig_lifting_object.pdf` | 4.3 | Lifting-object reward |
-| `fig_eval_task_performance.pdf` | 4.4 | Success rates zoomed + failure rate on log axis |
-| `fig_eval_safety_violations.pdf` | 4.5 | Four safety outcomes, 2×2, independently scaled |
-| `fig_constraints_components.pdf` | 4.6 | Cost split into singularity / joint limit / collision |
-| `fig_manipulability.pdf` | 4.7 | Mean episode-minimum manipulability |
-| `fig_mean_episode_cost.pdf` | 4.8 | Episodic cost vs budgets, log axis |
-| `per_seed_cost.pdf` | 4.9 | Per-seed cost, vertical segment per seed |
-| `fig_seed_variance.pdf` | 4.10 | Per-seed cost over training, one panel per arm |
-| `lambda_traj.pdf` | 4.11 | Lagrange multiplier, per seed, both constrained arms |
+| `fig_reward_terms.pdf` | 4.2 | Reaching and lifting reward, 1×2 |
+| `fig_eval_task_performance.pdf` | 4.3 | Success rates zoomed + failure rate on log axis, 2×1 |
+| `fig_eval_safety_violations.pdf` | 4.4 | Four safety outcomes, 2×2, independently scaled |
+| `fig_constraints_components.pdf` | 4.5 | Cost split into singularity / joint limit / collision |
+| `fig_safety_curves.pdf` | 4.6 | Manipulability and episodic cost, 1×2 |
+| `per_seed_cost.pdf` | 4.7 | Per-seed cost, vertical segment per seed |
+| `fig_seed_variance.pdf` | 4.8 | Per-seed cost over training, one panel per arm |
+| `lambda_traj.pdf` | 4.9 | Lagrange multiplier, per seed, both constrained arms |
+| `fig_budget_effect.pdf` | 4.10 | Proportional change on tightening d = 25 to d = 15 |
+
+**Unused leftovers in `pdfs/`, safe to delete:** `fig_manipulability.pdf` and
+`fig_mean_episode_cost.pdf` (merged into `fig_safety_curves` on 2026-08-04),
+`fig_reaching_object.pdf` and `fig_lifting_object.pdf` (merged into `fig_reward_terms`), and
+`fig_lambda_trajectory.pdf` (superseded by `lambda_traj`). The script no longer emits any of
+them. Nothing references them; they are kept only because deleting files is not this script's
+job.
+
+**`ur5e_sim.png`** — Figure 3.1, `fig:m-ur5e-sim`. Isaac Sim viewport screenshot of the UR5e at
+its home pose in the simulated workspace, supplied by Touhid 2026-08-05. 993 x 632 px. Carries
+the raw Isaac Sim UI chrome (RTX Real-Time badge, camera/viewport icons in the top-left corner) —
+not cropped. Worth a cheap crop before final submission if Touhid wants a cleaner frame; ask
+before doing it since it is his source image.
 
 **Superseded scripts, do not use:** `make_ch4_figs.py` (produced the black-line-art `per_seed_cost`
 and `lambda_traj`) and `make_per_seed_cost_fig.py` (two arms, reads the flat `results/tb_csv/`

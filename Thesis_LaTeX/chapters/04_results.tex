@@ -71,7 +71,7 @@ it is the larger of the two active terms by realised cost. The collision floor o
 confirmed inactive and remains so in every result below.
 
 \begin{kuettable}{Experimental configuration.}{tab:r-config}
-\begin{tabular}{p{0.34\textwidth}p{0.56\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.34\textwidth}p{0.56\textwidth}}
 \toprule
 Item & Value\\
 \midrule
@@ -87,7 +87,7 @@ Evaluation episodes & 3000 per policy, 15{,}000 per arm, 45{,}000 in total\\
 \texttt{COLLISION\_Z\_FLOOR} & 0.05 m (confirmed inactive)\\
 \texttt{cost\_limit} & 25 (\texttt{cppo}), 15 (\texttt{cppo15})\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 \section{Validity check: the control arm reproduces the baseline exactly}\label{sec:r-validity}
@@ -186,18 +186,20 @@ training, with the spread across the five seeds.
 \begin{kuettable}{Training-time performance (tail mean over the final 10 \% of iterations, mean \(\pm\) sd across n = 5 seeds).}{tab:r-train}
 % Ragged-right on the label column: justified setting stretched the wrap inside
 % "viol_singularity (step fraction)" into a visible gap.
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.30\textwidth}p{0.18\textwidth}p{0.18\textwidth}p{0.18\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash}p{0.30\textwidth}p{0.18\textwidth}p{0.18\textwidth}p{0.18\textwidth}}
 \toprule
 \multirow{2}{*}{Quantity} & \multicolumn{3}{c}{Mean \(\pm\) sd across n = 5 seeds}\\
 \cmidrule(l){2-4}
  & PPO (baseline) & cPPO, \(d=25\) & cPPO, \(d=15\)\\
 \midrule
 Mean reward & 133.06 \(\pm\) 1.27 & 132.18 \(\pm\) 1.99 & \textbf{134.09 \(\pm\) 0.80}\\
+Reaching-object reward & \textbf{0.904 \(\pm\) 0.004} & 0.891 \(\pm\) 0.016 & 0.903 \(\pm\) 0.002\\
+Lifting-object reward & \textbf{9.467 \(\pm\) 0.021} & 9.437 \(\pm\) 0.030 & 9.441 \(\pm\) 0.021\\
 Mean episodic cost & 81.86 \(\pm\) 62.56 & 14.22 \(\pm\) 4.38 & \textbf{10.94 \(\pm\) 4.30}\\
 \texttt{viol\_singularity} (step fraction) & 0.455 \(\pm\) 0.338 & \textbf{0.169 \(\pm\) 0.043} & 0.233 \(\pm\) 0.088\\
 \texttt{viol\_joint\_limit} (step fraction) & 0.076 \(\pm\) 0.156 & \textbf{0.000} & \textbf{0.000}\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 On reward the three arms are indistinguishable. The reward decomposition for the \(d=25\) arm is
@@ -210,7 +212,7 @@ reward, and the honest form of that statement is an upper bound rather than a po
 Figure~\ref{fig:r-reward} shows the learning curves behind that row.
 
 \begin{kuetfigure}{Mean episodic reward, averaged across the five seeds.}{fig:r-reward}
-\includegraphics[width=0.86\textwidth]{fig_mean_reward.pdf}
+\includegraphics[width=\textwidth]{fig_mean_reward.pdf}
 \end{kuetfigure}
 
 All three arms converge to the same level. The constrained arms learn more slowly for roughly the
@@ -223,11 +225,9 @@ The reward total is a sum of shaped terms, and the two that carry the task are p
 Figure~\ref{fig:r-rewardterms}. Both converge to a common level on all three arms, so the equality
 of the reward row is not an artifact of one term compensating for another.
 
-\begin{kuetfigure}{The two task-carrying reward terms, averaged across the five seeds. The arms
-are indistinguishable on lifting after roughly three hundred iterations, which is the
-training-time counterpart of the lift-success row of Table~\ref{tab:r-task}. Curves are
-exponentially smoothed for legibility.}{fig:r-rewardterms}
-\includegraphics[width=0.99\textwidth]{fig_reward_terms.pdf}
+\begin{kuetfigure}{The two task-carrying reward terms, averaged across the five seeds. Curves are
+exponentially smoothed.}{fig:r-rewardterms}
+\includegraphics[width=\textwidth]{fig_reward_terms.pdf}
 \end{kuetfigure}
 
 The soft-margin violation fractions in the lower rows are included for completeness and are
@@ -251,7 +251,7 @@ ceiling that produced the implausible 100\,\% against 0\,\% figures in the withd
 this work.
 
 \begin{kuettable}{Evaluation-time task performance on the frozen deterministic policy. Each arm is 15{,}000 episodes (5 training seeds \(\times\) 3 evaluation seeds \(\times\) 1000). Bracketed figures are the standard deviation across the five training seeds.}{tab:r-task}
-\begin{tabular}{p{0.30\textwidth}p{0.19\textwidth}p{0.19\textwidth}p{0.19\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.30\textwidth}p{0.19\textwidth}p{0.19\textwidth}p{0.19\textwidth}}
 \toprule
 Metric & PPO (baseline) & cPPO, \(d=25\) & cPPO, \(d=15\)\\
 \midrule
@@ -259,12 +259,12 @@ Lift success & 99.91 \% (0.09) & 99.87 \% (0.08) & 99.90 \% (0.08)\\
 Goal-reach \textless{} 1 cm & 93.03 \% (7.52) & 98.33 \% (1.04) & \textbf{98.93 \% (0.95)}\\
 Goal-reach \textless{} 2 cm & 98.78 \% & 99.58 \% & \textbf{99.84 \%}\\
 Goal-reach \textless{} 5 cm & 99.81 \% & 99.86 \% & \textbf{99.90 \%}\\
-Goal distance, mean (m) & 0.0062 & 0.0051 & \textbf{0.0047}\\
-Goal distance, median (m) & 0.0050 & 0.0041 & 0.0041\\
-Goal distance, p90 (m) & 0.0087 & 0.0064 & \textbf{0.0059}\\
-Goal distance, max (m) & 0.812 & 1.326 & 0.708\\
+Goal distance, mean (cm) & 0.62 & 0.51 & \textbf{0.47}\\
+Goal distance, median (cm) & 0.50 & 0.41 & 0.41\\
+Goal distance, p90 (cm) & 0.87 & 0.64 & \textbf{0.59}\\
+Goal distance, max (cm) & 81.20 & 132.58 & 70.81\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 Every arm lifts the cube on essentially every episode, and the constrained arms are ahead of the
@@ -281,12 +281,10 @@ a logarithmic axis, where a difference between 99.91 and 93.03\,\% becomes a dif
 success rates this close to the ceiling, and it is the reason the goal-reach rows are reported at
 three thresholds rather than one.
 
-\begin{kuetfigure}{Evaluation-time task performance, 15{,}000 episodes per arm. Panel (a) shows
-success rates with the vertical axis zoomed to the 90 to 100\,\% band, the suppressed region
-marked by the hatched strip at the axis base. Panel (b) shows the complement, the failure rate,
-on a logarithmic axis, where differences invisible in panel (a) separate by more than a factor of
-seventy. Lower is better in panel (b).}{fig:r-evaltask}
-\includegraphics[width=0.70\textwidth]{fig_eval_task_performance.pdf}
+\begin{kuetfigure}{Evaluation-time task performance, 15{,}000 episodes per arm. Panel (a) is zoomed to
+90--100\,\%, the suppressed region hatched at the axis base. Panel (b) is the same data as
+failure rate, lower being better.}{fig:r-evaltask}
+\includegraphics[width=\textwidth]{fig_eval_task_performance.pdf}
 \end{kuetfigure}
 
 One column of that table is more interesting than the margins, and it is the bracketed one. The
@@ -314,20 +312,18 @@ genuine loss of a degree of freedom rather than about a calibrated soft margin.
 \begin{kuettable}{Safety on the frozen policy, pooled over 15{,}000 evaluation episodes per arm. Bracketed figures are the standard deviation across the five training seeds.}{tab:r-safety}
 % Ragged-right throughout: justified cells stretched the wrap inside the first row
 % ("2.66 % (399) [3.79]") into a visible gap.
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}}
 \toprule
 Metric & PPO (baseline) & cPPO, \(d=25\) & cPPO, \(d=15\)\\
 \midrule
 True singularity crossings (\(w<10^{-4}\)) & 2.66 \% (399) [3.79] & 0.38 \% (57) [0.36] & \textbf{0.07 \% (10) [0.13]}\\
-Mean episode-minimum \(w\) & 0.0465 & \textbf{0.0669} & 0.0628\\
-Worst single-episode \(w\) & 0.000001 & 0.000001 & 0.000001\\
 Joint limit touched at all & 10.70 \% & \textbf{0.00 \%} & \textbf{0.00 \%}\\
 Collision touched at all & 0.03 \% & 0.03 \% & 0.02 \%\\
 Episodic cost, mean & 84.05 & 15.21 & \textbf{11.31}\\
 Episodic cost, p90 & 200.38 & 56.90 & \textbf{43.77}\\
 Episodic cost, max & 343.01 & \textbf{219.59} & 228.51\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The constraint reduces true singularity crossings by a factor of 7.0 at a budget of 25, from 399
@@ -339,12 +335,8 @@ its own scale, because they differ by three orders of magnitude and a shared axi
 three of the four flat.
 
 \begin{kuetfigure}{The four safety outcomes of Table~\ref{tab:r-safety}, each panel independently
-scaled. Panel (c) uses a logarithmic axis. Note that (a) counts entry into the calibrated soft
-margin while (c) counts an actual loss of a degree of freedom, which is why the constrained arms
-improve far more on (c) than on (a): the constraint does not merely keep the arm out of the
-margin, it prevents the margin excursions from deepening into genuine
-singularities.}{fig:r-evalsafety}
-\includegraphics[width=0.86\textwidth]{fig_eval_safety_violations.pdf}
+scaled. Panel (c) uses a logarithmic axis.}{fig:r-evalsafety}
+\includegraphics[width=\textwidth]{fig_eval_safety_violations.pdf}
 \end{kuetfigure}
 
 The joint-limit row is the cleanest single result in the dataset. Joint-limit contact occurs in
@@ -367,10 +359,8 @@ discussed. The collision panel is flat at the vertical scale of a thousandth of 
 confirming the term is inactive rather than merely small.
 
 \begin{kuetfigure}{Episodic safety cost separated into its three terms, averaged across the five
-seeds. Note the differing vertical scales: the singularity term is an order of magnitude larger
-than the joint-limit term and two orders larger than collision. Curves are exponentially smoothed
-for legibility.}{fig:r-costterms}
-\includegraphics[width=0.99\textwidth]{fig_constraints_components.pdf}
+seeds. Note the differing vertical scales. Curves are exponentially smoothed.}{fig:r-costterms}
+\includegraphics[width=\textwidth]{fig_constraints_components.pdf}
 \end{kuetfigure}
 
 Collision was near zero for all three arms and remains so. It is reported for completeness and
@@ -392,29 +382,20 @@ margin in expected exposure rather than in worst-case severity. This is the dist
 \emph{et al.} \cite{brunke2022safe} draw between constraint satisfaction in expectation and a
 safety certificate, discussed in Section~\ref{sec:b-roboticsafety}.
 
-The mechanism behind that distinction is visible in Figure~\ref{fig:r-manip}. The mean
-episode-minimum manipulability of the \(d=15\) arm settles roughly four times higher than the
-baseline's, so the typical episode operates further from the singular set. The worst instant,
-which no averaged curve can show, is unchanged at 0.000001 on all three arms.
+Figure~\ref{fig:r-safetycurves} closes the section with the two quantities that carry the safety
+argument through training. Panel (a) gives the mechanism behind the distinction just drawn: the
+mean episode-minimum manipulability of the \(d=15\) arm settles roughly four times higher than
+the baseline's, so the typical episode operates further from the singular set, while the worst
+instant, which no averaged curve can show, is unchanged at 0.000001 on all three arms. Panel (b)
+gives the quantity the budget is actually written against. The baseline's episodic cost climbs
+throughout training and settles near 82, more than three times its own budget, because nothing in
+its objective penalises it for doing so. Both constrained arms settle beneath their budgets and
+stay there.
 
-\begin{kuetfigure}{Mean episode-minimum manipulability \(w\) against training iteration, averaged
-across the five seeds. Higher is safer. The tighter budget holds the arm materially further from
-the singular set for the whole of the second half of training. Curves are exponentially smoothed
-for legibility.}{fig:r-manip}
-\includegraphics[width=0.86\textwidth]{fig_manipulability.pdf}
-\end{kuetfigure}
-
-Figure~\ref{fig:r-costcurve} closes the section with the quantity the budget is written against.
-The baseline's episodic cost climbs throughout training and settles near 82, more than three
-times its own budget, because nothing in its objective penalises it for doing so. Both
-constrained arms settle beneath their budgets and stay there.
-
-\begin{kuetfigure}{Mean episodic safety cost against training iteration, averaged across the five
-seeds, on a logarithmic axis. The dashed lines are the two budgets. The vertical axis is clipped
-below 1, which suppresses an early-training transient in the first two hundred iterations; the
-full range spans six decades and would compress the converged region into a sliver. Curves are
-exponentially smoothed for legibility.}{fig:r-costcurve}
-\includegraphics[width=0.86\textwidth]{fig_mean_episode_cost.pdf}
+\begin{kuetfigure}{Safety through training, averaged across the five seeds. Panel (b) uses a
+logarithmic axis clipped below 1, which suppresses an early transient. Curves are exponentially
+smoothed.}{fig:r-safetycurves}
+\includegraphics[width=\textwidth]{fig_safety_curves.pdf}
 \end{kuetfigure}
 
 \section{The principal finding: collapse of seed-to-seed variance}\label{sec:r-variance}
@@ -429,7 +410,7 @@ single mean.
 
 \begin{kuettable}{Per-seed episodic cost, training tail mean and evaluation mean, with the peak Lagrange multiplier reached during training.}{tab:r-seed}
 \small\setlength{\tabcolsep}{5pt}
-\begin{tabular}{lrrrrrr}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr}
 \toprule
 Quantity & s1 & s3 & s4 & s52 & s54 & spread\\
 \midrule
@@ -447,7 +428,7 @@ cPPO, \(d=15\) & 16.02 & 11.15 & 3.43 & 10.63 & 15.29 & 4.7\(\times\)\\
 cPPO, \(d=25\) & 15.84 & 40.46 & 30.30 & 46.32 & 48.05 & \\
 cPPO, \(d=15\) & 17.62 & 35.47 & 40.83 & 27.13 & 38.56 & \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The same training data is plotted in Figure~\ref{fig:r-seedcost}, where each seed contributes one
@@ -455,13 +436,9 @@ vertical segment joining its three arm values. The figure is drawn this way, rat
 sorted bands, because a sorted band would show the collapse in spread while hiding which
 direction each seed moved in. Both facts matter to the reading below.
 
-\begin{kuetfigure}{Per-seed episodic safety cost on a logarithmic scale. Each vertical segment
-joins the three arms for one seed, and the two horizontal lines are the budgets. Seeds are
-ordered by descending baseline cost rather than by seed number, so that the baseline's twentyfold
-sweep across the plot can be compared against the two constrained arms, which stay flat. The
-spread beside each legend entry is the ratio of that arm's highest seed to its
-lowest.}{fig:r-seedcost}
-\includegraphics[width=0.92\textwidth]{per_seed_cost.pdf}
+\begin{kuetfigure}{Per-seed episodic safety cost, log scale. Each vertical segment joins the three arms
+for one seed. Seeds are ordered by descending baseline cost, not by seed number.}{fig:r-seedcost}
+\includegraphics[width=\textwidth]{per_seed_cost.pdf}
 \end{kuetfigure}
 
 Figure~\ref{fig:r-seedvar} shows the same collapse developing over training rather than at its
@@ -469,11 +446,10 @@ endpoint, with every seed drawn separately. The baseline panel is the one to loo
 of the same algorithm in the same environment, differing only in the random seed, ending anywhere
 between 8 and 162. The constrained panels are not merely lower, they are narrow.
 
-\begin{kuetfigure}{Training-time episodic cost for every seed, one panel per arm, on a shared
-logarithmic scale. Thin lines are individual seeds and the thick line is their mean. The spread
-quoted above each panel is the ratio of the highest to the lowest seed at the end of training.
-Curves are exponentially smoothed for legibility.}{fig:r-seedvar}
-\includegraphics[width=0.99\textwidth]{fig_seed_variance.pdf}
+\begin{kuetfigure}{Training-time episodic cost for every seed, one panel per arm, shared logarithmic
+scale. Thin lines are individual seeds, the thick line their mean. Curves are exponentially
+smoothed.}{fig:r-seedvar}
+\includegraphics[width=\textwidth]{fig_seed_variance.pdf}
 \end{kuetfigure}
 
 The baseline row is the behaviour of unconstrained policy optimisation with the cost merely
@@ -526,10 +502,9 @@ iteration and inferred the rest of its behaviour. The full per-iteration traject
 been extracted from the training logs, and Figure~\ref{fig:r-lambda} plots them. The inference is
 confirmed and can now be stated as a measurement.
 
-\begin{kuetfigure}{Lagrange multiplier against training iteration, all five seeds, both
-constrained arms. The multiplier is zero for the remaining 1200 iterations in every
-run.}{fig:r-lambda}
-\includegraphics[width=0.96\textwidth]{lambda_traj.pdf}
+\begin{kuetfigure}{Lagrange multiplier against training iteration, all five seeds. It is zero for the
+remaining 1200 iterations in every run.}{fig:r-lambda}
+\includegraphics[width=\textwidth]{lambda_traj.pdf}
 \end{kuetfigure}
 
 The pattern is the same on every seed and at both budgets. The multiplier sits at zero for
@@ -567,7 +542,19 @@ Singularity crossings fall further, from 57 episodes to 10, so the tighter budge
 ninetieth percentile from 56.90 to 43.77. Joint-limit contact was already at zero and stays there.
 On the task side the tighter arm is marginally the best of the three at every goal-reach
 threshold and carries the highest training reward at 134.09, so no trade-off against task
-performance is visible at this budget.
+performance is visible at this budget. Figure~\ref{fig:r-budget} collects those movements as
+proportional changes, with improvements drawn to the left of zero and regressions to the right
+whatever the natural direction of the underlying metric, so no sign has to be inverted mentally.
+
+\begin{kuetfigure}{Proportional change in each measure on tightening the budget from \(d=25\)
+to \(d=15\). Improvements are drawn left of zero, regressions right.}{fig:r-budget}
+\includegraphics[width=\textwidth]{fig_budget_effect.pdf}
+\end{kuetfigure}
+
+The figure also makes the shape of the trade visible. One bar dominates, the fivefold further
+reduction in true singularity crossings, and one bar points the other way, the soft-margin
+fraction measured during training. That single regression is the first of the three
+qualifications below.
 
 Three qualifications keep that from being read as a general rule. The tighter budget does not
 improve the soft-margin singularity fraction during training, which rises from 0.169 to 0.233,

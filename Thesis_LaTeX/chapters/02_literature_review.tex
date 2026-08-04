@@ -77,7 +77,7 @@ Section~\ref{sec:b-gap}, which is what Chapter~\ref{ch:intro} refers back to and
 Chapter~\ref{ch:results} answers.
 
 \begin{kuettable}{Section map for this chapter.}{tab:b-map}
-\begin{tabular}{p{1.0cm}p{5.0cm}p{6.0cm}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{1.0cm}p{5.0cm}p{6.0cm}}
 \hline
 \textbf{\S} & \textbf{Subject} & \textbf{Principal sources} \\
 \hline
@@ -95,7 +95,7 @@ Chapter~\ref{ch:results} answers.
 2.10 & Reproducibility and seed variance & \cite{henderson2018matters} \\
 2.11 & Research gap and positioning & \cite{khan2026rl_precision_grasping} \\
 \hline
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The findings the chapter reaches are collected below, so that the sections that follow read as
@@ -177,7 +177,7 @@ knowledge such as a teacher, a demonstration set or a backup controller.
 
 \begin{kuettable}{The two branches of safe reinforcement learning, after
 \cite{garcia2015survey}.}{tab:b-taxonomy}
-\begin{tabular}{p{3.1cm}p{4.7cm}p{4.4cm}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{3.1cm}p{4.7cm}p{4.4cm}}
 \hline
 \textbf{Branch} & \textbf{Mechanism} & \textbf{Evaluated on} \\
 \hline
@@ -186,7 +186,7 @@ on expected cumulative cost & The trained policy, on held-out episodes \\
 Modify the exploration process & Teacher guidance, demonstrations, backup controllers, action
 shielding & Violations accumulated during training \\
 \hline
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 This thesis belongs to the first branch, and to its constrained-criterion sub-family. The
@@ -276,7 +276,7 @@ second reason to cite that report is empirical, and is why PPO-Lagrangian was pr
 \begin{kuettable}{Normalised end-of-training metrics on the eighteen-environment Safety Gym
 slate, three seeds per environment, from \cite{ray2019benchmarking}. Normalised against
 unconstrained PPO, so 1.0 is the baseline and lower is safer.}{tab:b-safetygym}
-\begin{tabular}{lccc}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccc}
 \hline
 \textbf{Algorithm} & \textbf{Return \(\bar{J}_{r}\)} & \textbf{Violation \(\bar{M}_{c}\)} &
 \textbf{Cost rate \(\bar{\rho}_{c}\)} \\
@@ -287,7 +287,7 @@ TRPO (unconstrained) & 1.094 & 1.132 & 1.004 \\
 TRPO-Lagrangian & 0.331 & 0.018 & 0.265 \\
 CPO & 0.784 & 0.593 & 0.646 \\
 \hline
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 CPO retains far more return than either Lagrangian method, but leaves a normalised violation of
@@ -306,7 +306,7 @@ a quarter-cycle lag, as Figure~\ref{fig:b-stooke} shows.
 
 \begin{kuetfigure}{Cost \(g(x)\) and multiplier \(\lambda\) under the traditional Lagrangian
 update (left) and under PID control (right). From \cite{stooke2020pid}, Fig.~1.}{fig:b-stooke}
-\includegraphics[width=0.88\textwidth]{lit_stooke_pid_lagrangian.png}
+\includegraphics[width=\textwidth]{lit_stooke_pid_lagrangian.png}
 \end{kuetfigure}
 
 Their remedy treats the multiplier as a control input under full PID control,
@@ -426,7 +426,7 @@ state a seed count.}{tab:b-methods}
 \footnotesize
 \setlength{\tabcolsep}{3.5pt}
 \newcolumntype{R}[1]{>{\raggedright\arraybackslash}p{#1}}
-\begin{tabular}{R{2.35cm}R{2.15cm}R{1.6cm}R{2.05cm}R{0.95cm}R{2.8cm}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}R{2.35cm}R{2.15cm}R{1.6cm}R{2.05cm}R{0.95cm}R{2.8cm}}
 \hline
 \textbf{Study} & \textbf{Platform} & \textbf{Simulator} & \textbf{Algorithms} &
 \textbf{Seeds} & \textbf{Headline result} \\
@@ -451,7 +451,7 @@ Khan \emph{et al.} \cite{khan2026rl_precision_grasping} & Franka Panda & Safety 
 \textbf{This thesis} & \textbf{UR5e} & \textbf{Isaac Sim} & \textbf{PPO (baseline), cPPO
 \(d=25\), cPPO \(d=15\)} & \textbf{5} & \textbf{Chapter~\ref{ch:results}} \\
 \hline
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 Three patterns in that table shape decisions made in Chapter~\ref{ch:methods}. The cost limit
@@ -543,7 +543,7 @@ large joint rates.
 \begin{kuetfigure}{Manipulability of a planar two-link arm with equal links, from
 Equation~\eqref{eq:b-twolink}. It falls to zero at both the folded and the extended posture and
 peaks at a right angle.}{fig:b-twolink}
-\includegraphics[width=0.74\textwidth]{lit_twolink_w.pdf}
+\includegraphics[width=\textwidth]{lit_twolink_w.pdf}
 \end{kuetfigure}
 
 That consequence is why a floor on \(w\) counts as a safety constraint rather than a performance
@@ -591,7 +591,7 @@ Figure~\ref{fig:b-shen} shows what that looks like in configuration space.
 \begin{kuetfigure}{Manipulability over the \(q_{2}\)--\(q_{3}\) plane, with the paths taken by
 the baseline and by the learned policy from a common start. From \cite{shen2022reactive},
 Fig.~12, CC~BY 4.0.}{fig:b-shen}
-\includegraphics[width=0.66\textwidth]{lit_shen_manipulability.png}
+\includegraphics[width=\textwidth]{lit_shen_manipulability.png}
 \end{kuetfigure}
 
 The objective pursued there is the same as the one pursued here, and the quantity is identical
@@ -623,7 +623,7 @@ statistically distinct distributions.
 \begin{kuetfigure}{TRPO on HalfCheetah-v1, two groups of five random seeds under identical
 settings (\(t=-9.0916\), \(p=0.0016\)). From \cite{henderson2018matters},
 Fig.~5.}{fig:b-henderson}
-\includegraphics[width=0.80\textwidth]{lit_henderson_seed_variance.png}
+\includegraphics[width=\textwidth]{lit_henderson_seed_variance.png}
 \end{kuetfigure}
 
 Their bootstrap intervals give the size of the effect. On HalfCheetah-v1 the 95\,\% interval for
@@ -678,7 +678,7 @@ they take as design requirements, together with what this thesis does about each
 \footnotesize
 \setlength{\tabcolsep}{4pt}
 \newcolumntype{G}[1]{>{\raggedright\arraybackslash}p{#1}}
-\begin{tabular}{G{1.5cm}G{3.5cm}G{3.6cm}G{3.4cm}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}G{1.5cm}G{3.5cm}G{3.6cm}G{3.4cm}}
 \hline
 & \textbf{What the literature does} & \textbf{Why it is a problem} & \textbf{What this thesis
 does} \\
@@ -698,7 +698,7 @@ the effect is a property of the constraint or an artifact of one threshold & Tra
 constrained arm at \(d=15\), so the effect can be read against how hard the constraint is
 applied (Section~\ref{sec:m-arms}) \\
 \hline
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 Gap 1 is not a hypothetical concern. An earlier version of the present work reported a large
@@ -731,7 +731,7 @@ Table~\ref{tab:b-position} sets that design against the two studies it most clos
 \begin{kuettable}{Positioning against the two nearest published studies.}{tab:b-position}
 \setlength{\tabcolsep}{4pt}
 \newcolumntype{Q}[1]{>{\raggedright\arraybackslash}p{#1}}
-\begin{tabular}{Q{4.7cm}Q{2.4cm}Q{2.4cm}Q{2.5cm}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}Q{4.7cm}Q{2.4cm}Q{2.4cm}Q{2.5cm}}
 \hline
 \textbf{Property} & \textbf{Khan \emph{et al.}} \cite{khan2026rl_precision_grasping} &
 \textbf{Shen \emph{et al.}} \cite{shen2022reactive} & \textbf{This thesis} \\
@@ -747,7 +747,7 @@ Per-seed dispersion reported & \(\times\) & \(\times\) & \(\checkmark\) \\
 Budget varied & \(\times\) (\(d=25\) only) & n/a & \(\checkmark\) (\(d=25\) and 15) \\
 Frozen-policy evaluation & \(\times\) & \(\checkmark\) & \(\checkmark\) \\
 \hline
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The work is also positioned locally. It continues a line of manipulator research in the same

@@ -20,6 +20,14 @@
 \ExecuteOptions{draft}
 \ProcessOptions\relax
 
+% ---------- maths symbols (must load BEFORE newtxmath) -----------------
+% newtxmath's own documentation: load amsmath/amssymb first, or it and
+% amssymb both try to define \Bbbk and the build dies with "Command
+% \Bbbk already defined". Never triggered until 2026-08-05, because every
+% build up to then was silently falling back to mathptmx (below), which
+% doesn't define \Bbbk -- newtx wasn't actually installed until now.
+\RequirePackage{amsmath,amssymb}
+
 % ---------- fonts (spec 3) --------------------------------------------
 % Times New Roman throughout. newtx is the preferred clone; mathptmx is
 % the fallback so the project still builds on a minimal TeX install.
@@ -57,8 +65,8 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
 
-% ---------- maths, tables, floats -------------------------------------
-\RequirePackage{amsmath,amssymb}
+% ---------- tables, floats ----------------------------------------------
+% amsmath/amssymb already loaded above, before the fonts section.
 \RequirePackage{array,booktabs,longtable,multirow,tabularx}
 \RequirePackage{graphicx}
 \RequirePackage{float}
@@ -66,7 +74,11 @@
 \RequirePackage{tikz}
 \usetikzlibrary{positioning,arrows.meta}
 \renewcommand{\arraystretch}{1.2}
-\graphicspath{{figures/}}
+% Figures were reorganised into subfolders on 2026-08-04. \graphicspath must list every one of
+% them or \includegraphics fails and the build dies (it did: exit 12, 17 missing-file errors).
+% Keep `figures/` first so a file left at the top level still resolves. Adding a new subfolder
+% means adding a brace group here.
+\graphicspath{{figures/}{figures/pdfs/}{figures/_pngs/}{figures/literature_review_figs/}}
 
 % Float-only pages (a page carrying no body text, which Chapter 4 produces because it is
 % figure-dense). LaTeX's defaults distribute such floats down the page with large rubber

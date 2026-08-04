@@ -46,6 +46,63 @@ still hard-fails on a genuinely unresolved `??`, just not on a stale-but-present
 Does not touch `main.tex` or any chapter file. All 6 chapters + cover + bibliography built and
 verified 2026-08-04.
 
+## ▶ Offline rebuild procedure — do this yourself, no chat needed (2026-08-05, Day 28)
+Whenever you edit a chapter (or add a new one), everything in `chapter_pdfs/` is stale until you
+rebuild. Full procedure:
+
+**0. One-time check** — `latexmk -v`, `pdflatex -v`, `python3 --version` all need to work. If
+`latexmk`/`pdflatex` aren't found, TeX Live isn't installed on that machine yet; that's a
+separate install, not covered here.
+
+**1. If you added a genuinely new chapter file** (not just new sections inside an existing one):
+   - Name it `chapters/NN_name.tex`, first line exactly `\chapter{Title}\label{ch:something}`.
+   - Add `\input{chapters/NN_name}` to `main.tex` in the right position among the other
+     `\input{chapters/...}` lines. Skip this and the chapter silently never enters the book or
+     `main.aux` — the most common way this goes wrong.
+
+**2. Rebuild the full book once** (refreshes `main.aux`/`main.bbl`, which several of the
+`chapter_pdfs/` outputs read from):
+```bash
+cd Thesis_LaTeX
+latexmk -pdf main.tex
+```
+Check it actually worked: `grep -i undefined main.log` should print nothing. If `latexmk` exits
+non-zero, open `main.log` and search for lines starting with `!` — that's the real error
+(unmatched brace, bad `\cite` key, etc.), usually a few lines above a `l.<number>` pointer to the
+offending line.
+
+**3. Regenerate the PDFs:**
+```bash
+python3 tools/build_chapter_pdfs.py --all           # 6 chapters + Cover_Page.pdf + Bibliography.pdf
+python3 tools/build_chapter_pdfs.py --submission     # one-file supervisor copy
+python3 tools/build_chapter_pdfs.py 3 4              # any custom combo you want, by chapter number
+```
+The script hard-fails (non-zero exit, error printed) on a leaked draft note or an unresolved `??`
+reference — a clean exit means it already checked itself. `pdfinfo chapter_pdfs/NAME.pdf | grep
+Pages` is a quick manual spot-check if you want to eyeball that a page count moved the way you
+expected.
+
+### Troubleshooting (both hit for real, 2026-08-05)
+- **"File X.sty not found" / font not loadable, even though the package is clearly installed** —
+  stale TeX filename cache, common right after a fresh machine/container. Fix: `mktexlsr`
+  (`sudo mktexlsr` if it complains about permissions on some paths — the main tree still updates),
+  then rebuild.
+- **"Missing \begin{document}" pointing into `main.aux`, especially after trying `latexmk -C`** —
+  the aux/bbl files got corrupted by an interrupted clean (this happens if the filesystem allows
+  overwriting a file but not deleting it — `rm` fails silently-ish, clean only half-runs). Fix:
+  empty the derived files and rebuild from scratch, don't try to `rm` them:
+  ```bash
+  > main.aux; > main.bbl; > main.blg; > main.toc; > main.lof; > main.lot; > main.out
+  latexmk -pdf main.tex
+  ```
+- **A `.swp` file sitting next to a chapter** (e.g. `chapters/.02_literature_review.tex.swp`) —
+  an editor session on that file didn't close cleanly. Page count not moving after you thought you
+  edited that chapter is the tell. `vim -r chapters/FILE.tex` offers recovery if there's anything
+  unsaved.
+
+**4. End of session** — usual routine: update this file / the relevant `logbook/NN_*.md` +
+`run_log.md`, then `git add -A && git commit -m "..." && git push` (see `logbook/07_documentation.md`).
+
 ## ▶ Submission build (new, 2026-08-04, Day 27)
 `python3 tools/build_chapter_pdfs.py --submission` builds cover page + every chapter (1-6, in
 order) + a real bibliography into one PDF, `Thesis_Report_Body_Submission.pdf` (used for the

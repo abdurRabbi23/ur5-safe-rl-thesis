@@ -66,7 +66,7 @@ PyTorch builds before 2.7 or by NVIDIA drivers before the 570 series, so the CUD
 the 580-series driver are requirements.
 
 \begin{kuettable}{Software stack, as pinned for every run reported in this thesis.}{tab:m-stack}
-\begin{tabular}{p{0.34\textwidth}p{0.54\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.34\textwidth}p{0.54\textwidth}}
 \toprule
 Component & Version\\
 \midrule
@@ -81,7 +81,7 @@ GPU & NVIDIA RTX 5090, Blackwell, sm\_120\\
 NVIDIA driver & 580 series\\
 Host & Intel i9, 64 GB RAM, Ubuntu\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The Isaac Lab version is held at exactly 2.3.0 rather than at the 2.3 release line. The line
@@ -109,7 +109,7 @@ modelling decision each one drives, because several numbers appearing later in t
 datasheet limits carried into the simulator rather than values chosen for training convenience.
 
 \begin{kuettable}{UR5e specifications and where each one enters the method.}{tab:m-ur5e}
-\begin{tabular}{p{0.26\textwidth}p{0.24\textwidth}p{0.38\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.26\textwidth}p{0.24\textwidth}p{0.38\textwidth}}
 \toprule
 Property & Value & Where it is used here\\
 \midrule
@@ -122,7 +122,7 @@ Maximum joint speed & 180 deg/s (\(\pi\) rad/s) & Velocity limit in the simulate
 Safety functions & 17, configurable & \textbf{Not used.} The learned constraint is what is under test\\
 Certification & ISO 13849-1 Cat.~3 PL~d; ISO 10218-1 & Context only; no certified function is simulated\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The last two rows carry a distinction that the rest of the chapter depends on. A real UR5e already
@@ -138,7 +138,7 @@ and in the per-joint reporting of Chapter~\ref{ch:results}.
 
 \begin{kuettable}{The six arm joints, their working range and the reset configuration used in this
 work.}{tab:m-joints}
-\begin{tabular}{p{0.26\textwidth}p{0.22\textwidth}p{0.16\textwidth}p{0.16\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.26\textwidth}p{0.22\textwidth}p{0.16\textwidth}p{0.16\textwidth}}
 \toprule
 Joint & Working range & Home (rad) & Home (deg)\\
 \midrule
@@ -149,7 +149,7 @@ Joint & Working range & Home (rad) & Home (deg)\\
 \texttt{wrist\_2} & \(\pm\)360\textdegree{} & \(-\)1.57 & \(-\)90.0\\
 \texttt{wrist\_3} & \(\pm\)360\textdegree{} & 0.00 & 0.0\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The home pose places the arm reaching forward over the table with the wrist pointing down, which is
@@ -160,9 +160,9 @@ the configuration every episode starts from before the cube and goal are randomi
 % the build never breaks and the slot is impossible to forget.
 \begin{kuetfigure}[H]{The UR5e in the simulated workspace.}{fig:m-ur5e-sim}
 \IfFileExists{figures/ur5e_sim.pdf}%
-  {\includegraphics[width=0.72\textwidth]{figures/ur5e_sim.pdf}}%
+  {\includegraphics[width=\textwidth]{figures/ur5e_sim.pdf}}%
   {\IfFileExists{figures/ur5e_sim.png}%
-    {\includegraphics[width=0.72\textwidth]{figures/ur5e_sim.png}}%
+    {\includegraphics[width=\textwidth]{figures/ur5e_sim.png}}%
     {\framebox[0.72\textwidth]{\rule{0pt}{45mm}\itshape figure to be supplied}}}
 \end{kuetfigure}
 
@@ -232,7 +232,7 @@ an update changes the policy. An \emph{off-policy} method keeps a replay buffer 
 transitions from earlier versions of the policy. Table~\ref{tab:m-onoff} sets the two side by side.
 
 \begin{kuettable}[H]{On-policy and off-policy methods compared.}{tab:m-onoff}
-\begin{tabular}{p{0.24\textwidth}p{0.31\textwidth}p{0.31\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.24\textwidth}p{0.31\textwidth}p{0.31\textwidth}}
 \toprule
 Property & On-policy & Off-policy\\
 \midrule
@@ -245,7 +245,7 @@ Suits & Cheap, massively parallel simulation & Expensive interaction, physical h
 Example algorithms & \textbf{PPO}, TRPO, A2C / A3C, vanilla policy gradient & SAC, TD3, DDPG, DQN\\
 Used in this thesis & Yes, PPO and its Lagrangian variant & No; retained as future work\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 This study is on-policy, and the reason is that its samples are cheap. At 4096 environments
@@ -383,7 +383,7 @@ hardware. Both are revisited in the Limitations discussion.
 Table~\ref{tab:m-mdp} gives the observation, the action and the episode structure.
 
 \begin{kuettable}{Observation, action and episode.}{tab:m-mdp}
-\begin{tabular}{p{0.30\textwidth}p{0.58\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.30\textwidth}p{0.58\textwidth}}
 \toprule
 Element & Definition\\
 \midrule
@@ -393,7 +393,7 @@ Episode & 5.0 s = 250 control steps at 50 Hz, decimation 2 physics steps per act
 Goal sampling & Once per episode, uniform over x {[}0.22, 0.60{]}, y {[}\(-\)0.30, 0.30{]}, z {[}0.10, 0.50{]} m\\
 Cube reset & Randomised within a small planar region\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 Two of those rows carry a decision rather than a value. The object pose is given to the policy
@@ -442,7 +442,7 @@ construction in learned contact-rich manipulation \cite{elguea2023review}, so th
 conventional and only its safety treatment is not.
 
 \begin{kuettable}{Reward terms.}{tab:m-reward}
-\begin{tabular}{p{0.28\textwidth}p{0.36\textwidth}p{0.20\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.28\textwidth}p{0.36\textwidth}p{0.20\textwidth}}
 \toprule
 Term & Form & Weight\\
 \midrule
@@ -454,7 +454,7 @@ Action rate & Quadratic penalty & \(-10^{-4}\)\\
 Joint velocity & Quadratic penalty & \(-10^{-4}\)\\
 Safety & \textbf{None.} Safety is a separate cost channel & \textbf{n/a}\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The last row is the one that matters for the comparison. The reward contains no safety term at all,
@@ -463,7 +463,7 @@ Results chapter can attribute any safety difference to the constraint.
 Table~\ref{tab:m-env-summary} collects the scene settings not already given above.
 
 \begin{kuettable}[H]{Scene and simulation settings.}{tab:m-env-summary}
-\begin{tabular}{p{0.32\textwidth}p{0.56\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.32\textwidth}p{0.56\textwidth}}
 \toprule
 Item & Setting\\
 \midrule
@@ -477,7 +477,7 @@ Object & DexCube asset, scale 0.8, reset on the table in front of the arm\\
 Self-collision & Disabled; collision cost is a table-plane keep-out\\
 Parallel environments & 4096 (training), 128 (evaluation)\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 \section{Software framework}\label{sec:m-software}
@@ -490,7 +490,7 @@ keeps the boundary visible between what this work contributes and what it inheri
 framework. Table~\ref{tab:m-package} lists the modules.
 
 \begin{kuettable}{The \texttt{ur5\_grasp} package.}{tab:m-package}
-\begin{tabular}{p{0.44\textwidth}p{0.44\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.44\textwidth}p{0.44\textwidth}}
 \toprule
 Module & Role\\
 \midrule
@@ -508,7 +508,7 @@ Module & Role\\
 \texttt{scripts/eval\_policy.py} & Evaluation of a frozen checkpoint (Section~\ref{sec:m-eval})\\
 \texttt{tools/} & Asset builders, gripper diagnostics, run summarisers, regression tests\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The safety cost is computed by \texttt{SafetyCostComputer}. It resolves the arm joint indices, the
@@ -570,7 +570,7 @@ Table~\ref{tab:m-cost} defines the three terms.
 
 \begin{kuettable}{The three safety cost terms. Each is summed over the bodies or joints it
 monitors, and the three are added with unit weights.}{tab:m-cost}
-\begin{tabular}{p{0.20\textwidth}p{0.36\textwidth}p{0.15\textwidth}p{0.17\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.20\textwidth}p{0.36\textwidth}p{0.15\textwidth}p{0.17\textwidth}}
 \toprule
 Term & Per-step penalty & Threshold & Status\\
 \midrule
@@ -578,7 +578,7 @@ Collision keep-out & max(z\_floor \(-\) z, 0), summed over forearm, wrist-1 and 
 Joint-limit margin & clamp(1 \(-\) clearance / margin, 0, 1), summed over the 6 arm joints & margin = 0.175 rad (10.0\textdegree{}) & \textbf{Active}\\
 Singularity floor & clamp(1 \(-\) w / w\_floor, 0, 1) on the manipulability measure w & w\_floor = 0.06 & \textbf{Active}\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The third term is the one this study is designed around. Manipulability is where the thesis makes
@@ -754,7 +754,7 @@ the same tasks.
 baseline: a cost critic and a multiplier updated by dual ascent on measured violation. Their only
 point of entry into the policy update is the combined advantage, and pinning \(\lambda\) to zero
 recovers the baseline exactly.}{fig:m-cppo}
-\resizebox{0.96\textwidth}{!}{%
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
   font=\footnotesize,
   box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, minimum height=8mm, minimum width=20mm},
@@ -833,7 +833,7 @@ Both agents use the same actor and critic multilayer perceptrons with hidden lay
 Table~\ref{tab:m-hyper}.
 
 \begin{kuettable}[H]{Shared training hyperparameters.}{tab:m-hyper}
-\begin{tabular}{p{0.50\textwidth}p{0.36\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.50\textwidth}p{0.36\textwidth}}
 \toprule
 Hyperparameter & Value\\
 \midrule
@@ -851,7 +851,7 @@ cPPO cost budget d (\texttt{cost\_limit}) & 25, and 15 for the tighter arm\\
 cPPO dual step \(\eta\) / \(\lambda\) ceiling & 0.035 / 100\\
 cPPO cost discount / \(\lambda_{\text{GAE}}\) & 0.98 / 0.95\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 \begin{keypoints}
@@ -883,7 +883,7 @@ Table~\ref{tab:m-calib} gives what was measured and what each measurement settle
 \begin{kuettable}{The calibration probe: what was measured on one converged unconstrained run, and
 what each measurement settled. The probe is a single run and its cost composition is not
 representative of the five reported seeds, for which see Table~\ref{tab:m-composition}.}{tab:m-calib}
-\begin{tabular}{p{0.24\textwidth}p{0.34\textwidth}p{0.30\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.24\textwidth}p{0.34\textwidth}p{0.30\textwidth}}
 \toprule
 Quantity & Measured on the probe & Outcome\\
 \midrule
@@ -893,7 +893,7 @@ Monitored-link height & Minimum 0.0896 m, about 44 mm above the floor & Collisio
 Cost composition & Joint-limit \(\approx\) 86 \%, singularity \(\approx\) 14 \%, collision 0 \% & Two constraints share one budget\\
 Natural episodic cost & \(\approx\) 105 & Budget d = 25, a \(\approx\) 76 \% reduction against this run\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 The probe settled the thresholds, and that is all it settled. It is one run, and its cost
@@ -905,7 +905,7 @@ draws on.
 terms, per seed, as a tail mean over the final tenth of training. The collision term is zero on
 every seed. Chapter~\ref{ch:results} reports the episodic cost totals
 themselves.}{tab:m-composition}
-\begin{tabular}{p{0.20\textwidth}p{0.26\textwidth}p{0.26\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.20\textwidth}p{0.26\textwidth}p{0.26\textwidth}}
 \toprule
 Seed & Singularity & Joint-limit\\
 \midrule
@@ -917,7 +917,7 @@ Seed & Singularity & Joint-limit\\
 \midrule
 Mean & 78 \% & 22 \%\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 Three things follow, and the third is the one that matters. First, the manipulability floor was
@@ -948,7 +948,7 @@ down toward the budget, the multiplier rises while over budget and then settles 
 ceiling, the reward continues to improve, and the singularity-violation rate falls below the baseline.
 
 \begin{kuettable}[H]{Training protocol.}{tab:m-train}
-\begin{tabular}{p{0.34\textwidth}p{0.54\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.34\textwidth}p{0.54\textwidth}}
 \toprule
 Item & Setting\\
 \midrule
@@ -965,7 +965,7 @@ Launch & One script, arm selected by agent-config entry point\\
 Logging & Separate experiment directory per arm, so curves overlay directly\\
 Verification & All 15 final checkpoints confirmed present on disk, not inferred from clean logs\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 
 \subsection{Experimental arms and seeds}\label{sec:m-arms}
@@ -977,7 +977,7 @@ separate method: 15 binds more deeply than 25 on the seeds where either binds at
 shows whether the effect of the constraint scales with how hard it is applied.
 
 \begin{kuettable}[H]{The three experimental arms.}{tab:m-arms}
-\begin{tabular}{p{0.17\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.40\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.17\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.40\textwidth}}
 \toprule
 Arm & \texttt{cost\_limit} & \(\lambda_{\max}\) & Reported in this thesis as\\
 \midrule
@@ -985,7 +985,7 @@ Arm & \texttt{cost\_limit} & \(\lambda_{\max}\) & Reported in this thesis as\\
 \texttt{cppo} & 25 & 100 & cPPO, d = 25\\
 \texttt{cppo15} & 15 & 100 & cPPO, d = 15\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}
 \footnotetext{The control arm carries the cost critic with its multiplier ceiling pinned to zero, so
 its policy update is stock PPO. A plain PPO arm was trained on the same seeds and its stored network
@@ -1023,7 +1023,7 @@ episode rather than averaged per step, so one dangerous excursion stays visible 
 diluted across 250 steps. The resulting comparison is presented in Chapter~\ref{ch:results}.
 
 \begin{kuettable}[H]{Evaluation protocol.}{tab:m-eval}
-\begin{tabular}{p{0.34\textwidth}p{0.54\textwidth}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.34\textwidth}p{0.54\textwidth}}
 \toprule
 Item & Setting\\
 \midrule
@@ -1040,5 +1040,5 @@ Reported alongside & Full distribution of final goal distances, since the weld m
 Safety, per episode & Episodic cost; singularity crossings (w \(< 10^{-4}\)); episodes touching the joint-limit margin\\
 Constrained arms only & Terminal multiplier, episodic-cost trajectory\\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{kuettable}

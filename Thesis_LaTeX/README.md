@@ -15,6 +15,11 @@ Engine is **pdflatex** with **newtx** (Times New Roman metrics). If newtx is not
 installed the preamble falls back to `mathptmx` and warns — same metrics, so the
 page layout does not move.
 
+**After editing a chapter, or adding a new one, and wanting `chapter_pdfs/` (per-chapter,
+cover, bibliography, submission copy) refreshed:** full step-by-step procedure, including
+troubleshooting for two build breakages already hit once, is in `logbook/06_writing.md`,
+"Offline rebuild procedure".
+
 ## Layout
 
 | Path | What it is |

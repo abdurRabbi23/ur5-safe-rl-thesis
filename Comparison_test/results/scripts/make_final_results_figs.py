@@ -57,6 +57,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib import font_manager as fm
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RESULTS = os.path.dirname(HERE)
@@ -166,9 +167,17 @@ def load():
 
 
 def save(fig, name):
-    os.makedirs(OUTDIR, exist_ok=True)
-    for ext in ("pdf", "png"):
-        fig.savefig(os.path.join(OUTDIR, f"{name}.{ext}"), bbox_inches="tight")
+    """Vector to figures/pdfs/, raster to figures/_pngs/.
+
+    The figures tree was reorganised into subfolders on 2026-08-04. LaTeX finds them through
+    \\graphicspath in thesis-format.sty, which lists every subfolder, so \\includegraphics still
+    takes a bare filename. If a new subfolder is ever added here, add it there too or the build
+    dies with a missing-file error.
+    """
+    for ext, sub in (("pdf", "pdfs"), ("png", "_pngs")):
+        d = os.path.join(OUTDIR, sub)
+        os.makedirs(d, exist_ok=True)
+        fig.savefig(os.path.join(d, f"{name}.{ext}"), bbox_inches="tight")
     plt.close(fig)
     print("  wrote", name)
 
@@ -266,6 +275,107 @@ def fig_constraints_components(D):
                bbox_to_anchor=(0.5, 1.11), fontsize=PANEL_VALUE)
     fig.tight_layout(pad=0.5, w_pad=1.8)
     save(fig, "fig_constraints_components")
+
+
+def fig_safety_curves(D):
+    """Manipulability and episodic cost side by side (merged 2026-08-04 from two figures).
+
+    The two budget lines carry DIFFERENT dash patterns, not just different positions, so they
+    stay distinguishable in a black-and-white print and when the figure is scaled down.
+    """
+    fig, axes = plt.subplots(1, 2, figsize=(10.6, 4.0))
+
+    ax = axes[0]
+    for arm in ARMS:
+        m = D["training"][arm]["manip_min"]
+        ax.plot(np.array(m["steps"]), ema(m["mean"]), color=COLOR[arm], lw=2.0, zorder=3)
+    ax.set_xlim(0, 1500)
+    ax.set_ylabel("Episode-minimum $w$")
+    ax.set_xlabel("Training iteration")
+    style_axes(ax)
+    panel_type(ax, "(a) Manipulability (higher is safer)")
+    ax.legend(handles=arm_handles(), loc="upper right", frameon=False, fontsize=PANEL_VALUE)
+
+    ax = axes[1]
+    for arm in ARMS:
+        m = D["training"][arm]["mean_episode_cost"]
+        ax.plot(np.array(m["steps"]), ema(m["mean"]), color=COLOR[arm], lw=2.0, zorder=3)
+    budget_styles = [(25, (0, (6, 3)), "$d = 25$"), (15, (0, (1.5, 2)), "$d = 15$")]
+    handles = []
+    for b, dash, lab in budget_styles:
+        ax.axhline(b, color=RULE, lw=1.4, ls=dash, zorder=1)
+        handles.append(Line2D([], [], color=RULE, lw=1.4, ls=dash, label=f"budget {lab}"))
+    ax.set_yscale("log")
+    ax.set_ylim(1, 400)
+    ax.set_xlim(0, 1500)
+    ax.set_ylabel("Episodic safety cost")
+    ax.set_xlabel("Training iteration")
+    style_axes(ax)
+    panel_type(ax, "(b) Episodic safety cost (lower is safer)")
+    ax.legend(handles=handles, loc="lower right", frameon=False, fontsize=PANEL_VALUE)
+
+    fig.tight_layout(pad=0.6, w_pad=2.4)
+    save(fig, "fig_safety_curves")
+
+
+def fig_budget_effect(D):
+    """Section 4.8: what changes when the budget tightens from d = 25 to d = 15.
+
+    Horizontal percentage-change bars. Bars to the LEFT of zero are improvements, to the RIGHT
+    are regressions, regardless of whether the underlying metric is better high or better low,
+    so the reader never has to invert a sign mentally. The two regressions are the point of the
+    figure as much as the improvements: Section 4.8 states three qualifications and this shows
+    two of them without a word of text.
+    """
+    tr, ev = D["training"], D["evaluation"]
+
+    def pct(new, old):
+        return (new - old) / old * 100.0
+
+    rows = [
+        ("True singularity crossings", pct(ev["cppo15"]["true_singularity_pct"],
+                                            ev["cppo"]["true_singularity_pct"]), True),
+        ("Episodic cost, p90", pct(ev["cppo15"]["cost_p90"], ev["cppo"]["cost_p90"]), True),
+        ("Episodic cost, mean", pct(ev["cppo15"]["cost_mean"], ev["cppo"]["cost_mean"]), True),
+        ("Goal-reach failure, <1 cm", pct(100 - ev["cppo15"]["goal_reach_1cm_pct"],
+                                           100 - ev["cppo"]["goal_reach_1cm_pct"]), True),
+        ("Mean reward", pct(tr["cppo15"]["mean_reward"]["tail_mean"],
+                             tr["cppo"]["mean_reward"]["tail_mean"]), False),
+        ("Soft-margin singularity\nfraction (training)",
+         pct(tr["cppo15"]["viol_singularity"]["tail_mean"],
+             tr["cppo"]["viol_singularity"]["tail_mean"]), True),
+    ]
+
+    fig, ax = plt.subplots(figsize=(8.8, 4.4))
+    y = np.arange(len(rows))[::-1]
+    for yi, (label, delta, lower_is_better) in zip(y, rows):
+        improved = (delta < 0) if lower_is_better else (delta > 0)
+        # Improvements are drawn to the left of zero whatever the metric's natural direction.
+        draw = -abs(delta) if improved else abs(delta)
+        # cppo15's green for a gain, the baseline red for a loss: the same good/bad reading
+        # the rest of the chapter's colour key already carries.
+        col = COLOR["cppo15"] if improved else COLOR["ctrl"]
+        ax.barh(yi, draw, 0.6, color=col, zorder=3, edgecolor="white", linewidth=0.8)
+        off = -2.5 if draw < 0 else 2.5
+        # Plain "%" here: matplotlib is not LaTeX, so an escaped \% prints the backslash.
+        ax.text(draw + off, yi, f"{delta:+.1f}%", va="center",
+                ha="right" if draw < 0 else "left", fontsize=PANEL_VALUE, color=INK)
+
+    ax.axvline(0, color=INK, lw=1.2, zorder=4)
+    ax.set_yticks(y)
+    ax.set_yticklabels([r[0] for r in rows], fontsize=PANEL_TICK)
+    ax.set_xlabel("Change from $d = 25$ to $d = 15$ (%)", fontsize=PANEL_LABEL)
+    ax.set_xlim(-100, 62)
+    ax.tick_params(labelsize=PANEL_TICK)
+    ax.grid(axis="x", ls=":", lw=0.7, color=GRID, zorder=0)
+    ax.set_axisbelow(True)
+    for side in ("top", "right", "left"):
+        ax.spines[side].set_visible(False)
+    ax.legend(handles=[Patch(facecolor=COLOR["cppo15"], label="improved"),
+                       Patch(facecolor=COLOR["ctrl"], label="worsened")],
+              loc="upper right", frameon=False, fontsize=PANEL_VALUE)
+    fig.tight_layout(pad=0.6)
+    save(fig, "fig_budget_effect")
 
 
 def fig_lambda_traj(D):
@@ -412,7 +522,9 @@ def fig_eval_task_performance(D):
                ("goal_reach_1cm_pct", "Goal-reach\n< 1 cm"),
                ("goal_reach_2cm_pct", "Goal-reach\n< 2 cm"),
                ("goal_reach_5cm_pct", "Goal-reach\n< 5 cm")]
-    fig, (axL, axR) = plt.subplots(2, 1, figsize=(8.6, 8.2))
+    # Wide enough to fill the text measure at \textwidth. hspace below is generous because the
+    # upper panel's x tick labels are two lines deep and would otherwise crowd (b)'s title.
+    fig, (axL, axR) = plt.subplots(2, 1, figsize=(11.0, 8.6))
     x = np.arange(len(metrics))
     width = 0.26
     base, top = 90.0, 102.4
@@ -432,8 +544,8 @@ def fig_eval_task_performance(D):
     axL.set_xticks(x)
     axL.set_xticklabels([m[1] for m in metrics])
     axL.set_ylabel("Episodes (%)")
-    axL.set_title("(a) Success rate (axis zoomed; 0--90 % suppressed)", pad=10)
     style_axes(axL)
+    panel_type(axL, "(a) Success rate (axis zoomed; 0--90 % suppressed)")
 
     for j, arm in enumerate(ARMS):
         fails = [max(100.0 - ev[arm][k], 1e-3) for k, _ in metrics]
@@ -447,12 +559,12 @@ def fig_eval_task_performance(D):
     axR.set_xticks(x)
     axR.set_xticklabels([m[1] for m in metrics])
     axR.set_ylabel("Failure rate (%), log scale")
-    axR.set_title("(b) The same data as failure rate (lower is better)", pad=10)
     style_axes(axR)
+    panel_type(axR, "(b) The same data as failure rate (lower is better)")
 
     fig.legend(handles=arm_handles(), loc="upper center", ncol=3, frameon=False,
-               bbox_to_anchor=(0.5, 0.995))
-    fig.subplots_adjust(left=0.11, right=0.98, top=0.90, bottom=0.07, hspace=0.32)
+               bbox_to_anchor=(0.5, 0.995), fontsize=PANEL_VALUE)
+    fig.subplots_adjust(left=0.09, right=0.985, top=0.90, bottom=0.07, hspace=0.46)
     save(fig, "fig_eval_task_performance")
 
 
@@ -465,7 +577,7 @@ def fig_eval_safety_violations(D):
         ("true_singularity_pct", r"(c) True singularity crossing ($w < 10^{-4}$)", "Episodes (%)", True),
         ("coll_touched_pct", "(d) Collision floor touched", "Episodes (%)", False),
     ]
-    fig, axes = plt.subplots(2, 2, figsize=(8.8, 7.4))
+    fig, axes = plt.subplots(2, 2, figsize=(11.0, 8.0))
     x = np.arange(len(ARMS))
     for ax, (key, title, ylab, ylog) in zip(axes.ravel(), panels):
         vals = [ev[a][key] for a in ARMS]
@@ -504,12 +616,11 @@ def main():
     # ylim clips an early-training transient that dips below 1; the untrained phase is not the
     # object of comparison and the full range would compress the converged region into a sliver.
     # The caption must say the axis is clipped.
-    training_curve_fig(D, "mean_episode_cost", "Mean episodic safety cost", "fig_mean_episode_cost",
-                       ylog=True, ylim=(1, 400), legend_loc="lower right",
-                       hlines=[(25, "budget d = 25"), (15, "budget d = 15")])
+    # (mean_episode_cost and manip_min are no longer emitted as standalone figures; they are
+    #  panels (b) and (a) of fig_safety_curves, merged 2026-08-04.)
     fig_reward_terms(D)
-    training_curve_fig(D, "manip_min", "Mean episode-minimum manipulability $w$",
-                       "fig_manipulability", legend_loc="upper right")
+    fig_safety_curves(D)
+    fig_budget_effect(D)
     fig_constraints_components(D)
     fig_lambda_traj(D)
     fig_seed_variance(D)
