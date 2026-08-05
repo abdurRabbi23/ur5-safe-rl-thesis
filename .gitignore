@@ -99,3 +99,4 @@ Thesis_LaTeX/fonts/*.TTF
 .idea/
 *.swp
 .DS_Store
+results/logs.zip
